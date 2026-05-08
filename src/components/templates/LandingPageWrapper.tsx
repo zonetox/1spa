@@ -9,6 +9,7 @@ import SeasonalEvent from '@/components/templates/SeasonalEvent'
 import DentalCare from '@/components/templates/DentalCare'
 import LuxurySpaZen from '@/components/templates/LuxurySpaZen'
 import HauteCoutureBeauty from '@/components/templates/HauteCoutureBeauty'
+import { ImagePickerModal } from '@/components/editor/ImagePickerModal'
 
 interface WrapperProps {
   business: any
@@ -20,10 +21,29 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
   const [hasChanges, setHasChanges] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [mounted, setMounted] = useState(false)
+  
+  // Image Picker State
+  const [isPickerOpen, setIsPickerOpen] = useState(false)
+  const [activeImagePath, setActiveImagePath] = useState('')
+  const [activeImageUrl, setActiveImageUrl] = useState('')
+
   const supabase = createClient()
 
   useEffect(() => {
     setMounted(true)
+    
+    // Track View Analytics
+    const trackView = async () => {
+      if (!isEditMode && business.business_id) {
+        await supabase.from('analytics_events').insert({
+          business_id: business.business_id,
+          event_type: 'view',
+          page_slug: business.business_slug,
+          referrer: typeof document !== 'undefined' ? document.referrer : null
+        })
+      }
+    }
+    trackView()
   }, [])
 
   if (!mounted) {
@@ -88,6 +108,11 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
       hotline: business.hotline,
       slug: business.business_slug,
       logo_url: business.logo_url
+    },
+    onImagePick: (path: string, currentUrl: string) => {
+      setActiveImagePath(path)
+      setActiveImageUrl(currentUrl)
+      setIsPickerOpen(true)
     }
   }
 
@@ -231,6 +256,16 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
           </div>
         </div>
       )}
+
+      <ImagePickerModal 
+        isOpen={isPickerOpen}
+        onClose={() => setIsPickerOpen(false)}
+        currentUrl={activeImageUrl}
+        onSelect={(url) => {
+          handleUpdate(activeImagePath, url)
+          setIsPickerOpen(false)
+        }}
+      />
     </>
   )
 }

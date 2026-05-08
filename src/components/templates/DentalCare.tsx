@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { EditableText } from '@/components/shared/EditableText'
-import { EditableField } from '@/components/shared/EditorOverlay'
+import { EditableField, ArrayActionButtons } from '@/components/shared/EditorOverlay'
 import { Phone, MessageCircle, MapPin, Clock, Star, Calendar, ShieldCheck, HeartPulse, Award, CheckCircle2, ChevronRight, X } from 'lucide-react'
 
 interface DentalCareProps {

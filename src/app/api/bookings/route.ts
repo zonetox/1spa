@@ -43,6 +43,13 @@ export async function POST(req: Request) {
 
     if (dbError) {
       console.error('Database booking insertion error:', dbError)
+    } else {
+      // 1.5 Track Conversion Analytics
+      await supabaseAdmin.from('analytics_events').insert({
+        business_id,
+        event_type: 'conversion',
+        page_slug: source_url ? source_url.split('/').pop() : 'unknown'
+      })
     }
 
     // 2. Trigger Emails via Resend (Wrapped in try/catch to avoid blocking DB flow if Resend Key is invalid)

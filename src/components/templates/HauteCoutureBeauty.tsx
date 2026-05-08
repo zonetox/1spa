@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { EditableText } from '@/components/shared/EditableText'
-import { EditableField } from '@/components/shared/EditorOverlay'
+import { EditableField, ArrayActionButtons } from '@/components/shared/EditorOverlay'
 import { 
   Phone, 
   MapPin, 

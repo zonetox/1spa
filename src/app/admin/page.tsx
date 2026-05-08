@@ -21,7 +21,8 @@ export default function AdminOverviewPage() {
     totalPartners: 0,
     publishedLandings: 0,
     totalLeads: 0,
-    activeSubscribers: 0
+    activeSubscribers: 0,
+    avgConversionRate: 0
   })
   const [bookings, setBookings] = useState<any[]>([])
   const [filterStatus, setFilterStatus] = useState('all')
@@ -55,11 +56,21 @@ export default function AdminOverviewPage() {
         .select('*', { count: 'exact', head: true })
         .eq('subscription_status', 'active')
 
+      // 1.5 Fetch Analytics for Conversion Rate
+      const { data: viewsData } = await supabase
+        .from('analytics_events')
+        .select('event_type')
+        .eq('event_type', 'view')
+      
+      const viewsCount = viewsData?.length || 1 // Avoid division by zero
+      const conversionRate = ((bookingsCount || 0) / viewsCount) * 100
+
       setStats({
         totalPartners: partnersCount || 0,
         publishedLandings: landingsCount || 0,
         totalLeads: bookingsCount || 0,
-        activeSubscribers: activeCount || 0
+        activeSubscribers: activeCount || 0,
+        avgConversionRate: parseFloat(conversionRate.toFixed(2))
       })
 
       // 2. Fetch booking leads joined with business_profiles
@@ -137,7 +148,8 @@ export default function AdminOverviewPage() {
     { label: 'Tổng Đối Tác', value: stats.totalPartners, delta: 'Doanh nghiệp spa & nha khoa', icon: Users, color: 'text-amber-500' },
     { label: 'Landing Page Hoạt Động', value: stats.publishedLandings, delta: 'Đã xuất bản online', icon: FileText, color: 'text-emerald-500' },
     { label: 'Khách Đăng Ký (Leads)', value: stats.totalLeads, delta: 'Gửi từ landing pages', icon: Activity, color: 'text-blue-500' },
-    { label: 'Gói VIP Active', value: stats.activeSubscribers, delta: 'Thuê bao trả phí', icon: UserCheck, color: 'text-violet-500' }
+    { label: 'Gói VIP Active', value: stats.activeSubscribers, delta: 'Thuê bao trả phí', icon: UserCheck, color: 'text-violet-500' },
+    { label: 'Tỷ Lệ Chuyển Đổi', value: `${stats.avgConversionRate}%`, delta: 'Bookings / Lượt xem', icon: Activity, color: 'text-rose-500' }
   ]
 
   return (
