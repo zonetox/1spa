@@ -58,8 +58,14 @@ export async function POST(req: Request) {
         categoryClean = 'Spa'
       }
 
-      // Chuẩn hóa Template ID tương ứng
-      const template_id = categoryClean === 'Dental' ? 'dental_care_01' : (categoryClean === 'Clinic' ? 'modern_medical_01' : 'royal_classic_01')
+      // Chuẩn hóa Template ID tương ứng (Ưu tiên từ JSON, nếu không có thì gán mặc định theo Category)
+      let template_id = item.template_id || ''
+      if (!template_id) {
+        if (categoryClean === 'Dental') template_id = 'DentalCare'
+        else if (categoryClean === 'Clinic') template_id = 'ModernMedical'
+        else if (categoryClean === 'Beauty') template_id = 'HauteCoutureBeauty'
+        else template_id = 'LuxurySpaZen'
+      }
 
       // 3. Tạo Slug chuyên nghiệp & bảo mật độc nhất
       let slug = item.slug || slugify(business_name)
@@ -101,6 +107,17 @@ export async function POST(req: Request) {
         })
       }
 
+      const expert_team = []
+      if (item.expert_1_name) {
+        expert_team.push({
+          name: item.expert_1_name,
+          role: item.expert_1_role || 'Chuyên gia',
+          img: item.expert_1_img || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400',
+          origin: item.expert_1_origin || 'Vietnam',
+          desc: item.expert_1_desc || ''
+        })
+      }
+
       const hero_slides = [
         item.hero_slide_1,
         item.hero_slide_2,
@@ -122,11 +139,14 @@ export async function POST(req: Request) {
           hero_slides: hero_slides
         },
         about_us: {
+          section_title: item.about_title || 'Nơi Tâm Hồn Đồng điệu cùng Thể xác',
           intro_text: item.about_intro || `Chúng tôi là đơn vị hàng đầu trong lĩnh vực ${categoryClean} tại ${location_district || 'TP.HCM'}.`,
           experience_years: item.experience_years || '5+',
           video_intro_url: item.about_video_url || ''
         },
         services_menu: services_menu,
+        expert_team: expert_team,
+        theme_color: item.theme_color || (categoryClean === 'Dental' ? '#0F4C81' : '#C9A050'),
         contact_info: {
           zalo_link: `https://zalo.me/${zalo}`,
           hotline: hotline,
@@ -135,13 +155,8 @@ export async function POST(req: Request) {
           google_map_embed_code: item.map_embed_url || ''
         },
         operating_hours: {
-          mon: item.time_mon || '08:00 - 20:00',
-          tue: item.time_tue || '08:00 - 20:00',
-          wed: item.time_wed || '08:00 - 20:00',
-          thu: item.time_thu || '08:00 - 20:00',
-          fri: item.time_fri || '08:00 - 20:00',
-          sat: item.time_sat || '08:00 - 21:00',
-          sun: item.time_sun || '09:00 - 18:00'
+          weekdays: item.time_mon || '08:00 - 20:00',
+          weekends: item.time_sat || '08:00 - 22:00'
         },
         social_trust: {
           rating_count: Math.floor(Math.random() * 50) + 10,
