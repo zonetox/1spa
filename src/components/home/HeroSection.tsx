@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, MapPin, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -43,8 +43,8 @@ export function HeroSection() {
           {/* Subtle top-vignette to make white/gold navigation menus stand out perfectly */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent z-10 pointer-events-none" />
           {/* Gradient overlay - right side heavy, left light for text */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#F9F6F0]/90 via-[#F9F6F0]/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#F9F6F0]/70 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#F9F6F0]/75 via-[#F9F6F0]/35 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#F9F6F0]/50 via-transparent to-transparent" />
         </motion.div>
       </AnimatePresence>
 
@@ -62,14 +62,21 @@ export function HeroSection() {
             <motion.h1 key={`title-${current}`} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.1 }}
               className="text-6xl md:text-8xl font-bold leading-tight text-[#2F2F2F] mb-6 whitespace-pre-line"
               style={{ fontFamily: "'Playfair Display', serif" }}>
-              {slide.title.endsWith('.') ? (
-                <>
-                  {slide.title.slice(0, -1)}
-                  <span className="text-[#D4AF37]">.</span>
-                </>
-              ) : (
-                slide.title
-              )}
+              {(() => {
+                const parts = slide.title.split('\n');
+                return parts.map((part, pIdx) => {
+                  const endsWithDot = part.endsWith('.');
+                  const content = endsWithDot ? part.slice(0, -1) : part;
+                  const isSecondLine = pIdx === 1;
+                  
+                  return (
+                    <div key={pIdx} className={isSecondLine ? "text-[#D4AF37]" : ""}>
+                      {content}
+                      {endsWithDot && <span className="text-[#D4AF37]">.</span>}
+                    </div>
+                  )
+                });
+              })()}
             </motion.h1>
 
             <motion.p key={`sub-${current}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.3 }}

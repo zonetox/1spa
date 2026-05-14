@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
 
@@ -37,11 +36,10 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
       >
         {/* Cover Image */}
         <div className="absolute inset-0 z-0 overflow-hidden">
-          <Image 
+          <img 
             src={cover_image} 
             alt={business_name}
-            fill
-            className="object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000 ease-out"
+            className="w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-1000 ease-out"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
         </div>
@@ -64,7 +62,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
           <div className="flex items-center gap-4">
             {logo_url && (
               <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-luxury-gold/50 bg-black">
-                <Image src={logo_url} alt={business_name} fill className="object-cover" />
+                <img src={logo_url} alt={business_name} className="w-full h-full object-cover" />
               </div>
             )}
             <div className="flex-1">

@@ -83,7 +83,7 @@ export function Footer() {
                 { name: 'Dental Care', url: '/p/dental-01' },
                 { name: 'Haute Couture Beauty', url: '/p/beauty-01' },
                 { name: 'Luxury Spa Zen', url: '/p/spa-01' },
-                { name: 'Royal Classic', url: '/p/royal-01' },
+                { name: 'Royal Classic', url: '/p/beauty-01' },
                 { name: 'Exclusive Flash Campaign', url: '/p/campaign-01' }
               ].map(t => (
                 <Link key={t.name} href={t.url}

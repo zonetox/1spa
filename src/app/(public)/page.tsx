@@ -19,13 +19,11 @@ export default function Home() {
       const { data } = await supabase.from('active_landing_pages').select('*')
       if (data && data.length > 0) {
         const mapped = data.map((item: any) => {
-          let cat = item.category || 'Spa';
-          if (cat === 'Clinic' || cat === 'clinic') cat = 'Beauty';
-          if (cat === 'Dental' || cat === 'dental') cat = 'Dental Clinic';
+          const rawCat = (item.category || 'Spa') as keyof typeof CANONICAL_TEMPLATES;
           return {
             slug: item.business_slug,
             business_name: item.business_name,
-            category: cat,
+            category: item.category || 'Spa',
             location_district: `${item.district || ''}, ${item.city || 'TP.HCM'}`.replace(/^, /, ''),
             is_verified: item.is_verified,
             cover_image: item.content_json?.hero_section?.hero_slides?.[0] || item.content_json?.hero_section?.slides?.[0]?.image_url || 'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?q=80&w=800',
@@ -38,14 +36,8 @@ export default function Home() {
         setAll(mapped)
         setFiltered(mapped)
       } else {
-        // Fallback mock
-        const mock = [
-          { slug: 'vien-tham-my-hoang-gia-luxury-q1', business_name: 'Viện Thẩm Mỹ Hoàng Gia Luxury', category: 'Spa', location_district: 'Quận 1, TP.HCM', is_verified: true, cover_image: 'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?q=80&w=800', services: [{ name: 'Nâng Cơ Ultherapy', price: '25tr' }, { name: 'Trị Nám Picosure', price: '15tr' }, { name: 'Filler/Botox', price: '8tr' }] },
-          { slug: 'nha-khoa-prestige-dental-q3', business_name: 'Nha Khoa Prestige Dental', category: 'Dental', location_district: 'Quận 3, TP.HCM', is_verified: true, cover_image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=800', services: [{ name: 'Răng Sứ Cercon', price: '12tr' }, { name: 'Invisalign', price: '80tr' }, { name: 'Implant', price: '25tr' }] },
-          { slug: 'aurora-beauty-clinic-binhcanh', business_name: 'Aurora Beauty Clinic', category: 'Clinic', location_district: 'Bình Chánh, TP.HCM', is_verified: false, cover_image: 'https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?q=80&w=800', services: [{ name: 'Trị Mụn', price: '3.5tr' }, { name: 'Laser CO2', price: '18tr' }, { name: 'Thermage', price: '22tr' }] },
-        ]
-        setAll(mock)
-        setFiltered(mock)
+        setAll([])
+        setFiltered([])
       }
     }
     fetch()

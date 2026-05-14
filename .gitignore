@@ -22,7 +22,7 @@
 
 # misc
 /1hub_backup
-/ingest
+/ingest/data/
 /scratch
 .DS_Store
 *.pem
@@ -50,6 +50,12 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+
+# Trash & Ingest
+trash/
+_trash/
+ingest/
+supabase/snapshots/
 
 # vercel
 .vercel

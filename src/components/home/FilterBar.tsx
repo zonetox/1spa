@@ -7,7 +7,7 @@ const CATEGORIES = [
   { id: 'all', label: 'Tất cả', icon: '✦' },
   { id: 'Spa', label: 'Spa', icon: '◈' },
   { id: 'Beauty', label: 'Beauty', icon: '◉' },
-  { id: 'Dental Clinic', label: 'Dental Clinic', icon: '◇' },
+  { id: 'Dental', label: 'Dental', icon: '◇' },
 ]
 
 const DISTRICTS = [

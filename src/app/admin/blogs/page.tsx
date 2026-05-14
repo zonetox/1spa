@@ -8,11 +8,13 @@ import {
 } from 'lucide-react'
 
 type Business = { id: string; business_name: string }
+type Category = { id: string; name: string; slug: string }
 type Blog = {
   id: string
   title: string
   content: string
   image_url: string | null
+  category_id: string | null
   status: string
   created_at: string
 }
@@ -20,39 +22,80 @@ type Blog = {
 export default function AdminBlogsPage() {
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [selectedBiz, setSelectedBiz] = useState<Business | null>(null)
+  const [isAdminVerified, setIsAdminVerified] = useState(false)
   const [blogs, setBlogs] = useState<Blog[]>([])
   const [maxBlogs, setMaxBlogs] = useState(3)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [showForm, setShowForm] = useState(false)
+  const [categories, setCategories] = useState<Category[]>([])
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [newCategory, setNewCategory] = useState('')
+  const [showCategoryForm, setShowCategoryForm] = useState(false)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [imageUrl, setImageUrl] = useState('')
+  const [excerpt, setExcerpt] = useState('')
+  const [showForm, setShowForm] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
+    async function checkAuth() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { window.location.href = '/login'; return }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (profile?.role?.toLowerCase() !== 'admin') {
+        alert('Unauthorized: Quyền truy cập bị từ chối.')
+        window.location.href = '/dashboard'
+        return
+      }
+      setIsAdminVerified(true)
+    }
+    
+    checkAuth()
+
+    // Fetch businesses
     supabase
       .from('business_profiles')
       .select('id, business_name')
       .order('business_name')
       .then(({ data }) => {
         setBusinesses(data || [])
+      })
+
+    // Fetch categories
+    supabase
+      .from('blog_categories')
+      .select('*')
+      .order('name')
+      .then(({ data }) => {
+        setCategories(data || [])
         setLoading(false)
       })
   }, [])
+
+  const getAuthToken = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    return session?.access_token
+  }
 
   async function selectBusiness(biz: Business) {
     setSelectedBiz(biz)
     setShowForm(false)
     setLoading(true)
 
-    // Fetch blogs for this business
-    const { data: blogData } = await supabase
-      .from('blogs')
-      .select('id, title, content, image_url, status, created_at')
-      .eq('business_id', biz.id)
-      .order('created_at', { ascending: false })
-    setBlogs(blogData || [])
+    try {
+      const response = await fetch(`/api/admin/blogs?businessId=${biz.id}`)
+      const blogData = await response.json()
+      if (blogData && !blogData.error) setBlogs(blogData)
+    } catch (err) {
+      console.error('Fetch blogs error:', err)
+    }
 
     // Fetch subscription quota for this business
     const { data: subData } = await supabase
@@ -68,7 +111,6 @@ export default function AdminBlogsPage() {
       const limits = (subData.packages as any).limits
       setMaxBlogs(limits?.max_blogs ?? 3)
     } else {
-      // Default: packages table → first package
       const { data: pkg } = await supabase.from('packages').select('limits').limit(1).single()
       setMaxBlogs(pkg?.limits?.max_blogs ?? 3)
     }
@@ -87,34 +129,82 @@ export default function AdminBlogsPage() {
     }
 
     setSaving(true)
-    const { data, error } = await supabase.from('blogs').insert([{
+    const slug = title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') + '-' + Math.random().toString(36).substring(2, 5)
+
+    const payload = {
       business_id: selectedBiz.id,
       title: title.trim(),
+      slug,
       content: content.trim(),
+      excerpt: excerpt.trim() || content.substring(0, 150) + '...',
       image_url: imageUrl.trim() || null,
+      category_id: selectedCategory || null,
       status: 'Published'
-    }]).select().single()
+    }
 
-    if (error) {
-      alert('Lỗi đăng bài: ' + error.message)
-    } else {
-      setBlogs(prev => [data, ...prev])
+    const token = await getAuthToken()
+    try {
+      const response = await fetch('/api/admin/blogs', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      })
+      const result = await response.json()
+      if (result.error) throw new Error(result.error)
+      
+      setBlogs(prev => [result, ...prev])
       setTitle('')
       setContent('')
       setImageUrl('')
+      setExcerpt('')
+      setSelectedCategory('')
       setShowForm(false)
+    } catch (err: any) {
+      alert(`Lỗi: ${err.message}`)
     }
     setSaving(false)
   }
 
+  async function addCategory() {
+    if (!newCategory.trim()) return
+    const slug = newCategory.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '')
+    
+    const { data, error } = await supabase.from('blog_categories').insert([{
+      name: newCategory.trim(),
+      slug
+    }]).select().single()
+
+    if (error) {
+      alert('Lỗi thêm danh mục: ' + error.message)
+    } else {
+      setCategories(prev => [...prev, data].sort((a, b) => a.name.localeCompare(b.name)))
+      setNewCategory('')
+      setShowCategoryForm(false)
+    }
+  }
+
   async function deleteBlog(id: string) {
     if (!confirm('Xoá bài viết này?')) return
-    const { error } = await supabase.from('blogs').delete().eq('id', id)
-    if (!error) setBlogs(prev => prev.filter(b => b.id !== id))
-    else alert('Lỗi xoá: ' + error.message)
+    const token = await getAuthToken()
+    try {
+      const response = await fetch(`/api/admin/blogs?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const result = await response.json()
+      if (result.error) throw new Error(result.error)
+      setBlogs(prev => prev.filter(b => b.id !== id))
+    } catch (err: any) {
+      alert(`Lỗi: ${err.message}`)
+    }
   }
 
   const isQuotaFull = blogs.length >= maxBlogs
+  
+  if (!isAdminVerified) return null
 
   return (
     <div className="space-y-6">
@@ -202,20 +292,67 @@ export default function AdminBlogsPage() {
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-zinc-100 placeholder-zinc-700 focus:outline-none focus:border-amber-500/50"
                 />
               </div>
-              <div>
-                <label className="text-[11px] text-zinc-500 font-mono uppercase tracking-wider block mb-1.5">Ảnh đại diện (URL)</label>
-                <div className="flex items-center bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden focus-within:border-amber-500/50">
-                  <div className="px-3 py-3 text-zinc-600 border-r border-zinc-800">
-                    <ImageIcon size={16} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-[11px] text-zinc-500 font-mono uppercase tracking-wider block mb-1.5">Ảnh đại diện (URL)</label>
+                  <div className="flex items-center bg-zinc-950 border border-zinc-800 rounded-lg overflow-hidden focus-within:border-amber-500/50">
+                    <div className="px-3 py-3 text-zinc-600 border-r border-zinc-800">
+                      <ImageIcon size={16} />
+                    </div>
+                    <input
+                      type="url"
+                      value={imageUrl}
+                      onChange={e => setImageUrl(e.target.value)}
+                      placeholder="https://example.com/thumbnail.jpg"
+                      className="flex-1 px-4 py-3 text-sm text-zinc-300 bg-transparent placeholder-zinc-700 outline-none"
+                    />
                   </div>
-                  <input
-                    type="url"
-                    value={imageUrl}
-                    onChange={e => setImageUrl(e.target.value)}
-                    placeholder="https://example.com/thumbnail.jpg"
-                    className="flex-1 px-4 py-3 text-sm text-zinc-300 bg-transparent placeholder-zinc-700 outline-none"
-                  />
                 </div>
+                <div>
+                  <label className="text-[11px] text-zinc-500 font-mono uppercase tracking-wider block mb-1.5">Danh mục</label>
+                  <div className="flex gap-2">
+                    <select
+                      value={selectedCategory}
+                      onChange={e => setSelectedCategory(e.target.value)}
+                      className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-zinc-300 focus:outline-none focus:border-amber-500/50"
+                    >
+                      <option value="">-- Chọn danh mục --</option>
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
+                    <button 
+                      onClick={() => setShowCategoryForm(!showCategoryForm)}
+                      className="p-3 bg-zinc-800 text-zinc-400 rounded-lg hover:text-amber-500 transition"
+                      title="Thêm danh mục mới"
+                    >
+                      <Plus size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {showCategoryForm && (
+                <div className="flex gap-2 p-3 bg-zinc-950 rounded-lg border border-amber-500/20">
+                  <input
+                    type="text"
+                    value={newCategory}
+                    onChange={e => setNewCategory(e.target.value)}
+                    placeholder="Tên danh mục mới..."
+                    className="flex-1 bg-transparent text-sm text-zinc-200 outline-none"
+                  />
+                  <button onClick={addCategory} className="px-4 py-1.5 bg-amber-500 text-black text-[10px] font-bold uppercase rounded-md">Lưu</button>
+                </div>
+              )}
+
+              <div>
+                <label className="text-[11px] text-zinc-500 font-mono uppercase tracking-wider block mb-1.5">Mô tả ngắn (Excerpt)</label>
+                <textarea
+                  value={excerpt}
+                  onChange={e => setExcerpt(e.target.value)}
+                  placeholder="Tóm tắt ngắn gọn nội dung bài viết..."
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm text-zinc-300 placeholder-zinc-700 focus:outline-none focus:border-amber-500/50 resize-none h-20"
+                />
               </div>
               <div>
                 <label className="text-[11px] text-zinc-500 font-mono uppercase tracking-wider block mb-1.5">Nội dung chi tiết</label>

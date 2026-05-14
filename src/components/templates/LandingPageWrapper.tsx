@@ -3,13 +3,11 @@
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { EditorToolbar } from '@/components/editor/EditorToolbar'
-import RoyalClassic from '@/components/templates/RoyalClassic'
-import ModernMedical from '@/components/templates/ModernMedical'
-import SeasonalEvent from '@/components/templates/SeasonalEvent'
-import DentalCare from '@/components/templates/DentalCare'
-import LuxurySpaZen from '@/components/templates/LuxurySpaZen'
-import HauteCoutureBeauty from '@/components/templates/HauteCoutureBeauty'
+import { UniversalTemplate } from '@/components/templates/v7-core/UniversalTemplate'
 import { ImagePickerModal } from '@/components/editor/ImagePickerModal'
+import { CATEGORY_DEFAULTS, CATEGORY_COLORS } from '@/lib/constants'
+
+import { LandingPageData, BusinessCategory } from '@/types/landing-page'
 
 interface WrapperProps {
   business: any
@@ -17,7 +15,7 @@ interface WrapperProps {
 }
 
 export default function LandingPageWrapper({ business, isEditMode }: WrapperProps) {
-  const [data, setData] = useState(business.content_json || {})
+  const [data, setData] = useState<LandingPageData>(business.content_json || {})
   const [hasChanges, setHasChanges] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -47,7 +45,7 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
   }, [])
 
   if (!mounted) {
-    return <div className="min-h-screen bg-[#F9F6F0]" />
+    return <div className="min-h-screen bg-background" />
   }
 
   const handleUpdate = (path: string, value: any) => {
@@ -120,12 +118,6 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
 
   const demoTemplates = [
     {
-      slug: 'medical-01',
-      name: 'Modern Medical',
-      field: 'Phòng Khám Thẩm Mỹ / Clinic',
-      url: '/p/medical-01'
-    },
-    {
       slug: 'dental-01',
       name: 'Dental Care',
       field: 'Nha Khoa Thẩm Mỹ',
@@ -142,65 +134,53 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
       name: 'Luxury Spa Zen',
       field: 'Spa & Trị Liệu Chữa Lành 5 Sao',
       url: '/p/spa-01'
-    },
-    {
-      slug: 'royal-01',
-      name: 'Royal Classic',
-      field: 'Thẩm Mỹ Viện Cổ Điển',
-      url: '/p/royal-01'
-    },
-    {
-      slug: 'campaign-01',
-      name: 'Exclusive Flash Campaign',
-      field: 'Chiến Dịch Săn Deal & Khuyến Mãi',
-      url: '/p/campaign-01'
     }
   ]
 
   const activeDemo = demoTemplates.find(t => t.slug === slug)
 
   const renderTemplate = () => {
-    // Explicit 6-business mapping for consistent demo pages
-    if (slug === 'medical-01') {
-      return <ModernMedical {...props} />
-    }
-    if (slug === 'dental-01') {
-      return <DentalCare {...props} />
-    }
-    if (slug === 'beauty-01') {
-      return <HauteCoutureBeauty {...props} />
-    }
-    if (slug === 'spa-01') {
-      return <LuxurySpaZen {...props} />
-    }
-    if (slug === 'royal-01') {
-      return <RoyalClassic {...props} />
-    }
-    if (slug === 'campaign-01') {
-      return <SeasonalEvent {...props} />
+    // 1. Data Validation Check
+    const hasEnoughData = (
+      data.hero_section?.hero_title ||
+      data.about_us?.intro_text ||
+      (data.services_menu && data.services_menu.length > 0)
+    )
+
+    if (!hasEnoughData && !isEditMode) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+          <div className="text-center space-y-4 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+            <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mx-auto text-2xl">
+              🚧
+            </div>
+            <h2 className="text-xl font-bold text-gray-800">Landing Page Đang Xây Dựng</h2>
+            <p className="text-gray-500 max-w-sm mx-auto">
+              {business.business_name} đang trong quá trình hoàn thiện nội dung. 
+              Vui lòng quay lại sau!
+            </p>
+          </div>
+        </div>
+      )
     }
 
-    // Default fallbacks based on template_id or category
-    const templateId = business.template_id
-    const category = business.category?.toLowerCase() || ''
+    // 2. Render Engine (V7 Smart Universal Core)
+    const categoryRaw = (business.category || 'Spa') as any
+    const pillar = (['Spa', 'Beauty', 'Dental'].includes(categoryRaw) ? categoryRaw : 'Spa') as 'Spa' | 'Beauty' | 'Dental'
     
-    if (templateId === 'haute_couture_beauty_01' || category === 'beauty') {
-      return <HauteCoutureBeauty {...props} />
-    }
+    // Inject industry-specific defaults if not present in content_json
+    const industryDefaults = CATEGORY_DEFAULTS[pillar] || CATEGORY_DEFAULTS.Spa
+    const industryTheme = CATEGORY_COLORS[pillar] || CATEGORY_COLORS.Spa
 
-    switch (templateId) {
-      case 'modern_medical_01':
-        return <ModernMedical {...props} />
-      case 'seasonal_event_01':
-        return <SeasonalEvent {...props} />
-      case 'dental_care_01':
-        return <DentalCare {...props} />
-      case 'royal_classic_01':
-        return <RoyalClassic {...props} />
-      case 'luxury_spa_zen_01':
-      default:
-        return <LuxurySpaZen {...props} />
-    }
+    return (
+      <UniversalTemplate 
+        {...props} 
+        defaults={{
+          ...industryDefaults,
+          themeColor: industryTheme
+        }} 
+      />
+    )
   }
 
   return (

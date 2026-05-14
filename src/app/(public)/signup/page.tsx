@@ -34,12 +34,12 @@ export default function SignupPage() {
 
       if (authData.user) {
         const { error: accError } = await supabase
-          .from('accounts')
+          .from('profiles')
           .insert({
             id: authData.user.id,
             email: formData.email,
             role: 'Business',
-            subscription_plan: 'Trial',
+            subscription_status: 'trial',
             expiry_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
           })
         if (accError) {
@@ -66,7 +66,7 @@ export default function SignupPage() {
 
         const { error: lpError } = await supabase.from('landing_pages').insert({
           business_id: profile.id,
-          template_id: 'royal_classic_01',
+          template_id: 'BeautyTemplate',
           status: 'Published',
           content_json: {
             hero_section: { hero_title: `Chào mừng tới ${formData.businessName}`, hero_subtitle: 'Nâng tầm vẻ đẹp thượng lưu' },
@@ -83,7 +83,7 @@ export default function SignupPage() {
 
         // Wait a bit to show the loading animation before redirecting
         setTimeout(() => {
-          window.location.href = '/dashboard'
+          window.location.href = '/onboarding'
         }, 1500)
       }
     } catch (error: any) {

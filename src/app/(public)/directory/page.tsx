@@ -17,7 +17,7 @@ function DirectoryPageContent() {
   const detectedCategory = initialQuery.toLowerCase().includes('spa') 
     ? 'Spa' 
     : (initialQuery.toLowerCase().includes('dental') || initialQuery.toLowerCase().includes('nha khoa')
-      ? 'Dental Clinic' 
+      ? 'Dental' 
       : (initialQuery.toLowerCase().includes('beauty') || initialQuery.toLowerCase().includes('thẩm mỹ')
         ? 'Beauty'
         : 'Tất cả'))
@@ -52,7 +52,7 @@ function DirectoryPageContent() {
         const formatted = data.map((item, idx) => ({
           slug: item.business_slug,
           business_name: item.business_name,
-          category: (item.category === 'Spa' || item.category === 'spa') ? 'Spa' : ((item.category === 'Dental' || item.category === 'dental') ? 'Dental Clinic' : 'Beauty'),
+          category: (item.category === 'Spa' || item.category === 'spa') ? 'Spa' : ((item.category === 'Dental' || item.category === 'dental') ? 'Dental' : 'Beauty'),
           location_district: `${item.district || 'Quận 1'}, ${item.city || 'TP.HCM'}`,
           rating_score: 4.8 + (idx % 3) * 0.1,
           cover_image: item.content_json?.hero_section?.hero_slides?.[0] || item.content_json?.hero_section?.slides?.[0]?.image_url || 'https://images.unsplash.com/photo-1544161515-4af6b1d46af0?auto=format&fit=crop&q=80',
@@ -138,14 +138,27 @@ function DirectoryPageContent() {
              />
              
              <div className="flex flex-wrap items-center justify-between gap-6 py-4 border-y border-[#D4AF37]/10 bg-white/60 rounded-2xl px-6">
-                <div className="flex items-center gap-8 overflow-x-auto no-scrollbar py-2">
-                  {['Tất cả', 'Spa', 'Beauty', 'Dental Clinic'].map(cat => (
+                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-2">
+                  {[
+                    { id: 'Tất cả', label: 'Tất cả', icon: '✦' },
+                    { id: 'Spa', label: 'Spa', icon: '◈' },
+                    { id: 'Beauty', label: 'Beauty', icon: '◉' },
+                    { id: 'Dental', label: 'Dental', icon: '◇' }
+                  ].map(cat => (
                     <button 
-                      key={cat}
-                      onClick={() => setCategory(cat)}
-                      className={`text-[11px] font-bold uppercase tracking-[0.2em] whitespace-nowrap transition-colors ${category === cat ? 'text-[#D4AF37]' : 'text-[#2F2F2F]/40 hover:text-[#D4AF37]'}`}
+                      key={cat.id}
+                      onClick={() => setCategory(cat.id)}
+                      className={`flex items-center gap-2 px-5 py-2 rounded-full text-[11px] font-medium tracking-widest uppercase whitespace-nowrap transition-all duration-300 relative ${
+                        category === cat.id
+                          ? 'text-[#D4AF37]'
+                          : 'text-[#2F2F2F]/50 hover:text-[#D4AF37]'
+                      }`}
                     >
-                      {cat}
+                      <span className="text-[#D4AF37] text-xs">{cat.icon}</span>
+                      {cat.label}
+                      {category === cat.id && (
+                        <motion.div layoutId="dir-filter-underline" className="absolute bottom-0 left-3 right-3 h-[1.5px] bg-[#D4AF37]" />
+                      )}
                     </button>
                   ))}
                 </div>

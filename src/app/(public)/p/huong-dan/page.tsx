@@ -20,7 +20,7 @@ export default function ManualPage() {
     {
       num: '01',
       title: 'Đăng nhập trang quản trị',
-      icon: <Lock className="w-8 h-8 text-gold-royal" />,
+      icon: <Lock className="w-8 h-8 text-[#E0A96D]" />,
       desc: 'Sử dụng địa chỉ email và mật khẩu mặc định (ví dụ: Beauty123!) được bàn giao để đăng nhập hệ thống.',
       details: [
         'Truy cập đường dẫn quản trị tại: /login',
@@ -31,7 +31,7 @@ export default function ManualPage() {
     {
       num: '02',
       title: 'Thay đổi ảnh & giá dịch vụ',
-      icon: <Image className="w-8 h-8 text-gold-royal" />,
+      icon: <Image className="w-8 h-8 text-[#E0A96D]" />,
       desc: 'Giao diện chỉnh sửa kéo-thả (Visual Editor) cho phép thay đổi hình ảnh và mô tả dịch vụ trực quan 100%.',
       details: [
         'Nhấn nút "Chỉnh sửa trực quan" tại góc trang chủ cá nhân của bạn.',
@@ -42,7 +42,7 @@ export default function ManualPage() {
     {
       num: '03',
       title: 'Nhận thông báo lịch hẹn',
-      icon: <Mail className="w-8 h-8 text-gold-royal" />,
+      icon: <Mail className="w-8 h-8 text-[#E0A96D]" />,
       desc: 'Hệ thống tự động đồng bộ hóa toàn bộ lịch hẹn tư vấn mới về hòm thư điện tử và Zalo của bạn.',
       details: [
         'Khi khách hàng điền form, email thông báo tự động gửi về địa chỉ mail của bạn tức thì.',

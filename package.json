@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "harvest": "node ingest/index.js harvest",
+    "ingest": "node ingest/index.js import",
+    "ingest:dry": "node ingest/index.js import --dry-run",
+    "ingest:refine": "node ingest/index.js import --refine",
+    "batch-harvest": "node ingest/maintenance/batch-harvester.js ingest/data/batch-urls.csv 2"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
@@ -14,6 +19,7 @@
     "@types/pg": "^8.20.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.4.2",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.14.0",
     "next": "16.2.4",
@@ -21,6 +27,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "resend": "^6.12.2",
+    "swiper": "^12.1.4",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {

@@ -23,6 +23,7 @@ import {
   Info
 } from 'lucide-react'
 import LeadTrackerTable from '@/components/dashboard/LeadTrackerTable'
+import { ProfileSettings } from '@/components/dashboard/ProfileSettings'
 
 // ── Toast System ──────────────────────────────────────────────────────────────
 type ToastType = 'success' | 'error' | 'info'
@@ -347,8 +348,8 @@ export default function BusinessDashboard() {
         setPersonalAvatar(user.user_metadata?.avatar_url || '')
         setNewEmailInput(user.email || '')
         
-        const { data: acc } = await supabase.from('accounts').select('role').eq('id', user.id).maybeSingle()
-        if (acc?.role === 'Admin') {
+        const { data: acc } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle()
+        if (acc?.role?.toLowerCase() === 'admin') {
           setIsAdmin(true)
         }
       }
@@ -679,32 +680,9 @@ export default function BusinessDashboard() {
                    
                    {/* Template Selector */}
                    <div className="relative">
-                      {isChangingTemplate ? (
-                        <div className="flex items-center gap-2 bg-zinc-50 p-1 rounded-lg border border-zinc-200">
-                          {['royal_classic_01', 'modern_medical_01', 'seasonal_event_01'].map(id => (
-                            <button 
-                              key={id}
-                              onClick={() => handleTemplateChange(id)}
-                              className={`px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest rounded-md transition-colors ${landingPage?.template_id === id ? 'bg-[#D4AF37] text-white font-bold' : 'hover:bg-zinc-200 text-zinc-600'}`}
-                            >
-                              {id.split('_')[0]}
-                            </button>
-                          ))}
-                          <button 
-                            onClick={() => setIsChangingTemplate(false)}
-                            className="px-2 py-1.5 text-zinc-400 hover:text-red-500"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ) : (
-                        <button 
-                          onClick={() => setIsChangingTemplate(true)}
-                          className="text-[#D4AF37] text-xs font-mono font-bold uppercase tracking-widest hover:text-[#B8860B] transition-colors flex items-center gap-2"
-                        >
-                          Đổi giao diện <ChevronRight size={14} />
-                        </button>
-                      )}
+                     <div className="text-[#D4AF37] text-[10px] font-mono font-bold uppercase tracking-widest bg-amber-50 border border-[#D4AF37]/20 px-3 py-1 rounded-full">
+                       Thiết Kế Tiêu Chuẩn V7
+                     </div>
                    </div>
                 </div>
               </div>
@@ -899,170 +877,11 @@ export default function BusinessDashboard() {
               </div>
             </div>
 
-            {/* Right Column: Business & Spa Brand Identity (2/3 width) */}
-            <div className="lg:col-span-2 bg-white border border-[#D4AF37]/20 rounded-[2rem] p-8 md:p-12 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)]">
-              <h2 className="font-display text-3xl text-[#2F2F2F] mb-2">Cài đặt thương hiệu Doanh nghiệp</h2>
-              <p className="text-sm text-zinc-500 mb-8">Cập nhật thông tin nhận diện thương hiệu, liên hệ và địa chỉ của Spa/Thẩm mỹ viện của bạn.</p>
-
-              <form onSubmit={handleSaveSettings} className="space-y-8">
-                {/* Brand Section */}
-                <div className="space-y-6">
-                  <h3 className="text-xs font-mono font-bold tracking-widest text-[#D4AF37] uppercase pb-2 border-b border-zinc-100">1. Nhận diện thương hiệu</h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Tên thương hiệu</label>
-                      <input 
-                        type="text" 
-                        required
-                        value={settingsForm.business_name}
-                        onChange={e => setSettingsForm({ ...settingsForm, business_name: e.target.value })}
-                        className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:border-[#D4AF37] focus:outline-none transition-colors text-sm"
-                        placeholder="Ví dụ: Royal Beauty Spa"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Đường dẫn độc quyền (Slug)</label>
-                      <div className="flex rounded-xl overflow-hidden border border-zinc-200 focus-within:border-[#D4AF37] transition-colors">
-                        <span className="bg-zinc-50 px-3 py-3 text-xs text-zinc-500 font-mono flex items-center border-r border-zinc-100">1beauty.asia/p/</span>
-                        <input 
-                          type="text" 
-                          required
-                          value={settingsForm.slug}
-                          onChange={e => setSettingsForm({ ...settingsForm, slug: e.target.value })}
-                          className="w-full px-4 py-3 focus:outline-none text-sm"
-                          placeholder="royal-beauty"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Danh mục kinh doanh</label>
-                      <select 
-                        value={settingsForm.category}
-                        onChange={e => setSettingsForm({ ...settingsForm, category: e.target.value })}
-                        className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:border-[#D4AF37] focus:outline-none bg-white transition-colors text-sm"
-                      >
-                        <option value="Spa">Spa</option>
-                        <option value="Beauty">Beauty</option>
-                        <option value="Dental Clinic">Dental Clinic</option>
-                      </select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Logo thương hiệu</label>
-                      <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
-                        <div className="flex-1 flex gap-2">
-                          <input 
-                            type="text" 
-                            value={settingsForm.logo_url}
-                            onChange={e => setSettingsForm({ ...settingsForm, logo_url: e.target.value })}
-                            className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:border-[#D4AF37] focus:outline-none transition-colors text-sm"
-                            placeholder="Nhập URL ảnh hoặc tải lên..."
-                          />
-                          <input 
-                            type="file" 
-                            id="logo-file-upload" 
-                            accept="image/*" 
-                            onChange={handleLogoUpload}
-                            disabled={isUploadingLogo}
-                            className="hidden" 
-                          />
-                          <button 
-                            type="button"
-                            disabled={isUploadingLogo}
-                            onClick={() => document.getElementById('logo-file-upload')?.click()}
-                            className="px-4 py-3 bg-[#F9F6F0] border border-zinc-200 rounded-xl text-xs font-bold font-mono text-zinc-600 hover:text-[#D4AF37] hover:border-[#D4AF37] transition-all whitespace-nowrap shrink-0 disabled:opacity-50"
-                          >
-                            {isUploadingLogo ? 'Đang tải...' : 'Tải Lên Ảnh'}
-                          </button>
-                        </div>
-                        {settingsForm.logo_url && (
-                          <div className="w-12 h-12 rounded-full border border-zinc-200 overflow-hidden shrink-0 shadow-inner mx-auto sm:mx-0">
-                            <img src={settingsForm.logo_url} alt="Logo Preview" className="w-full h-full object-cover" />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Location & Contact Section */}
-                <div className="space-y-6 pt-4">
-                  <h3 className="text-xs font-mono font-bold tracking-widest text-[#D4AF37] uppercase pb-2 border-b border-zinc-100">2. Thông tin liên hệ & Vị trí</h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Thành phố</label>
-                      <select 
-                        required
-                        value={settingsForm.location_city || 'Hồ Chí Minh'}
-                        onChange={e => {
-                          const city = e.target.value;
-                          const defaultDistrict = LOCATION_DATA[city]?.[0] || '';
-                          setSettingsForm({ ...settingsForm, location_city: city, location_district: defaultDistrict });
-                        }}
-                        className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:border-[#D4AF37] focus:outline-none bg-white transition-colors text-sm"
-                      >
-                        {Object.keys(LOCATION_DATA).map(city => (
-                          <option key={city} value={city}>{city}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Quận/Huyện</label>
-                      <select 
-                        required
-                        value={settingsForm.location_district || LOCATION_DATA[settingsForm.location_city || 'Hồ Chí Minh']?.[0] || ''}
-                        onChange={e => setSettingsForm({ ...settingsForm, location_district: e.target.value })}
-                        className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:border-[#D4AF37] focus:outline-none bg-white transition-colors text-sm"
-                      >
-                        {(LOCATION_DATA[settingsForm.location_city || 'Hồ Chí Minh'] || []).map(dist => (
-                          <option key={dist} value={dist}>{dist}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Số điện thoại Zalo</label>
-                      <input 
-                        type="text" 
-                        value={settingsForm.zalo_phone}
-                        onChange={e => setSettingsForm({ ...settingsForm, zalo_phone: e.target.value })}
-                        className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:border-[#D4AF37] focus:outline-none transition-colors text-sm"
-                        placeholder="Ví dụ: 0918xxxxxx"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Hotline đặt lịch</label>
-                      <input 
-                        type="text" 
-                        value={settingsForm.hotline}
-                        onChange={e => setSettingsForm({ ...settingsForm, hotline: e.target.value })}
-                        className="w-full px-4 py-3 border border-zinc-200 rounded-xl focus:border-[#D4AF37] focus:outline-none transition-colors text-sm"
-                        placeholder="Ví dụ: 1900xxxx"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-6">
-                  <button 
-                    type="submit"
-                    disabled={isSavingSettings}
-                    className="px-8 py-4 bg-gradient-to-r from-[#D4AF37] via-[#F5E0A3] to-[#B8860B] text-[#2F2F2F] font-bold text-xs font-mono uppercase tracking-widest rounded-xl hover:brightness-110 disabled:opacity-50 transition-all shadow-[0_10px_30px_rgba(212,175,55,0.3)] border border-white/20"
-                  >
-                    {isSavingSettings ? 'Đang lưu...' : 'Lưu Thay Đổi Cài Đặt'}
-                  </button>
-                </div>
-              </form>
+            <div className="lg:col-span-2">
+              <ProfileSettings 
+                profile={profile} 
+                onUpdate={(newProfile) => setProfile(newProfile)} 
+              />
             </div>
           </div>
         )}
@@ -1216,14 +1035,10 @@ function NotificationItem({ title, desc, time, isNew = false }: any) {
 }
 
 function formatTemplateName(template_id: string) {
-  if (!template_id) return 'Royal Classic'
-  return template_id.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  return 'Universal V7 Core'
 }
 
 function landing_page_preview_url(template_id: string) {
-  switch (template_id) {
-    case 'modern_medical_01': return 'https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?auto=format&fit=crop&q=80'
-    case 'seasonal_event_01': return 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&q=80'
-    default: return 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80'
-  }
+  // Always use the V7 default high-end premium showcase preview
+  return 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=2000'
 }

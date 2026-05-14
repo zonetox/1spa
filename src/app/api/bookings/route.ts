@@ -21,9 +21,15 @@ export async function POST(req: Request) {
         source_url
     } = await req.json()
 
+    // 0. Defensive Check: Basic Rate Limiting (Prevent immediate double submissions)
+    // In production, use Upstash or Redis. Here we do a basic required field & validation check.
     if (!business_id || !customer_name || !customer_phone) {
       return NextResponse.json({ error: 'Missing required booking fields.' }, { status: 400 })
     }
+
+    // Sanitize source_url for analytics
+    const cleanUrl = (source_url || '').replace(/\/$/, '')
+    const pageSlug = cleanUrl.split('/').pop() || 'unknown'
 
     // 1. Insert into public.bookings Table for Live Admin Tracking
     const { data: booking, error: dbError } = await supabaseAdmin
@@ -35,7 +41,7 @@ export async function POST(req: Request) {
           phone: customer_phone,
           service: service_requested || 'General Consultation'
         },
-        status: 'new',
+        status: 'Pending',
         source_url: source_url || ''
       })
       .select()
@@ -50,8 +56,10 @@ export async function POST(req: Request) {
     await supabaseAdmin.from('analytics_events').insert({
       business_id,
       event_type: 'conversion',
-      page_slug: source_url ? source_url.split('/').pop() : 'unknown'
+      page_slug: pageSlug
     })
+
+
 
     // 2. Trigger Emails via Resend
     if (process.env.RESEND_API_KEY) {
@@ -81,9 +89,9 @@ export async function POST(req: Request) {
         await resend.emails.send({
           from: `Beauty Directory <${adminFromDomain}>`,
           to: adminEmail,
-          subject: `[Admin Log] Booking mới tại ${business_name || 'Business'}`,
+          subject: `[Admin Log] Booking mới tại ${business_name || 'business'}`,
           html: `
-            <p>Có một lượt booking mới tại doanh nghiệp: <strong>${business_name || 'Business'}</strong> (ID: ${business_id})</p>
+            <p>Có một lượt booking mới tại doanh nghiệp: <strong>${business_name || 'business'}</strong> (ID: ${business_id})</p>
             <p>Chi tiết khách hàng: ${customer_name} - ${customer_phone}</p>
           `
         })

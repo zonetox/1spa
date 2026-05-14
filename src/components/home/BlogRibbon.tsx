@@ -53,7 +53,7 @@ export function BlogRibbon() {
               <span className="text-[11px] tracking-[0.5em] uppercase text-[#D4AF37] font-medium">Vogue Style</span>
             </div>
             <h2 className="text-5xl font-bold text-[#2F2F2F]" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Cẩm Nang<br />Làm Đẹp.
+              Cẩm Nang<br /><span className="text-[#D4AF37]">Làm Đẹp.</span>
             </h2>
           </div>
           <Link href="/blog" className="hidden md:flex items-center gap-2 text-[11px] tracking-widest uppercase text-[#D4AF37] hover:gap-4 transition-all font-medium">

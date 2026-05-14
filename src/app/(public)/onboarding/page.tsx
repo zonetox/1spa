@@ -11,8 +11,8 @@ export default function OnboardingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showMockWarning, setShowMockWarning] = useState(false)
   const [formData, setFormData] = useState({
-    name: '',
-    major: 'Software Engineering',
+    business_name: '',
+    major: 'Spa',
     specialization: '',
     bio: ''
   })
@@ -82,14 +82,14 @@ export default function OnboardingPage() {
                 <div className="space-y-3">
                   <label className="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.3em] ml-1">Professional Identity / Pseudonym</label>
                   <input 
-                    value={formData.name}
-                    onChange={e => setFormData({...formData, name: e.target.value})}
+                    value={formData.business_name}
+                    onChange={e => setFormData({...formData, business_name: e.target.value})}
                     type="text" 
                     placeholder="e.g. Master Aris"
                     className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-8 py-5 text-xl text-white focus:border-white/20 focus:bg-white/[0.04] outline-none transition-all placeholder:text-zinc-800 font-serif"
                   />
                 </div>
-                <button onClick={nextStep} disabled={!formData.name} className="premium-button w-full py-6 flex items-center justify-center gap-4 group">
+                <button onClick={nextStep} disabled={!formData.business_name} className="premium-button w-full py-6 flex items-center justify-center gap-4 group">
                   <span className="text-sm tracking-widest">CONTINUE TO DOMAIN</span>
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </button>
@@ -114,11 +114,9 @@ export default function OnboardingPage() {
                         onChange={e => setFormData({...formData, major: e.target.value})}
                         className="w-full bg-zinc-900 border border-white/10 rounded-2xl px-8 py-5 text-lg text-white outline-none appearance-none cursor-pointer focus:border-white/20 transition-all font-serif"
                       >
-                        <option value="Spa" className="bg-zinc-900">Spa & Massage</option>
-                        <option value="Clinic" className="bg-zinc-900">Phòng khám Da liễu (Clinic)</option>
-                        <option value="Dental" className="bg-zinc-900">Nha Khoa (Dental)</option>
-                        <option value="Beauty" className="bg-zinc-900">Thẩm mỹ viện (Beauty)</option>
-                        <option value="Salon" className="bg-zinc-900">Hair Salon</option>
+                        <option value="Spa" className="bg-zinc-900">Spa</option>
+                        <option value="Beauty" className="bg-zinc-900">Beauty</option>
+                        <option value="Dental" className="bg-zinc-900">Dental</option>
                       </select>
                       <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-600 group-hover:text-zinc-400 transition-colors">
                         <ArrowRight size={16} className="rotate-90" />

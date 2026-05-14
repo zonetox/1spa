@@ -1,0 +1,79 @@
+'use client';
+
+import React from 'react';
+import { motion } from 'framer-motion';
+
+interface V7BookingProps {
+  title: string;
+  subtitle: string;
+  badge?: string;
+  bgImage?: string;
+  themeColor?: string;
+}
+
+export const V7Booking: React.FC<V7BookingProps> = ({ 
+  title, 
+  subtitle, 
+  badge = 'Ưu đãi đặc biệt',
+  bgImage, 
+  themeColor = '#D4AF37' 
+}) => {
+  return (
+    <section id="booking" className="relative py-24 md:py-32 overflow-hidden">
+      {/* Background with Parallax effect simulation */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src={bgImage || 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80'} 
+          alt="Booking background" 
+          className="w-full h-full object-cover brightness-[1.0] saturate-[1.1]"
+        />
+        {/* High-class ambient fog layer */}
+        <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px]" />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative rounded-3xl shadow-2xl p-10 md:p-16 text-center overflow-hidden bg-white"
+          >
+            <div className="relative z-10 flex flex-col items-center">
+              <span className="inline-block px-5 py-1.5 rounded-full bg-gray-50 text-[#1A1A1A] text-[10px] font-bold uppercase tracking-[0.2em] mb-6 border border-gray-100">
+                {badge || 'ĐẶC QUYỀN THÁNG NÀY'}
+              </span>
+              
+              <h2 className="text-3xl md:text-5xl font-sans font-bold text-[#1A1A1A] mb-5 leading-tight tracking-tight">
+                {title}
+              </h2>
+              
+              <p className="text-gray-500 text-sm md:text-base font-normal mb-10 max-w-lg leading-relaxed">
+                {subtitle}
+              </p>
+              
+              <div className="w-full max-w-md flex flex-col gap-4">
+                <a 
+                  href="#contact"
+                  className="relative overflow-hidden w-full py-4 rounded-full text-white font-bold uppercase tracking-[0.3em] text-[11px] flex items-center justify-center gap-3 group shadow-lg transition-all hover:scale-[1.02]"
+                  style={{ background: themeColor }}
+                >
+                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+                  Đặt lịch trải nghiệm ngay
+                </a>
+                
+                <a 
+                  href="#contact"
+                  className="w-full py-4 rounded-full border text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white/50 backdrop-blur-sm transition-all flex items-center justify-center"
+                  style={{ borderColor: `${themeColor}60`, color: themeColor }}
+                >
+                  Tư vấn liệu trình miễn phí
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};

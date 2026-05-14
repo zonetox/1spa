@@ -3,10 +3,12 @@ import { format } from 'date-fns';
 
 interface Lead {
   id: string;
-  customer_name: string;
-  customer_phone: string;
-  service_requested: string;
-  booking_time: string;
+  customer_info: {
+    name?: string;
+    phone?: string;
+    service?: string;
+    datetime?: string;
+  };
   status: 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
   created_at: string;
 }
@@ -20,6 +22,16 @@ const LeadTrackerTable = ({ leads }: { leads: Lead[] }) => {
       default: return 'bg-slate-100 text-slate-700 border-slate-200';
     }
   };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'Pending': return 'Mới';
+      case 'Confirmed': return 'Đã Liên Hệ';
+      case 'Completed': return 'Hoàn Tất';
+      case 'Cancelled': return 'Đã Hủy';
+      default: return status;
+    }
+  }
 
   return (
     <div className="bg-[#FFFFFF] rounded-[2rem] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-[#D4AF37]/20 overflow-hidden">
@@ -52,30 +64,33 @@ const LeadTrackerTable = ({ leads }: { leads: Lead[] }) => {
                   Chưa có lịch hẹn nào
                 </td>
               </tr>
-            ) : leads.map((lead) => (
-              <tr key={lead.id} className="hover:bg-[#F9F6F0]/50 transition-colors group">
-                <td className="px-6 py-4">
-                  <div className="font-medium text-[#2F2F2F]">{lead.customer_name}</div>
-                  <div className="text-[10px] text-zinc-400 font-mono mt-1">{lead.customer_phone}</div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="text-zinc-600 italic font-serif">"{lead.service_requested}"</span>
-                </td>
-                <td className="px-6 py-4 text-zinc-500 text-xs">
-                  {format(new Date(lead.booking_time), 'HH:mm - dd/MM/yyyy')}
-                </td>
-                <td className="px-6 py-4 text-center">
-                  <span className={`px-3 py-1 rounded-full text-[10px] font-bold border uppercase tracking-widest ${getStatusStyle(lead.status)}`}>
-                    {lead.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-right">
-                  <button className="text-[#D4AF37] hover:text-[#B8860B] text-[10px] font-bold uppercase tracking-widest transition-all group-hover:scale-105">
-                    Xử lý ngay →
-                  </button>
-                </td>
-              </tr>
-            ))}
+            ) : leads.map((lead) => {
+              const info = lead.customer_info || {};
+              return (
+                <tr key={lead.id} className="hover:bg-[#F9F6F0]/50 transition-colors group">
+                  <td className="px-6 py-4">
+                    <div className="font-medium text-[#2F2F2F]">{info.name || 'Khách ẩn danh'}</div>
+                    <div className="text-[10px] text-zinc-400 font-mono mt-1">{info.phone || 'N/A'}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="text-zinc-600 italic font-serif">"{info.service || 'Dịch vụ lẻ'}"</span>
+                  </td>
+                  <td className="px-6 py-4 text-zinc-500 text-xs">
+                    {info.datetime || (lead.created_at ? format(new Date(lead.created_at), 'HH:mm - dd/MM/yyyy') : 'N/A')}
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold border uppercase tracking-widest ${getStatusStyle(lead.status)}`}>
+                      {getStatusLabel(lead.status)}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <button className="text-[#D4AF37] hover:text-[#B8860B] text-[10px] font-bold uppercase tracking-widest transition-all group-hover:scale-105">
+                      Xử lý ngay →
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

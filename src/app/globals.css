@@ -42,6 +42,25 @@
   :root {
     --background: #F9F6F0;
     --foreground: #2F2F2F;
+    
+    /* Spa Template Specific (Aesthetic Zen) */
+    --spa-primary: #E5D5C0; /* Sand Beige */
+    --spa-secondary: #F3EDE4; /* Light Cream */
+    --spa-accent: #D4AF37; /* Gold */
+    --spa-text-dark: #3A3530;
+    --spa-text-muted: #8A847C;
+
+    /* Beauty Template Specific (Royal Editorial) */
+    --beauty-primary: #F8F1E9; /* Champagne Pink */
+    --beauty-secondary: #FFFFFF;
+    --beauty-accent: #E0A96D; /* Rose Gold */
+    --beauty-text-dark: #1A1A1A;
+
+    /* Dental Template Specific (Clinical Professional) */
+    --dental-primary: #0D9488; /* Teal Blue */
+    --dental-secondary: #F0F9FF; /* Light Azure */
+    --dental-accent: #64748B; /* Professional Slate */
+    --dental-text-dark: #0F172A;
   }
 
   * {
@@ -113,6 +132,23 @@
 
   .editorial-spacing {
     @apply py-24 md:py-32 lg:py-48;
+  }
+
+  /* Ingestion V7 Perfect Fit Utilities */
+  .v7-img-hero {
+    @apply w-full h-full object-cover aspect-video;
+  }
+  .v7-img-about {
+    @apply w-full h-full object-cover aspect-[4/5];
+  }
+  .v7-img-service {
+    @apply w-full h-full object-cover aspect-square;
+  }
+  .v7-img-avatar {
+    @apply w-full h-full object-cover aspect-square rounded-full;
+  }
+  .v7-img-gallery {
+    @apply w-full h-full object-cover aspect-square;
   }
 }
 

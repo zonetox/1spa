@@ -7,9 +7,21 @@ const supabaseAdmin = createClient(
 
 /**
  * Quick Clone: Nhân bản toàn bộ Landing Page từ một doanh nghiệp mẫu sang doanh nghiệp mục tiêu.
+ * CHỈ dành cho Admin hệ thống.
  */
-export async function quickCloneLandingPage(sourceBusinessId: string, targetBusinessId: string) {
+export async function quickCloneLandingPage(sourceBusinessId: string, targetBusinessId: string, requestorId: string) {
   try {
+    // 0. Security Guard: Verify requestor is an ADMIN
+    const { data: requestor } = await supabaseAdmin
+      .from('profiles')
+      .select('role')
+      .eq('id', requestorId)
+      .single()
+
+    if (requestor?.role?.toLowerCase() !== 'admin') {
+      throw new Error('Unauthorized: Chỉ Admin mới có quyền nhân bản trang.')
+    }
+
     // 1. Lấy Landing Page đang Published của nguồn
     const { data: sourcePage, error: fetchError } = await supabaseAdmin
       .from('landing_pages')

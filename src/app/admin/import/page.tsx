@@ -59,7 +59,27 @@ export default function AdminImportPage() {
   const [isSavingEdit, setIsSavingEdit] = useState(false)
 
   useEffect(() => {
-    fetchMetrics()
+    async function checkAdmin() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        window.location.href = '/login'
+        return
+      }
+      
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+        
+      if (profile?.role?.toLowerCase() !== 'admin') {
+        window.location.href = '/dashboard'
+        return
+      }
+      
+      fetchMetrics()
+    }
+    checkAdmin()
   }, [])
 
   const fetchMetrics = async () => {
@@ -321,7 +341,10 @@ export default function AdminImportPage() {
       if (business) {
         const { error } = await supabase
           .from('landing_pages')
-          .update({ is_published: !currentVal })
+          .update({ 
+            is_published: !currentVal,
+            status: !currentVal ? 'Published' : 'Draft'
+          })
           .eq('business_id', business.id)
 
         if (error) throw error

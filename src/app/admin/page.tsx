@@ -31,7 +31,28 @@ export default function AdminOverviewPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    fetchDashboardData()
+    async function checkAdmin() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        window.location.href = '/login'
+        return
+      }
+      
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+        
+      if (profile?.role?.toLowerCase() !== 'admin') {
+        window.location.href = '/dashboard'
+        return
+      }
+      
+      fetchDashboardData()
+    }
+    
+    checkAdmin()
   }, [])
 
   async function fetchDashboardData() {
@@ -54,7 +75,7 @@ export default function AdminOverviewPage() {
       const { count: activeCount } = await supabase
         .from('profiles')
         .select('*', { count: 'exact', head: true })
-        .eq('subscription_status', 'active')
+        .eq('subscription_status', 'Active')
 
       // 1.5 Fetch Analytics for Conversion Rate
       const { data: viewsData } = await supabase
@@ -210,7 +231,7 @@ export default function AdminOverviewPage() {
             </div>
 
             {/* Filter Buttons */}
-            {['all', 'new', 'contacted', 'completed'].map((status) => (
+            {['all', 'Pending', 'Confirmed', 'Completed'].map((status) => (
               <button
                 key={status}
                 onClick={() => setFilterStatus(status)}
@@ -221,9 +242,9 @@ export default function AdminOverviewPage() {
                 }`}
               >
                 {status === 'all' && 'Tất Cả'}
-                {status === 'new' && 'Mới'}
-                {status === 'contacted' && 'Đã Liên Hệ'}
-                {status === 'completed' && 'Hoàn Tất'}
+                {status === 'Pending' && 'Mới'}
+                {status === 'Confirmed' && 'Đã Liên Hệ'}
+                {status === 'Completed' && 'Hoàn Tất'}
               </button>
             ))}
           </div>
@@ -272,13 +293,13 @@ export default function AdminOverviewPage() {
                       </td>
                       <td className="py-4 px-6">
                         <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${
-                          b.status === 'new' ? 'bg-amber-500/10 text-amber-500' :
-                          b.status === 'contacted' ? 'bg-blue-500/10 text-blue-500' :
+                          b.status === 'Pending' ? 'bg-amber-500/10 text-amber-500' :
+                          b.status === 'Confirmed' ? 'bg-blue-500/10 text-blue-500' :
                           'bg-emerald-500/10 text-emerald-500'
                         }`}>
-                          {b.status === 'new' && 'Mới'}
-                          {b.status === 'contacted' && 'Đã liên hệ'}
-                          {b.status === 'completed' && 'Đã hoàn tất'}
+                          {b.status === 'Pending' && 'Mới'}
+                          {b.status === 'Confirmed' && 'Đã liên hệ'}
+                          {b.status === 'Completed' && 'Đã hoàn tất'}
                         </span>
                       </td>
                       <td className="py-4 px-6">
@@ -294,23 +315,23 @@ export default function AdminOverviewPage() {
                       </td>
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          {b.status === 'new' && (
+                          {b.status === 'Pending' && (
                             <button
-                              onClick={() => handleUpdateStatus(b.id, 'contacted')}
+                              onClick={() => handleUpdateStatus(b.id, 'Confirmed')}
                               className="px-2.5 py-1 text-[10px] bg-blue-600/10 text-blue-400 border border-blue-500/20 rounded hover:bg-blue-600 hover:text-white transition"
                             >
                               Đã Liên Hệ
                             </button>
                           )}
-                          {b.status !== 'completed' && (
+                          {b.status !== 'Completed' && (
                             <button
-                              onClick={() => handleUpdateStatus(b.id, 'completed')}
+                              onClick={() => handleUpdateStatus(b.id, 'Completed')}
                               className="px-2.5 py-1 text-[10px] bg-emerald-600/10 text-emerald-400 border border-emerald-500/20 rounded hover:bg-emerald-600 hover:text-white transition"
                             >
                               Hoàn Tất
                             </button>
                           )}
-                          {b.status === 'completed' && (
+                          {b.status === 'Completed' && (
                             <span className="text-[10px] text-zinc-500 font-mono flex items-center gap-1">
                               <CheckCircle size={12} className="text-emerald-500" /> Done
                             </span>

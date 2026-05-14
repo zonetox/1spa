@@ -24,11 +24,22 @@ export default function AdminPackagesPage() {
     fetchPackages()
   }, [])
 
+  const getAuthToken = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    return session?.access_token
+  }
+
   const fetchPackages = async () => {
     setLoading(true)
-    const { data, error } = await supabase.from('packages').select('*').order('created_at', { ascending: false })
-    if (data) setPackages(data)
-    setLoading(false)
+    try {
+      const response = await fetch('/api/admin/packages')
+      const data = await response.json()
+      if (data && !data.error) setPackages(data)
+    } catch (err) {
+      console.error('Fetch error:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleOpenModal = (pkg: any = null) => {
@@ -72,20 +83,44 @@ export default function AdminPackagesPage() {
       features: validFeatures
     }
 
-    if (editingPackage) {
-      await supabase.from('packages').update(payload).eq('id', editingPackage.id)
-    } else {
-      await supabase.from('packages').insert([payload])
+    const token = await getAuthToken()
+    const method = editingPackage ? 'PUT' : 'POST'
+    const body = editingPackage ? { ...payload, id: editingPackage.id } : payload
+
+    try {
+      const response = await fetch('/api/admin/packages', {
+        method,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(body)
+      })
+      
+      const result = await response.json()
+      if (result.error) throw new Error(result.error)
+      
+      setIsModalOpen(false)
+      fetchPackages()
+    } catch (err: any) {
+      alert(`Lỗi: ${err.message}`)
     }
-    
-    setIsModalOpen(false)
-    fetchPackages()
   }
 
   const handleDelete = async (id: string) => {
-    if (confirm('Bạn có chắc muốn xoá gói này không?')) {
-      await supabase.from('packages').delete().eq('id', id)
+    if (!confirm('Bạn có chắc muốn xoá gói này không?')) return
+    
+    const token = await getAuthToken()
+    try {
+      const response = await fetch(`/api/admin/packages?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const result = await response.json()
+      if (result.error) throw new Error(result.error)
       fetchPackages()
+    } catch (err: any) {
+      alert(`Lỗi: ${err.message}`)
     }
   }
 

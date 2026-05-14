@@ -29,12 +29,12 @@ export default function LoginPage() {
       
       if (data.user) {
         const { data: acc } = await supabase
-          .from('accounts')
+          .from('profiles')
           .select('role')
           .eq('id', data.user.id)
           .maybeSingle()
           
-        if (acc?.role === 'Admin') {
+        if (acc?.role?.toLowerCase() === 'admin') {
           window.location.href = '/admin'
         } else {
           window.location.href = '/dashboard'

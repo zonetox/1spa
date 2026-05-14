@@ -22,7 +22,7 @@ const FALLBACK_PACKAGES = [
     features: ['Landing Page chuẩn SEO cao cấp', 'Tiếp nhận 100 lịch đặt hẹn/tháng', 'Báo cáo thống kê hiệu năng cơ bản', 'Hỗ trợ kỹ thuật 24/7 qua Zalo']
   },
   {
-    id: 'royal',
+    id: 'BeautyTemplate',
     name: 'Gói Chuyên Nghiệp (Royal Business)',
     price: 499000,
     duration_days: 90,

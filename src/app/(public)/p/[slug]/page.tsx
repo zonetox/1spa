@@ -16,10 +16,10 @@ const VIRTUAL_DEMOS: Record<string, any> = {
   'medical-01': {
     id: 'demo-medical-id',
     business_id: 'demo-medical-biz-id',
-    business_name: 'Platinum Advanced Clinic',
-    category: 'Clinic',
+    business_name: 'Platinum Advanced Spa & Wellness',
+    category: 'Spa',
     business_slug: 'medical-01',
-    template_id: 'modern_medical_01',
+    template_id: 'UniversalTemplate',
     logo_url: null,
     hotline: '1900 8888',
     zalo_phone: '0912 345 678',
@@ -31,10 +31,10 @@ const VIRTUAL_DEMOS: Record<string, any> = {
     id: 'demo-dental-id',
     business_id: 'demo-dental-biz-id',
     business_name: 'Prestige Aesthetic Dentistry',
-    category: 'Dentistry',
+    category: 'Dental',
     business_slug: 'dental-01',
-    template_id: 'dental_care_01',
-    logo_url: null,
+    template_id: 'UniversalTemplate',
+    logo_url: 'https://nhakhoakim.com/wp-content/themes/kimdental-child/assets/images/brand/logo.png',
     hotline: '1900 9999',
     zalo_phone: '0912 999 999',
     location_district: 'Quận 3',
@@ -47,7 +47,7 @@ const VIRTUAL_DEMOS: Record<string, any> = {
     business_name: 'Haute Couture Beauty Studio',
     category: 'Beauty',
     business_slug: 'beauty-01',
-    template_id: 'haute_couture_beauty_01',
+    template_id: 'UniversalTemplate',
     logo_url: null,
     hotline: '1900 7777',
     zalo_phone: '0912 777 777',
@@ -61,7 +61,7 @@ const VIRTUAL_DEMOS: Record<string, any> = {
     business_name: 'Luxury Spa Zen & Wellness',
     category: 'Spa',
     business_slug: 'spa-01',
-    template_id: 'luxury_spa_zen_01',
+    template_id: 'UniversalTemplate',
     logo_url: null,
     hotline: '1900 6666',
     zalo_phone: '0912 666 666',
@@ -69,13 +69,13 @@ const VIRTUAL_DEMOS: Record<string, any> = {
     location_city: 'TP. Hồ Chí Minh',
     address_full: '99 Phùng Khắc Khoan, Đa Kao, Quận 1, TP. Hồ Chí Minh'
   },
-  'royal-01': {
+  'premium-01': {
     id: 'demo-royal-id',
     business_id: 'demo-royal-biz-id',
-    business_name: 'Royal Classic Aesthetic',
-    category: 'Aesthetic',
-    business_slug: 'royal-01',
-    template_id: 'royal_classic_01',
+    business_name: 'Royal Classic Beauty Aesthetic',
+    category: 'Beauty',
+    business_slug: 'premium-01',
+    template_id: 'UniversalTemplate',
     logo_url: null,
     hotline: '1900 5555',
     zalo_phone: '0912 555 555',
@@ -86,10 +86,10 @@ const VIRTUAL_DEMOS: Record<string, any> = {
   'campaign-01': {
     id: 'demo-campaign-id',
     business_id: 'demo-campaign-biz-id',
-    business_name: 'Aurora Mega Promo Centre',
-    category: 'Campaign',
+    business_name: 'Aurora Beauty Promo Centre',
+    category: 'Beauty',
     business_slug: 'campaign-01',
-    template_id: 'seasonal_event_01',
+    template_id: 'UniversalTemplate',
     logo_url: null,
     hotline: '1900 4444',
     zalo_phone: '0912 444 444',
@@ -159,14 +159,14 @@ export async function generateMetadata({ params }: PageProps) {
 
   const { data: business } = await supabase
     .from('active_landing_pages')
-    .select('business_name, category, district, city')
+    .select('business_name, category, hotline')
     .eq('business_slug', slug)
-    .single()
+    .maybeSingle()
 
-  if (!business) return { title: 'Not Found - Beauty Hub' }
+  if (!business) return { title: '1Beauty.Asia Directory' }
 
   return {
-    title: `${business.business_name} | ${business.category} Đẳng Cấp tại ${business.district}, ${business.city}`,
-    description: `Khám phá các dịch vụ ${business.category} cao cấp và ưu đãi đặc quyền tại ${business.business_name} (${business.district}, ${business.city}). Đặt lịch hẹn nhận tư vấn miễn phí ngay hôm nay!`,
+    title: `${business.business_name} | ${business.category} Đẳng Cấp — 1Beauty.Asia`,
+    description: `Khám phá các dịch vụ ${business.category} cao cấp tại ${business.business_name}. Đặt lịch hẹn nhận tư vấn miễn phí ngay hôm nay! Hotline: ${business.hotline || 'Liên hệ'}`,
   }
 }

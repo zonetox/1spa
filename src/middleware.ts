@@ -37,14 +37,14 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL('/login', request.url))
         }
         
-        // Fetch role from public.accounts
+        // Fetch role from public.profiles
         const { data: profile, error: profileError } = await supabase
-            .from('accounts')
+            .from('profiles')
             .select('role')
             .eq('id', user.id)
             .single()
 
-        if (profileError || profile?.role !== 'Admin') {
+        if (profileError || profile?.role?.toLowerCase() !== 'admin') {
             return NextResponse.redirect(new URL('/', request.url))
         }
     }

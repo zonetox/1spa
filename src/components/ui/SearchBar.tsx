@@ -47,14 +47,16 @@ export const SearchBar = ({
   }
 
   const ButtonContent = () => (
-    <button 
+    <motion.button 
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.95 }}
       onClick={handleActionClick}
-      className="w-full px-8 py-4.5 rounded-2xl text-white font-bold text-[11px] tracking-[0.2em] uppercase transition-all duration-500 flex items-center justify-center gap-2 group shadow-[0_8px_20px_rgba(212,175,55,0.25)] hover:shadow-[0_12px_25px_rgba(212,175,55,0.35)]"
+      className="w-full px-8 py-4.5 rounded-2xl text-white font-bold text-[11px] tracking-[0.2em] uppercase transition-all duration-300 flex items-center justify-center gap-2 group shadow-[0_8px_20px_rgba(212,175,55,0.25)] hover:shadow-[0_12px_25px_rgba(212,175,55,0.35)]"
       style={{ background: 'linear-gradient(135deg, #D4AF37 0%, #F5E0A3 50%, #B8860B 100%)' }}
     >
       <span>Tìm kiếm</span>
       <Sparkles size={16} className="group-hover:animate-pulse" />
-    </button>
+    </motion.button>
   )
 
   return (

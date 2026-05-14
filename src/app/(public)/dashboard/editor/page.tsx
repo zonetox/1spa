@@ -13,22 +13,7 @@ import { ImagePickerModal } from '@/components/editor/ImagePickerModal'
 import { AddSectionModal } from '@/components/editor/AddSectionModal'
 import { PaymentPopup } from '@/components/ui/PaymentPopup'
 
-// Template imports
-import RoyalClassic from '@/components/templates/RoyalClassic'
-import ModernMedical from '@/components/templates/ModernMedical'
-import SeasonalEvent from '@/components/templates/SeasonalEvent'
-import DentalCare from '@/components/templates/DentalCare'
-import LuxurySpaZen from '@/components/templates/LuxurySpaZen'
-import HauteCoutureBeauty from '@/components/templates/HauteCoutureBeauty'
-
-const TEMPLATES: Record<string, any> = {
-  'royal_classic_01': RoyalClassic,
-  'modern_medical_01': ModernMedical,
-  'seasonal_event_01': SeasonalEvent,
-  'dental_care_01': DentalCare,
-  'luxury_spa_zen_01': LuxurySpaZen,
-  'haute_couture_beauty_01': HauteCoutureBeauty,
-}
+import { UniversalTemplate } from '@/components/templates/v7-core/UniversalTemplate'
 
 // Derive section order from content_json keys (deterministic)
 const DEFAULT_SECTION_ORDER = [
@@ -65,7 +50,7 @@ export default function EditorPage() {
   const [landingPage, setLandingPage] = useState<any>(null)
   const [draftData, setDraftData] = useState<any>(null)       // what we're editing
   const [publishedData, setPublishedData] = useState<any>(null) // what's currently live
-  const [currentTemplate, setCurrentTemplate] = useState('royal_classic_01')
+  const [currentTemplate, setCurrentTemplate] = useState('UniversalTemplate')
   const [draftStatus, setDraftStatus] = useState<'Draft' | 'Published'>('Published')
   const [sectionOrder, setSectionOrder] = useState<string[]>([])
   const [hiddenSections, setHiddenSections] = useState<string[]>([])
@@ -104,7 +89,7 @@ export default function EditorPage() {
 
       if (lp) {
         setLandingPage(lp)
-        setCurrentTemplate(lp.template_id || 'royal_classic_01')
+        setCurrentTemplate(lp.template_id || 'UniversalTemplate')
         setPublishedData(lp.content_json || {})
 
         // Load draft_json if available, otherwise start from content_json
@@ -263,7 +248,7 @@ export default function EditorPage() {
     )
   }
 
-  const ActiveTemplate = TEMPLATES[currentTemplate] || RoyalClassic
+  const ActiveTemplate = UniversalTemplate
 
   // Build a data view respecting section order and hidden sections
   const orderedData = sectionOrder.reduce((acc: any, key: string) => {
@@ -419,18 +404,9 @@ export default function EditorPage() {
               {/* Template Picker */}
               <div className="px-4 pt-4 pb-3 border-b border-[#D4AF37]/10">
                 <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#D4AF37] mb-2">Template</p>
-                <select
-                  value={currentTemplate}
-                  onChange={(e) => { setCurrentTemplate(e.target.value); setHasUnsavedChanges(true) }}
-                  className="w-full bg-[#F9F6F0] border border-[#D4AF37]/20 rounded-lg px-2 py-1.5 text-xs font-bold text-[#2F2F2F] outline-none focus:border-[#D4AF37] cursor-pointer"
-                >
-                  <option value="royal_classic_01">Royal Classic</option>
-                  <option value="modern_medical_01">Modern Medical</option>
-                  <option value="dental_care_01">Dental Care</option>
-                  <option value="luxury_spa_zen_01">Luxury Spa Zen</option>
-                  <option value="haute_couture_beauty_01">Haute Couture</option>
-                  <option value="seasonal_event_01">Seasonal Event</option>
-                </select>
+                <div className="w-full bg-[#F9F6F0] border border-[#D4AF37]/20 rounded-lg px-3 py-2 text-xs font-bold text-[#2F2F2F]">
+                  Universal V7 Core
+                </div>
               </div>
 
               {/* Draft Status Warning */}

@@ -43,13 +43,35 @@ export default function UsersAuditPage() {
   const [businesses, setBusinesses] = useState<BusinessRow[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState<'all' | 'verified' | 'unverified' | 'trial' | 'active' | 'blocked'>('all')
+  const [filter, setFilter] = useState<'all' | 'verified' | 'unverified' | 'Pending' | 'Active' | 'Expired' | 'Cancelled'>('all')
   const supabase = createClient()
 
   const [editingBusiness, setEditingBusiness] = useState<BusinessRow | null>(null)
   const [saving, setSaving] = useState(false)
 
-  useEffect(() => { fetchData() }, [])
+  useEffect(() => { 
+    async function checkAdmin() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        window.location.href = '/login'
+        return
+      }
+      
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+        
+      if (profile?.role?.toLowerCase() !== 'admin') {
+        window.location.href = '/dashboard'
+        return
+      }
+      
+      fetchData() 
+    }
+    checkAdmin()
+  }, [])
 
   async function fetchData() {
     setLoading(true)
@@ -58,7 +80,7 @@ export default function UsersAuditPage() {
       .select(`
         id, account_id, business_name, slug, category, hotline, zalo_phone, 
         is_verified, rating_score, created_at, location_city, location_district,
-        profiles!inner(email, subscription_status, expiry_date),
+        profiles!inner(email, subscription_status, expiry_date, role),
         landing_pages (is_published, status),
         bookings(count)
       `)
@@ -127,7 +149,8 @@ export default function UsersAuditPage() {
           .from('profiles')
           .update({
             subscription_status: editingBusiness.profiles.subscription_status,
-            expiry_date: editingBusiness.profiles.expiry_date
+            expiry_date: editingBusiness.profiles.expiry_date,
+            role: (editingBusiness.profiles as any).role
           })
           .eq('id', editingBusiness.account_id)
         
@@ -153,9 +176,10 @@ export default function UsersAuditPage() {
 
     if (filter === 'verified') return matchSearch && b.is_verified
     if (filter === 'unverified') return matchSearch && !b.is_verified
-    if (filter === 'trial') return matchSearch && b.profiles?.subscription_status === 'trial'
-    if (filter === 'active') return matchSearch && b.profiles?.subscription_status === 'active'
-    if (filter === 'blocked') return matchSearch && b.profiles?.subscription_status === 'blocked'
+    if (filter === 'Pending') return matchSearch && b.profiles?.subscription_status === 'Pending'
+    if (filter === 'Active') return matchSearch && b.profiles?.subscription_status === 'Active'
+    if (filter === 'Expired') return matchSearch && b.profiles?.subscription_status === 'Expired'
+    if (filter === 'Cancelled') return matchSearch && b.profiles?.subscription_status === 'Cancelled'
     return matchSearch
   })
 
@@ -190,16 +214,16 @@ export default function UsersAuditPage() {
           />
         </div>
         <div className="flex gap-2 flex-wrap">
-          {(['all', 'verified', 'unverified', 'trial', 'active', 'blocked'] as const).map(f => (
+          {(['all', 'verified', 'unverified', 'Pending', 'Active', 'Expired', 'Cancelled'] as const).map(f => (
             <button
               key={f}
-              onClick={() => setFilter(f)}
+              onClick={() => setFilter(f as any)}
               className={`px-3 py-2 rounded-lg text-xs font-medium transition ${filter === f
                 ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
                 : 'bg-zinc-900 text-zinc-500 border border-zinc-800 hover:text-zinc-200'
               }`}
             >
-              {f === 'all' ? 'Tất cả' : f === 'verified' ? 'Xác minh' : f === 'unverified' ? 'Chưa xác minh' : f === 'trial' ? 'Dùng thử' : f === 'active' ? 'Active' : 'Bị Khóa'}
+              {f === 'all' ? 'Tất cả' : f === 'verified' ? 'Xác minh' : f === 'unverified' ? 'Chưa xác minh' : f === 'Pending' ? 'Chờ duyệt' : f === 'Active' ? 'Active' : f === 'Expired' ? 'Hết hạn' : 'Đã Hủy'}
             </button>
           ))}
         </div>
@@ -256,8 +280,8 @@ export default function UsersAuditPage() {
                       </td>
                       <td className="py-4 px-5">
                         <div className="text-zinc-300">{b.profiles?.email || '—'}</div>
-                        <div className={`text-[10px] font-mono mt-0.5 ${b.profiles?.subscription_status === 'active' ? 'text-emerald-400' : b.profiles?.subscription_status === 'blocked' ? 'text-red-400' : 'text-amber-400'}`}>
-                          {b.profiles?.subscription_status === 'active' ? 'Đã kích hoạt' : b.profiles?.subscription_status === 'trial' ? 'Dùng thử' : b.profiles?.subscription_status === 'blocked' ? 'Bị Khóa' : b.profiles?.subscription_status || '—'}
+                        <div className={`text-[10px] font-mono mt-0.5 ${b.profiles?.subscription_status === 'Active' ? 'text-emerald-400' : b.profiles?.subscription_status === 'Cancelled' ? 'text-red-400' : 'text-amber-400'}`}>
+                          {b.profiles?.subscription_status === 'Active' ? 'Đã kích hoạt' : b.profiles?.subscription_status === 'Pending' ? 'Chờ xử lý' : b.profiles?.subscription_status === 'Expired' ? 'Hết hạn' : b.profiles?.subscription_status || '—'}
                         </div>
                       </td>
                       <td className="py-4 px-5">
@@ -368,9 +392,8 @@ export default function UsersAuditPage() {
                       className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
                     >
                       <option value="Spa">Spa</option>
-                      <option value="Dental">Nha Khoa (Dental)</option>
-                      <option value="Clinic">Phòng Khám (Clinic)</option>
                       <option value="Beauty">Làm Đẹp (Beauty)</option>
+                      <option value="Dental">Nha Khoa (Dental)</option>
                     </select>
                   </div>
                   <div className="space-y-1">
@@ -415,8 +438,22 @@ export default function UsersAuditPage() {
               {/* Account / Subscription Info */}
               {editingBusiness.profiles && (
                 <div className="space-y-4 pt-4 border-t border-zinc-800">
-                  <h4 className="text-sm font-semibold text-amber-500 uppercase tracking-wider font-mono">Quản Lý Gói Cước</h4>
+                  <h4 className="text-sm font-semibold text-amber-500 uppercase tracking-wider font-mono">Quản Lý Gói & Quyền Hạn</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-xs text-zinc-400">Quyền hạn (Role)</label>
+                      <select 
+                        value={(editingBusiness.profiles as any).role}
+                        onChange={e => setEditingBusiness({
+                          ...editingBusiness, 
+                          profiles: { ...editingBusiness.profiles!, role: e.target.value } as any
+                        })}
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      >
+                        <option value="Business">Business (Doanh nghiệp)</option>
+                        <option value="Admin">Admin (Quản trị viên)</option>
+                      </select>
+                    </div>
                     <div className="space-y-1">
                       <label className="text-xs text-zinc-400">Trạng Thái Gói</label>
                       <select 
@@ -427,13 +464,13 @@ export default function UsersAuditPage() {
                         })}
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
                       >
-                        <option value="trial">Dùng thử (Trial)</option>
-                        <option value="active">Kích hoạt (Active)</option>
-                        <option value="premium">Cao cấp (Premium)</option>
-                        <option value="blocked">Khóa (Blocked/Suspended)</option>
+                        <option value="Pending">Chờ duyệt (Pending)</option>
+                        <option value="Active">Kích hoạt (Active)</option>
+                        <option value="Expired">Hết hạn (Expired)</option>
+                        <option value="Cancelled">Đã hủy (Cancelled)</option>
                       </select>
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-1 md:col-span-2">
                       <label className="text-xs text-zinc-400">Ngày Hết Hạn</label>
                       <input 
                         type="datetime-local" 

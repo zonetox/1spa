@@ -35,7 +35,7 @@ export const Navbar = () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       if (user) {
-        const { data: acc } = await supabase.from('accounts').select('*').eq('id', user.id).maybeSingle()
+        const { data: acc } = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle()
         setAccount(acc)
         const { data: prof } = await supabase.from('business_profiles').select('*').eq('account_id', user.id).maybeSingle()
         if (prof) setProfile(prof)
@@ -47,7 +47,7 @@ export const Navbar = () => {
       const currentUser = session?.user || null
       setUser(currentUser)
       if (currentUser) {
-        const { data: acc } = await supabase.from('accounts').select('*').eq('id', currentUser.id).maybeSingle()
+        const { data: acc } = await supabase.from('profiles').select('*').eq('id', currentUser.id).maybeSingle()
         setAccount(acc)
         const { data: prof } = await supabase.from('business_profiles').select('*').eq('account_id', currentUser.id).maybeSingle()
         if (prof) setProfile(prof)
@@ -77,7 +77,7 @@ export const Navbar = () => {
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? 'bg-[#FFFFFF]/95 backdrop-blur-xl border-b border-[#D4AF37]/20 shadow-sm'
+            ? 'bg-[#F9F6F0]/90 backdrop-blur-xl border-b border-[#D4AF37]/30 shadow-sm'
             : 'bg-transparent'
         }`}
       >
@@ -91,7 +91,9 @@ export const Navbar = () => {
               <img 
                 src="/logo.png" 
                 alt="1BEAUTY.ASIA" 
-                className="h-9 w-auto object-contain"
+                className={`h-9 w-auto object-contain transition-all duration-500 ${
+                  (scrolled || (pathname !== '/' && !pathname.startsWith('/p/'))) ? 'brightness-[0.2]' : 'brightness-0 invert'
+                }`}
               />
             </motion.div>
           </Link>
@@ -188,7 +190,7 @@ export const Navbar = () => {
                             {/* Role / Plan Badge */}
                             <div className="flex flex-wrap gap-2 pt-1">
                               <span className="px-3 py-1 rounded-full text-[9px] font-bold font-mono uppercase tracking-widest bg-[#2F2F2F] text-[#D4AF37] border border-[#D4AF37]/20 shadow-sm">
-                                Quyền: {account?.role === 'Admin' ? 'Admin / Quản trị viên' : 'Business / Doanh nghiệp'}
+                                Quyền: {account?.role === 'admin' ? 'Admin / Quản trị viên' : 'Business / Doanh nghiệp'}
                               </span>
                               {profile?.category && (
                                 <span className="px-3 py-1 rounded-full text-[9px] font-bold font-mono uppercase tracking-widest bg-[#F9F6F0] text-[#2F2F2F] border border-zinc-200">
@@ -213,7 +215,7 @@ export const Navbar = () => {
 
                           {/* Quick Links */}
                           <div className="flex flex-col gap-1 pt-1">
-                            {account?.role === 'Admin' && (
+                            {account?.role === 'admin' && (
                               <Link 
                                 href="/admin" 
                                 onClick={() => setDropdownOpen(false)}
