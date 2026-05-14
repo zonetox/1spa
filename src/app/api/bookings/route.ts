@@ -43,21 +43,25 @@ export async function POST(req: Request) {
 
     if (dbError) {
       console.error('Database booking insertion error:', dbError)
-    } else {
-      // 1.5 Track Conversion Analytics
-      await supabaseAdmin.from('analytics_events').insert({
-        business_id,
-        event_type: 'conversion',
-        page_slug: source_url ? source_url.split('/').pop() : 'unknown'
-      })
+      return NextResponse.json({ error: 'Không thể lưu booking. Vui lòng thử lại.' }, { status: 500 })
     }
 
-    // 2. Trigger Emails via Resend (Wrapped in try/catch to avoid blocking DB flow if Resend Key is invalid)
+    // 1.5 Track Conversion Analytics
+    await supabaseAdmin.from('analytics_events').insert({
+      business_id,
+      event_type: 'conversion',
+      page_slug: source_url ? source_url.split('/').pop() : 'unknown'
+    })
+
+    // 2. Trigger Emails via Resend
     if (process.env.RESEND_API_KEY) {
       try {
+        const fromDomain = process.env.RESEND_FROM_DOMAIN || 'notifications@1beauty.asia'
+        const adminFromDomain = process.env.RESEND_ADMIN_FROM || 'admin@1beauty.asia'
+
         if (business_email) {
           await resend.emails.send({
-            from: 'Beauty Directory <notifications@beauty.com>',
+            from: `Beauty Directory <${fromDomain}>`,
             to: business_email,
             subject: `[Lịch hẹn mới] - Khách hàng ${customer_name}`,
             html: `
@@ -75,7 +79,7 @@ export async function POST(req: Request) {
 
         const adminEmail = process.env.ADMIN_EMAIL || 'admin@beautyhub.pro'
         await resend.emails.send({
-          from: 'Beauty Directory <admin@beauty.com>',
+          from: `Beauty Directory <${adminFromDomain}>`,
           to: adminEmail,
           subject: `[Admin Log] Booking mới tại ${business_name || 'Business'}`,
           html: `

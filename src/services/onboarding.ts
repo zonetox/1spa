@@ -4,44 +4,51 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
 export async function completeOnboarding(formData: FormData) {
-  // Check if Supabase is configured
-  const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://YOUR_PROJECT_ID.supabase.co';
-
-  if (!isConfigured) {
-    console.log('MOCK MODE: Simulating successful onboarding...');
-    // Simulate delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    redirect('/dashboard');
-    return;
-  }
-
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    console.warn('SYSTEM: User not authenticated. Bypassing to Dashboard for Sanctuary demonstration.');
-    redirect('/dashboard');
-    return;
+    redirect('/login')
+    return
   }
 
-  const major = formData.get('major') as string
-  const specialization = formData.get('specialization') as string
-  const bio = formData.get('bio') as string
+  const business_name = (formData.get('name') as string) || ''
+  const category = (formData.get('major') as string) || 'Spa'
+  const specialization = (formData.get('specialization') as string) || ''
+  const bio = (formData.get('bio') as string) || ''
 
-  const { error } = await supabase
-    .from('profiles')
-    .update({
-      major,
-      minor: specialization,
-      bio,
-      current_level: 7, 
-      reputation_score: 0,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', user.id)
+  // Tạo slug từ tên doanh nghiệp
+  const slug = business_name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .slice(0, 60) + '-' + Date.now().toString(36)
 
-  if (error) throw new Error(error.message)
+  // Kiểm tra đã có business_profile chưa
+  const { data: existing } = await supabase
+    .from('business_profiles')
+    .select('id')
+    .eq('account_id', user.id)
+    .maybeSingle()
+
+  if (!existing) {
+    const { error } = await supabase
+      .from('business_profiles')
+      .insert({
+        account_id: user.id,
+        business_name,
+        slug,
+        category,
+        description: bio || specialization,
+        is_verified: false,
+      })
+
+    if (error) throw new Error(error.message)
+  }
 
   redirect('/dashboard')
 }
-

@@ -38,13 +38,13 @@ export async function middleware(request: NextRequest) {
         }
         
         // Fetch role from public.accounts
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
             .from('accounts')
             .select('role')
             .eq('id', user.id)
             .single()
 
-        if (profile?.role !== 'Admin') {
+        if (profileError || profile?.role !== 'Admin') {
             return NextResponse.redirect(new URL('/', request.url))
         }
     }

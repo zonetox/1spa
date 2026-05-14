@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { 
@@ -17,9 +17,47 @@ import {
   TrendingUp,
   Palette,
   X,
-  Check
+  Check,
+  CheckCircle2,
+  AlertCircle,
+  Info
 } from 'lucide-react'
 import LeadTrackerTable from '@/components/dashboard/LeadTrackerTable'
+
+// ── Toast System ──────────────────────────────────────────────────────────────
+type ToastType = 'success' | 'error' | 'info'
+interface Toast { id: number; message: string; type: ToastType }
+
+function ToastContainer({ toasts, onRemove }: { toasts: Toast[]; onRemove: (id: number) => void }) {
+  return (
+    <div className="fixed top-6 right-6 z-[99999] flex flex-col gap-3 pointer-events-none">
+      <AnimatePresence>
+        {toasts.map(t => (
+          <motion.div
+            key={t.id}
+            initial={{ opacity: 0, x: 60, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 60, scale: 0.95 }}
+            transition={{ duration: 0.25 }}
+            className={`pointer-events-auto flex items-start gap-3 px-5 py-4 rounded-2xl shadow-2xl border max-w-sm ${
+              t.type === 'success' ? 'bg-white border-green-200 text-green-800' :
+              t.type === 'error'   ? 'bg-white border-red-200 text-red-800' :
+                                     'bg-white border-[#D4AF37]/40 text-[#2F2F2F]'
+            }`}
+          >
+            {t.type === 'success' && <CheckCircle2 size={18} className="text-green-500 mt-0.5 shrink-0" />}
+            {t.type === 'error'   && <AlertCircle  size={18} className="text-red-500 mt-0.5 shrink-0" />}
+            {t.type === 'info'    && <Info          size={18} className="text-[#D4AF37] mt-0.5 shrink-0" />}
+            <p className="text-sm font-medium leading-snug flex-1">{t.message}</p>
+            <button onClick={() => onRemove(t.id)} className="opacity-40 hover:opacity-80 transition-opacity mt-0.5 shrink-0">
+              <X size={14} />
+            </button>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 export const LOCATION_DATA: Record<string, string[]> = {
   'Hồ Chí Minh': ['Quận 1', 'Quận 3', 'Quận 5', 'Quận 7', 'Quận 10', 'Bình Thạnh', 'Phú Nhuận', 'Gò Vấp', 'Tân Bình', 'Bình Tân', 'Thủ Đức'],
@@ -36,12 +74,28 @@ export default function BusinessDashboard() {
   const [loading, setLoading] = useState(true)
   const [packages, setPackages] = useState<any[]>([])
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false)
-  
+
+  // Toast state
+  const [toasts, setToasts] = useState<Toast[]>([])
+  const toastCounter = React.useRef(0)
+  const showToast = useCallback((message: string, type: ToastType = 'success') => {
+    const id = ++toastCounter.current
+    setToasts(prev => [...prev, { id, message, type }])
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000)
+  }, [])
+  const removeToast = useCallback((id: number) => {
+    setToasts(prev => prev.filter(t => t.id !== id))
+  }, [])
+
   // Quota states
   const [usedBlogs, setUsedBlogs] = useState(0)
   const [maxBlogs, setMaxBlogs] = useState(0)
   const [isChangingTemplate, setIsChangingTemplate] = useState(false)
   const [selectedPkg, setSelectedPkg] = useState<any>(null)
+
+  // Analytics & subscription states
+  const [pageViews, setPageViews] = useState<number | null>(null)
+  const [subscriptionExpiry, setSubscriptionExpiry] = useState<Date | null>(null)
 
   // Account Settings States
   const [activeTab, setActiveTab] = useState<'overview' | 'settings'>('overview')
@@ -72,7 +126,7 @@ export default function BusinessDashboard() {
   })
   const [isSavingPassword, setIsSavingPassword] = useState(false)
 
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
 
   // Sync settings form when profile changes
   useEffect(() => {
@@ -94,7 +148,7 @@ export default function BusinessDashboard() {
     const file = e.target.files?.[0]
     if (!file) return
     if (file.size > 2 * 1024 * 1024) {
-      alert('Kích thước ảnh phải nhỏ hơn 2MB!')
+      showToast('Kích thước ảnh phải nhỏ hơn 2MB!', 'error')
       return
     }
 
@@ -119,10 +173,10 @@ export default function BusinessDashboard() {
         .getPublicUrl(filePath)
 
       setSettingsForm(prev => ({ ...prev, logo_url: publicUrl }))
-      alert('Tải ảnh logo lên thành công!')
+      showToast('Tải ảnh logo lên thành công!')
     } catch (err: any) {
       console.error('Error uploading logo:', err)
-      alert('Tải ảnh thất bại: ' + (err.message || err))
+      showToast('Tải ảnh thất bại: ' + (err.message || err), 'error')
     } finally {
       setIsUploadingLogo(false)
     }
@@ -132,6 +186,22 @@ export default function BusinessDashboard() {
     e.preventDefault()
     if (!profile) return
     setIsSavingSettings(true)
+
+    // Check slug unique (loại trừ chính mình)
+    if (settingsForm.slug !== profile.slug) {
+      const { data: existing } = await supabase
+        .from('business_profiles')
+        .select('id')
+        .eq('slug', settingsForm.slug)
+        .neq('id', profile.id)
+        .maybeSingle()
+
+      if (existing) {
+        showToast('Slug này đã được sử dụng. Vui lòng chọn slug khác.', 'error')
+        setIsSavingSettings(false)
+        return
+      }
+    }
 
     const { error } = await supabase
       .from('business_profiles')
@@ -149,10 +219,10 @@ export default function BusinessDashboard() {
 
     setIsSavingSettings(false)
     if (!error) {
-      alert('Cập nhật thông tin tài khoản thành công!')
+      showToast('Cập nhật thông tin tài khoản thành công!')
       setProfile({ ...profile, ...settingsForm })
     } else {
-      alert('Cập nhật thất bại: ' + error.message)
+      showToast('Cập nhật thất bại: ' + error.message, 'error')
     }
   }
 
@@ -167,9 +237,9 @@ export default function BusinessDashboard() {
         }
       })
       if (error) throw error
-      alert('Cập nhật hồ sơ cá nhân thành công!')
+      showToast('Cập nhật hồ sơ cá nhân thành công!')
     } catch (err: any) {
-      alert('Cập nhật thất bại: ' + (err.message || err))
+      showToast('Cập nhật thất bại: ' + (err.message || err), 'error')
     } finally {
       setIsSavingPersonal(false)
     }
@@ -179,7 +249,7 @@ export default function BusinessDashboard() {
     const file = e.target.files?.[0]
     if (!file) return
     if (file.size > 2 * 1024 * 1024) {
-      alert('Kích thước ảnh đại diện phải nhỏ hơn 2MB!')
+      showToast('Kích thước ảnh đại diện phải nhỏ hơn 2MB!', 'error')
       return
     }
 
@@ -208,10 +278,10 @@ export default function BusinessDashboard() {
         data: { avatar_url: publicUrl }
       })
 
-      alert('Tải ảnh đại diện cá nhân thành công!')
+      showToast('Tải ảnh đại diện cá nhân thành công!')
     } catch (err: any) {
       console.error('Error uploading avatar:', err)
-      alert('Tải ảnh thất bại: ' + (err.message || err))
+      showToast('Tải ảnh thất bại: ' + (err.message || err), 'error')
     } finally {
       setIsUploadingAvatar(false)
     }
@@ -220,11 +290,11 @@ export default function BusinessDashboard() {
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault()
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      alert('Mật khẩu xác nhận không khớp!')
+      showToast('Mật khẩu xác nhận không khớp!', 'error')
       return
     }
     if (passwordForm.newPassword.length < 6) {
-      alert('Mật khẩu mới phải từ 6 ký tự trở lên!')
+      showToast('Mật khẩu mới phải từ 6 ký tự trở lên!', 'error')
       return
     }
 
@@ -234,10 +304,10 @@ export default function BusinessDashboard() {
         password: passwordForm.newPassword
       })
       if (error) throw error
-      alert('Thay đổi mật khẩu thành công!')
+      showToast('Thay đổi mật khẩu thành công!')
       setPasswordForm({ newPassword: '', confirmPassword: '' })
     } catch (err: any) {
-      alert('Đổi mật khẩu thất bại: ' + (err.message || err))
+      showToast('Đổi mật khẩu thất bại: ' + (err.message || err), 'error')
     } finally {
       setIsSavingPassword(false)
     }
@@ -253,10 +323,10 @@ export default function BusinessDashboard() {
     try {
       const { error } = await supabase.auth.updateUser({ email: newEmailInput })
       if (error) throw error
-      alert('Một email xác nhận đã được gửi đến địa chỉ email mới. Vui lòng kiểm tra và xác nhận để hoàn tất thay đổi!')
+      showToast('Email xác nhận đã được gửi. Vui lòng kiểm tra hộp thư và xác nhận để hoàn tất thay đổi.', 'info')
       setIsChangingEmail(false)
     } catch (err: any) {
-      alert('Đổi email thất bại: ' + (err.message || err))
+      showToast('Đổi email thất bại: ' + (err.message || err), 'error')
     } finally {
       setIsSavingEmail(false)
     }
@@ -286,65 +356,101 @@ export default function BusinessDashboard() {
       // Fetch Account & Profile
       const { data: prof } = await supabase.from('business_profiles').select('*').eq('account_id', user.id).single()
       
-      if (prof) {
-        setProfile(prof)
-        // Fetch Landing Page
-        const { data: lp } = await supabase.from('landing_pages').select('*').eq('business_id', prof.id).single()
-        setLandingPage(lp)
+      if (!prof) {
+        // User đã đăng ký nhưng chưa có business profile → redirect onboarding
+        window.location.href = '/onboarding'
+        return
+      }
 
-        // Fetch Packages
-        const { data: pkgs } = await supabase.from('packages').select('*').order('price', { ascending: true })
-        if (pkgs) setPackages(pkgs)
+      setProfile(prof)
+      // Fetch Landing Page
+      const { data: lp } = await supabase.from('landing_pages').select('*').eq('business_id', prof.id).single()
+      setLandingPage(lp)
 
-        // Fetch Subscription Limits
-        const { data: subData } = await supabase
-          .from('subscriptions')
-          .select('package_id, packages(limits)')
-          .eq('business_id', prof.id)
-          .eq('status', 'Active')
-          .single()
-        
-        let packageLimitBlogs = 0
-        if (subData && (subData.packages as any)?.limits?.max_blogs) {
-          packageLimitBlogs = (subData.packages as any).limits.max_blogs
-        } else {
-          // fallback
-          const { data: fallbackSub } = await supabase.from('subscriptions').select('packages(limits)').eq('business_id', prof.id).order('created_at', { ascending: false }).limit(1).single()
-          if (fallbackSub && (fallbackSub.packages as any)?.limits?.max_blogs) {
-            packageLimitBlogs = (fallbackSub.packages as any).limits.max_blogs
-          } else {
-            packageLimitBlogs = 3 // default trial seed
-          }
+      // Fetch Packages
+      const { data: pkgs } = await supabase.from('packages').select('*').order('price', { ascending: true })
+      if (pkgs) setPackages(pkgs)
+
+      // Fetch Subscription (limits + expiry)
+      const { data: subData } = await supabase
+        .from('subscriptions')
+        .select('package_id, packages(limits), expires_at, created_at, packages(duration_days)')
+        .eq('business_id', prof.id)
+        .eq('status', 'Active')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      
+      let packageLimitBlogs = 0
+      if (subData && (subData.packages as any)?.limits?.max_blogs) {
+        packageLimitBlogs = (subData.packages as any).limits.max_blogs
+        // Tính ngày hết hạn từ expires_at hoặc created_at + duration_days
+        if ((subData as any).expires_at) {
+          setSubscriptionExpiry(new Date((subData as any).expires_at))
+        } else if ((subData as any).created_at && (subData.packages as any)?.duration_days) {
+          const expiry = new Date((subData as any).created_at)
+          expiry.setDate(expiry.getDate() + (subData.packages as any).duration_days)
+          setSubscriptionExpiry(expiry)
         }
-        setMaxBlogs(packageLimitBlogs)
-
-        // Fetch used blogs count
-        const { count } = await supabase.from('blogs').select('*', { count: 'exact', head: true }).eq('business_id', prof.id)
-        setUsedBlogs(count || 0)
-
-        // Fetch Leads
-        const { data: bookingsData } = await supabase
-          .from('bookings')
-          .select('*')
+      } else {
+        // Fallback: lấy subscription mới nhất bất kể status
+        const { data: fallbackSub } = await supabase
+          .from('subscriptions')
+          .select('packages(limits), expires_at, created_at, packages(duration_days)')
           .eq('business_id', prof.id)
           .order('created_at', { ascending: false })
-        
-        if (bookingsData) {
-          setLeads(bookingsData)
+          .limit(1)
+          .maybeSingle()
+        if (fallbackSub && (fallbackSub.packages as any)?.limits?.max_blogs) {
+          packageLimitBlogs = (fallbackSub.packages as any).limits.max_blogs
+          if ((fallbackSub as any).expires_at) {
+            setSubscriptionExpiry(new Date((fallbackSub as any).expires_at))
+          }
+        } else {
+          packageLimitBlogs = 3 // default trial
+          // Trial 30 ngày từ khi tạo account
+          if (user.created_at) {
+            const trialExpiry = new Date(user.created_at)
+            trialExpiry.setDate(trialExpiry.getDate() + 30)
+            setSubscriptionExpiry(trialExpiry)
+          }
         }
-
-        // Subscribe to Realtime Bookings
-        activeChannel = supabase.channel('realtime_bookings')
-          .on('postgres_changes', {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'bookings',
-            filter: `business_id=eq.${prof.id}`
-          }, (payload) => {
-            setLeads((currentLeads) => [payload.new, ...currentLeads])
-          })
-          .subscribe()
       }
+      setMaxBlogs(packageLimitBlogs)
+
+      // Fetch used blogs count
+      const { count } = await supabase.from('blogs').select('*', { count: 'exact', head: true }).eq('business_id', prof.id)
+      setUsedBlogs(count || 0)
+
+      // Fetch page views từ analytics_events
+      const { count: views } = await supabase
+        .from('analytics_events')
+        .select('*', { count: 'exact', head: true })
+        .eq('business_id', prof.id)
+      setPageViews(views ?? null)
+
+      // Fetch Leads
+      const { data: bookingsData } = await supabase
+        .from('bookings')
+        .select('*')
+        .eq('business_id', prof.id)
+        .order('created_at', { ascending: false })
+      
+      if (bookingsData) {
+        setLeads(bookingsData)
+      }
+
+      // Subscribe to Realtime Bookings
+      activeChannel = supabase.channel('realtime_bookings')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'bookings',
+          filter: `business_id=eq.${prof.id}`
+        }, (payload) => {
+          setLeads((currentLeads) => [payload.new, ...currentLeads])
+        })
+        .subscribe()
       
       setLoading(false)
     }
@@ -390,7 +496,7 @@ export default function BusinessDashboard() {
     }])
 
     if (!error) {
-      alert('Chuyển khoản thành công! Gói dịch vụ đã được kích hoạt lập tức để bạn sử dụng. Admin sẽ đối chiếu và xác minh trong vòng 24h.')
+      showToast('Chuyển khoản thành công! Gói dịch vụ đã được kích hoạt. Admin sẽ đối chiếu và xác minh trong vòng 24h.')
       setIsUpgradeModalOpen(false)
       setSelectedPkg(null)
       
@@ -410,7 +516,7 @@ export default function BusinessDashboard() {
       }
       setMaxBlogs(packageLimitBlogs)
     } else {
-      alert('Có lỗi xảy ra khi kích hoạt gói: ' + error.message)
+      showToast('Có lỗi xảy ra khi kích hoạt gói: ' + error.message, 'error')
     }
   }
 
@@ -422,6 +528,7 @@ export default function BusinessDashboard() {
 
   return (
     <main className="min-h-screen bg-[#F9F6F0] pt-32 pb-24 px-6 md:px-12 text-[#2F2F2F]">
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
       <div className="max-w-7xl mx-auto space-y-12">
         
         {/* Welcome Header */}
@@ -470,15 +577,20 @@ export default function BusinessDashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard icon={<Users />} label="Lượt truy cập" value="1,284" trend="+12%" />
-          <StatCard icon={<Calendar />} label="Booking mới" value={leads.length.toString()} trend="+5%" />
-          <StatCard icon={<TrendingUp />} label="Doanh thu dự kiến" value="45.5M" trend="+8%" />
+          <StatCard
+            icon={<Users />}
+            label="Lượt truy cập"
+            value={pageViews === null ? '—' : pageViews.toLocaleString('vi-VN')}
+            trend={null}
+          />
+          <StatCard icon={<Calendar />} label="Booking mới" value={leads.length.toString()} trend={null} />
+          <StatCard icon={<TrendingUp />} label="Tiềm năng doanh thu" value={leads.length > 0 ? `~${(leads.length * 500).toLocaleString('vi-VN')}K` : '—'} trend={null} />
           <StatCard 
             icon={<Clock />} 
-            label="Trial còn lại" 
-            value="24 ngày" 
-            subValue="Hết hạn: 29/05/2026"
-            isWarning
+            label="Hạn dịch vụ" 
+            value={subscriptionExpiry ? `${Math.max(0, Math.ceil((subscriptionExpiry.getTime() - Date.now()) / 86400000))} ngày` : '—'}
+            subValue={subscriptionExpiry ? `Hết hạn: ${subscriptionExpiry.toLocaleDateString('vi-VN')}` : undefined}
+            isWarning={subscriptionExpiry ? (subscriptionExpiry.getTime() - Date.now()) / 86400000 <= 7 : false}
           />
         </div>
 
@@ -605,24 +717,19 @@ export default function BusinessDashboard() {
             {/* Right Column: Notifications & Upgrades */}
             <div className="space-y-8">
               <div className="bg-white border border-[#D4AF37]/20 rounded-[2rem] p-8 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)]">
-                <h3 className="font-display text-2xl text-[#2F2F2F] mb-6">Thông báo mới</h3>
+                <h3 className="font-display text-2xl text-[#2F2F2F] mb-6">Booking gần đây</h3>
                 <div className="space-y-6">
-                  <NotificationItem 
-                    title="Có khách đặt lịch mới" 
-                    desc="Chị Minh Anh vừa đặt lịch qua Landing Page" 
-                    time="15 phút trước" 
-                    isNew
-                  />
-                  <NotificationItem 
-                    title="Gợi ý tối ưu trang" 
-                    desc="Thêm hình ảnh thực tế dịch vụ để tăng 30% tỷ lệ chuyển đổi." 
-                    time="2 giờ trước" 
-                  />
-                  <NotificationItem 
-                    title="Báo cáo tuần hoàn tất" 
-                    desc="Lượt truy cập trang đích tăng 12% so với tuần trước." 
-                    time="Hôm qua" 
-                  />
+                  {leads.length === 0 ? (
+                    <p className="text-sm text-zinc-400 text-center py-4">Chưa có booking nào.</p>
+                  ) : leads.slice(0, 3).map((lead: any, i: number) => (
+                    <NotificationItem
+                      key={lead.id || i}
+                      title={`Khách đặt lịch: ${lead.customer_info?.name || lead.customer_name || 'Khách hàng'}`}
+                      desc={`Dịch vụ: ${lead.customer_info?.service || lead.service_requested || 'Chưa chỉ định'} — SĐT: ${lead.customer_info?.phone || lead.customer_phone || ''}`}
+                      time={lead.created_at ? new Date(lead.created_at).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : ''}
+                      isNew={i === 0}
+                    />
+                  ))}
                 </div>
                 <button className="w-full mt-8 py-3 bg-[#F9F6F0] rounded-xl text-[10px] font-bold font-mono uppercase tracking-widest text-zinc-600 hover:text-[#D4AF37] transition-colors flex items-center justify-center gap-2">
                   Xem tất cả <ChevronRight size={12} />
