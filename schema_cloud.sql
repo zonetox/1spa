@@ -1,6 +1,6 @@
 -- =========================================================
 -- Supabase Cloud Database Schema (Extracted dynamically)
--- Date: 2026-05-17T10:25:13.364Z
+-- Date: 2026-05-17T11:36:38.532Z
 -- =========================================================
 
 -- CUSTOM ENUMS/TYPES
@@ -16,6 +16,7 @@ CREATE TABLE public.analytics_events (
     event_type text,
     page_slug text,
     created_at timestamp with time zone DEFAULT now(),
+    referrer text,
     CONSTRAINT analytics_events_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.business_profiles(id),
     CONSTRAINT analytics_events_pkey PRIMARY KEY (id),
     CONSTRAINT 2200_18073_1_not_null CHECK (id IS NOT NULL)
@@ -45,7 +46,7 @@ CREATE TABLE public.bookings (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
     business_id uuid NOT NULL,
     customer_info jsonb NOT NULL,
-    status text NOT NULL DEFAULT 'new'::text,
+    status text NOT NULL DEFAULT 'Pending'::text,
     source_url text,
     created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
     CONSTRAINT bookings_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.business_profiles(id),
@@ -55,7 +56,7 @@ CREATE TABLE public.bookings (
     CONSTRAINT 2200_17816_3_not_null CHECK (customer_info IS NOT NULL),
     CONSTRAINT 2200_17816_4_not_null CHECK (status IS NOT NULL),
     CONSTRAINT 2200_17816_6_not_null CHECK (created_at IS NOT NULL),
-    CONSTRAINT bookings_status_check CHECK ((status = ANY (ARRAY['new'::text, 'contacted'::text, 'done'::text])))
+    CONSTRAINT bookings_status_check CHECK ((status = ANY (ARRAY['Pending'::text, 'Confirmed'::text, 'Completed'::text, 'Cancelled'::text])))
 );
 
 -- TABLE: business_locations
@@ -128,14 +129,17 @@ CREATE TABLE public.landing_pages (
 -- TABLE: notifications
 CREATE TABLE public.notifications (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
-    recipient_id uuid,
+    profile_id uuid,
     type text,
     title text,
     message text,
     is_read boolean DEFAULT false,
     created_at timestamp with time zone DEFAULT now(),
+    sender_id uuid,
+    link text,
     CONSTRAINT notifications_pkey PRIMARY KEY (id),
-    CONSTRAINT notifications_recipient_id_fkey FOREIGN KEY (recipient_id) REFERENCES public.profiles(id),
+    CONSTRAINT notifications_recipient_id_fkey FOREIGN KEY (profile_id) REFERENCES public.profiles(id),
+    CONSTRAINT notifications_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES public.profiles(id),
     CONSTRAINT 2200_18087_1_not_null CHECK (id IS NOT NULL)
 );
 
@@ -148,6 +152,7 @@ CREATE TABLE public.packages (
     duration_days integer DEFAULT 365,
     features jsonb DEFAULT '[]'::jsonb,
     created_at timestamp with time zone DEFAULT now(),
+    limits jsonb DEFAULT '{"max_blogs": 3}'::jsonb,
     CONSTRAINT packages_pkey PRIMARY KEY (id),
     CONSTRAINT 2200_17902_1_not_null CHECK (id IS NOT NULL),
     CONSTRAINT 2200_17902_2_not_null CHECK (name IS NOT NULL),
@@ -163,6 +168,7 @@ CREATE TABLE public.profiles (
     subscription_status text NOT NULL DEFAULT 'trial'::text,
     expiry_date timestamp with time zone NOT NULL DEFAULT (now() + '30 days'::interval),
     created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+    avatar_url text,
     CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES public.null(null),
     CONSTRAINT profiles_pkey PRIMARY KEY (id),
     CONSTRAINT 2200_17737_1_not_null CHECK (id IS NOT NULL),
@@ -172,7 +178,7 @@ CREATE TABLE public.profiles (
     CONSTRAINT 2200_17737_6_not_null CHECK (expiry_date IS NOT NULL),
     CONSTRAINT 2200_17737_7_not_null CHECK (created_at IS NOT NULL),
     CONSTRAINT profiles_role_check CHECK ((role = ANY (ARRAY['admin'::text, 'business'::text, 'user'::text]))),
-    CONSTRAINT profiles_subscription_status_check CHECK ((subscription_status = ANY (ARRAY['trial'::text, 'active'::text, 'blocked'::text])))
+    CONSTRAINT profiles_subscription_status_check CHECK ((subscription_status = ANY (ARRAY['trial'::text, 'active'::text, 'blocked'::text, 'pending_verification'::text])))
 );
 
 -- TABLE: reviews
