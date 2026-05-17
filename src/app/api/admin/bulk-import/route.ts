@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { slugify } from '@/lib/utils'
 import { CANONICAL_TEMPLATES, CATEGORY_COLORS } from '@/lib/constants'
+import crypto from 'crypto'
 
 // Khởi tạo Supabase Admin Client với Service Role Key để bỏ qua các ràng buộc bảo mật khi Import
 const supabaseAdmin = createClient(
@@ -212,9 +213,10 @@ export async function POST(req: Request) {
         let userId = existingUser?.id
 
         if (!userId) {
+          const securePassword = crypto.randomBytes(16).toString('hex') + '!'
           const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
             email: email_owner,
-            password: 'Beauty123!',
+            password: securePassword,
             email_confirm: true
           })
           if (authError) {
@@ -223,10 +225,10 @@ export async function POST(req: Request) {
           }
           userId = authUser.user.id
 
-          // Explicitly set role to 'Business' (TitleCase) to match Enum
+          // Explicitly set role to 'business' (lowercase) to match Supabase CHECK constraint
           await supabaseAdmin
             .from('profiles')
-            .update({ role: 'Business' })
+            .update({ role: 'business' })
             .eq('id', userId)
         }
 

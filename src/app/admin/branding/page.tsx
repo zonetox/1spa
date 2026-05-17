@@ -18,9 +18,32 @@ export default function BrandingPage() {
   })
 
   const supabase = createClient()
+  const [isAdminVerified, setIsAdminVerified] = useState(false)
 
   // Load config from localStorage on component mount
   useEffect(() => {
+    async function checkAdmin() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        window.location.href = '/login'
+        return
+      }
+      
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+        
+      if (profile?.role?.toLowerCase() !== 'admin') {
+        window.location.href = '/dashboard'
+        return
+      }
+      
+      setIsAdminVerified(true)
+    }
+    checkAdmin()
+
     const savedConfig = localStorage.getItem('1beauty_branding_config')
     if (savedConfig) {
       try {

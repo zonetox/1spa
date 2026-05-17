@@ -64,16 +64,16 @@ export async function middleware(request: NextRequest) {
 
         // Only check expiry for non-admin business accounts
         if (profile && profile.role?.toLowerCase() !== 'admin') {
-            const isExpired = profile.expiry_date && new Date(profile.expiry_date) < new Date()
-            const isPendingOrExpired =
-                isExpired &&
-                profile.subscription_status !== 'trial' &&
-                profile.subscription_status !== 'active' &&
-                profile.subscription_status !== 'pending_verification'
+            const isExpired = profile.expiry_date ? new Date(profile.expiry_date) < new Date() : false
+            const isBlocked = profile.subscription_status?.toLowerCase() === 'blocked'
+            const isPendingOrExpired = isBlocked || isExpired
 
             if (isPendingOrExpired) {
-                // Redirect to upgrade page, but not if already on upgrade-related pages
-                if (!request.nextUrl.pathname.includes('/upgrade')) {
+                // Avoid infinite redirect loop if already on /dashboard or on upgrade pages
+                const isDashboardRoot = request.nextUrl.pathname === '/dashboard'
+                const isUpgradePage = request.nextUrl.pathname.includes('/upgrade')
+
+                if (!isDashboardRoot && !isUpgradePage) {
                     return NextResponse.redirect(new URL('/dashboard?expired=true', request.url))
                 }
             }

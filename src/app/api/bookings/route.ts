@@ -22,21 +22,46 @@ const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder_key')
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
 
-// Upstash rate limiter (1 request per 60 seconds)
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(1, '60 s'),
-  analytics: true,
-})
+let ratelimit: Ratelimit | null = null
+
+function getRateLimiter() {
+  if (ratelimit) return ratelimit
+
+  const url = process.env.UPSTASH_REDIS_REST_URL
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN
+
+  if (!url || !token) {
+    return null
+  }
+
+  try {
+    const redis = new Redis({
+      url,
+      token,
+    })
+    ratelimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(1, '60 s'),
+      analytics: true,
+    })
+    return ratelimit
+  } catch (err) {
+    console.error('Failed to initialize Upstash Redis rate limiter:', err)
+    return null
+  }
+}
 
 export async function POST(req: Request) {
   try {
     const ip = req.headers.get('x-forwarded-for') || 'unknown-ip'
     
     try {
-      const { success } = await ratelimit.limit(`booking_${ip}`)
-      if (!success) {
-        return NextResponse.json({ error: 'Bạn thao tác quá nhanh. Vui lòng đợi 1 phút rồi thử lại.' }, { status: 429 })
+      const limiter = getRateLimiter()
+      if (limiter) {
+        const { success } = await limiter.limit(`booking_${ip}`)
+        if (!success) {
+          return NextResponse.json({ error: 'Bạn thao tác quá nhanh. Vui lòng đợi 1 phút rồi thử lại.' }, { status: 429 })
+        }
       }
     } catch (err) {
       // If Upstash fails (e.g. env missing in local dev), allow pass through or fallback

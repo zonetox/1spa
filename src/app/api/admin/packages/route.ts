@@ -21,6 +21,9 @@ async function checkAdmin(req: Request) {
 }
 
 export async function GET(req: Request) {
+  if (!await checkAdmin(req)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   const { data, error } = await supabaseAdmin
     .from('packages')
     .select('*')

@@ -50,12 +50,12 @@ function DirectoryPageContent() {
         .select('*')
       
       if (!error && data) {
-        const formatted = data.map((item, idx) => ({
+        const formatted = data.map((item) => ({
           slug: item.business_slug,
           business_name: item.business_name,
           category: (item.category === 'Spa' || item.category === 'spa') ? 'Spa' : ((item.category === 'Dental' || item.category === 'dental') ? 'Dental' : 'Beauty'),
-          location_district: `${item.district || 'Quận 1'}, ${item.city || 'TP.HCM'}`,
-          rating_score: 4.8 + (idx % 3) * 0.1,
+          location_district: `${item.location_district || 'Quận 1'}, ${item.location_city || 'TP.HCM'}`,
+          rating_score: item.rating_score || 5.0,
           cover_image: item.content_json?.hero_section?.hero_slides?.[0] || item.content_json?.hero_section?.slides?.[0]?.image_url || 'https://images.unsplash.com/photo-1544161515-4af6b1d46af0?auto=format&fit=crop&q=80',
           logo_url: item.logo_url || 'https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?auto=format&fit=crop&q=40',
           isFeatured: false

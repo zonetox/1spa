@@ -44,7 +44,7 @@ export default function UsersAuditPage() {
   const [businesses, setBusinesses] = useState<BusinessRow[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState<'all' | 'verified' | 'unverified' | 'Pending' | 'Active' | 'Expired' | 'Cancelled'>('all')
+  const [filter, setFilter] = useState<'all' | 'verified' | 'unverified' | 'trial' | 'active' | 'blocked'>('all')
   const supabase = createClient()
 
   const [editingBusiness, setEditingBusiness] = useState<BusinessRow | null>(null)
@@ -177,10 +177,9 @@ export default function UsersAuditPage() {
 
     if (filter === 'verified') return matchSearch && b.is_verified
     if (filter === 'unverified') return matchSearch && !b.is_verified
-    if (filter === 'Pending') return matchSearch && b.profiles?.subscription_status === 'Pending'
-    if (filter === 'Active') return matchSearch && b.profiles?.subscription_status === 'Active'
-    if (filter === 'Expired') return matchSearch && b.profiles?.subscription_status === 'Expired'
-    if (filter === 'Cancelled') return matchSearch && b.profiles?.subscription_status === 'Cancelled'
+    if (filter === 'trial') return matchSearch && b.profiles?.subscription_status?.toLowerCase() === 'trial'
+    if (filter === 'active') return matchSearch && b.profiles?.subscription_status?.toLowerCase() === 'active'
+    if (filter === 'blocked') return matchSearch && b.profiles?.subscription_status?.toLowerCase() === 'blocked'
     return matchSearch
   })
 
@@ -215,7 +214,7 @@ export default function UsersAuditPage() {
           />
         </div>
         <div className="flex gap-2 flex-wrap">
-          {(['all', 'verified', 'unverified', 'Pending', 'Active', 'Expired', 'Cancelled'] as const).map(f => (
+          {(['all', 'verified', 'unverified', 'trial', 'active', 'blocked'] as const).map(f => (
             <button
               key={f}
               onClick={() => setFilter(f as any)}
@@ -224,7 +223,7 @@ export default function UsersAuditPage() {
                 : 'bg-zinc-900 text-zinc-500 border border-zinc-800 hover:text-zinc-200'
               }`}
             >
-              {f === 'all' ? 'Tất cả' : f === 'verified' ? 'Xác minh' : f === 'unverified' ? 'Chưa xác minh' : f === 'Pending' ? 'Chờ duyệt' : f === 'Active' ? 'Active' : f === 'Expired' ? 'Hết hạn' : 'Đã Hủy'}
+              {f === 'all' ? 'Tất cả' : f === 'verified' ? 'Xác minh' : f === 'unverified' ? 'Chưa xác minh' : f === 'trial' ? 'Dùng thử' : f === 'active' ? 'Hoạt động' : 'Đã khóa'}
             </button>
           ))}
         </div>
@@ -281,8 +280,8 @@ export default function UsersAuditPage() {
                       </td>
                       <td className="py-4 px-5">
                         <div className="text-zinc-300">{b.profiles?.email || '—'}</div>
-                        <div className={`text-[10px] font-mono mt-0.5 ${b.profiles?.subscription_status === 'Active' ? 'text-emerald-400' : b.profiles?.subscription_status === 'Cancelled' ? 'text-red-400' : 'text-amber-400'}`}>
-                          {b.profiles?.subscription_status === 'Active' ? 'Đã kích hoạt' : b.profiles?.subscription_status === 'Pending' ? 'Chờ xử lý' : b.profiles?.subscription_status === 'Expired' ? 'Hết hạn' : b.profiles?.subscription_status || '—'}
+                        <div className={`text-[10px] font-mono mt-0.5 ${b.profiles?.subscription_status?.toLowerCase() === 'active' ? 'text-emerald-400' : b.profiles?.subscription_status?.toLowerCase() === 'trial' ? 'text-amber-400' : 'text-red-400'}`}>
+                          {b.profiles?.subscription_status?.toLowerCase() === 'active' ? 'Hoạt động' : b.profiles?.subscription_status?.toLowerCase() === 'trial' ? 'Dùng thử' : b.profiles?.subscription_status?.toLowerCase() === 'blocked' ? 'Đã khóa' : b.profiles?.subscription_status || '—'}
                         </div>
                       </td>
                       <td className="py-4 px-5">
@@ -444,31 +443,30 @@ export default function UsersAuditPage() {
                     <div className="space-y-1">
                       <label className="text-xs text-zinc-400">Quyền hạn (Role)</label>
                       <select 
-                        value={(editingBusiness.profiles as any).role}
+                        value={(editingBusiness.profiles as any).role?.toLowerCase()}
                         onChange={e => setEditingBusiness({
                           ...editingBusiness, 
                           profiles: { ...editingBusiness.profiles!, role: e.target.value } as any
                         })}
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
                       >
-                        <option value="Business">Business (Doanh nghiệp)</option>
-                        <option value="Admin">Admin (Quản trị viên)</option>
+                        <option value="business">Business (Doanh nghiệp)</option>
+                        <option value="admin">Admin (Quản trị viên)</option>
                       </select>
                     </div>
                     <div className="space-y-1">
                       <label className="text-xs text-zinc-400">Trạng Thái Gói</label>
                       <select 
-                        value={editingBusiness.profiles.subscription_status}
+                        value={editingBusiness.profiles.subscription_status?.toLowerCase()}
                         onChange={e => setEditingBusiness({
                           ...editingBusiness, 
                           profiles: { ...editingBusiness.profiles!, subscription_status: e.target.value }
                         })}
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
                       >
-                        <option value="Pending">Chờ duyệt (Pending)</option>
-                        <option value="Active">Kích hoạt (Active)</option>
-                        <option value="Expired">Hết hạn (Expired)</option>
-                        <option value="Cancelled">Đã hủy (Cancelled)</option>
+                        <option value="trial">Dùng thử (Trial)</option>
+                        <option value="active">Kích hoạt (Active)</option>
+                        <option value="blocked">Đã khóa (Blocked)</option>
                       </select>
                     </div>
                     <div className="space-y-1 md:col-span-2">

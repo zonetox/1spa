@@ -36,13 +36,13 @@ export function ImagePickerModal({ isOpen, onClose, onSelect, currentUrl }: Imag
       const path = `uploads/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
       const { error: upErr } = await supabase.storage
-        .from('business_assets')
+        .from('public_images')
         .upload(path, file, { cacheControl: '3600', upsert: false })
 
       if (upErr) throw upErr
 
       const { data: { publicUrl } } = supabase.storage
-        .from('business_assets')
+        .from('public_images')
         .getPublicUrl(path)
 
       setPreview(publicUrl)

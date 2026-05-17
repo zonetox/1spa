@@ -49,12 +49,14 @@ export default function AdminSubscriptionsPage() {
         created_at,
         business_profiles (
           id,
-          business_name
+          business_name,
+          account_id
         ),
         packages (
           id,
           name,
-          price
+          price,
+          duration_days
         )
       `)
       .order('created_at', { ascending: false })
@@ -68,32 +70,72 @@ export default function AdminSubscriptionsPage() {
   }
 
   const handleVerify = async (id: string) => {
+    const sub = subscriptions.find(s => s.id === id)
+    if (!sub) {
+      toast.error('Không tìm thấy thông tin đăng ký!')
+      return
+    }
+
     const { error } = await supabase
       .from('subscriptions')
-      .update({ verified: true, status: 'Active' })
+      .update({ verified: true, status: 'active' })
       .eq('id', id)
 
     if (!error) {
-      toast.success('Đã xác nhận giao dịch thành công! Gói dịch vụ duy trì trạng thái Active an toàn.')
+      if (sub.business_profiles?.account_id) {
+        const durationDays = sub.packages?.duration_days || 365
+        const expiryDate = new Date()
+        expiryDate.setDate(expiryDate.getDate() + durationDays)
+
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({
+            subscription_status: 'active',
+            expiry_date: expiryDate.toISOString()
+          })
+          .eq('id', sub.business_profiles.account_id)
+
+        if (profileError) {
+          console.error('Error updating profiles subscription:', profileError.message)
+          toast.error('Duyệt giao dịch thành công nhưng cập nhật tài khoản thất bại: ' + profileError.message)
+          return
+        }
+      }
+
+      toast.success('Đã xác nhận giao dịch thành công! Gói dịch vụ duy trì trạng thái active an toàn.')
       fetchSubscriptions()
     } else {
-      toast('Lỗi khi duyệt: ' + error.message)
+      toast.error('Lỗi khi duyệt: ' + error.message)
     }
   }
 
   const handleReject = async (id: string) => {
     const confirmed = await confirmAction('Bạn có chắc chắn muốn Từ chối và Đình chỉ gói này? Hệ thống sẽ gỡ bỏ quyền lợi lập tức!')
     if (confirmed) {
+      const sub = subscriptions.find(s => s.id === id)
       const { error } = await supabase
         .from('subscriptions')
-        .update({ verified: false, status: 'Pending' })
+        .update({ verified: false, status: 'pending' })
         .eq('id', id)
 
       if (!error) {
-        toast.success('Đã từ chối giao dịch thành công. Gói dịch vụ đã chuyển sang trạng thái Pending (Vô hiệu hóa quyền lợi).')
+        if (sub?.business_profiles?.account_id) {
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .update({
+              subscription_status: 'blocked'
+            })
+            .eq('id', sub.business_profiles.account_id)
+
+          if (profileError) {
+            console.error('Error blocking profile:', profileError.message)
+          }
+        }
+
+        toast.success('Đã từ chối giao dịch thành công. Gói dịch vụ đã chuyển sang trạng thái pending (Vô hiệu hóa quyền lợi).')
         fetchSubscriptions()
       } else {
-        toast('Lỗi khi đình chỉ: ' + error.message)
+        toast.error('Lỗi khi đình chỉ: ' + error.message)
       }
     }
   }

@@ -37,6 +37,16 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '*.fbcdn.net',
       },
+      {
+        // Vercel gradients and assets
+        protocol: 'https',
+        hostname: 'grainy-gradients.vercel.app',
+      },
+      {
+        // Vercel subdomains
+        protocol: 'https',
+        hostname: '*.vercel.app',
+      },
     ],
   },
 };

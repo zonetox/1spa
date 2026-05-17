@@ -19,22 +19,65 @@ export default function AdminPackagesPage() {
   const [durationDays, setDurationDays] = useState(365)
   const [maxBlogs, setMaxBlogs] = useState(3)
   const [features, setFeatures] = useState<string[]>([''])
+  const [isAdminVerified, setIsAdminVerified] = useState(false)
 
   const supabase = createClient()
-
-  useEffect(() => {
-    fetchPackages()
-  }, [])
 
   const getAuthToken = async () => {
     const { data: { session } } = await supabase.auth.getSession()
     return session?.access_token
   }
 
+  useEffect(() => {
+    async function checkAdmin() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        window.location.href = '/login'
+        return
+      }
+      
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+        
+      if (profile?.role?.toLowerCase() !== 'admin') {
+        window.location.href = '/dashboard'
+        return
+      }
+      
+      setIsAdminVerified(true)
+      
+      // Fetch packages inside checkAdmin once verified
+      setLoading(true)
+      try {
+        const token = await getAuthToken()
+        const response = await fetch('/api/admin/packages', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        const data = await response.json()
+        if (data && !data.error) setPackages(data)
+      } catch (err) {
+        console.error('Fetch error:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    checkAdmin()
+  }, [])
+
   const fetchPackages = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/api/admin/packages')
+      const token = await getAuthToken()
+      const response = await fetch('/api/admin/packages', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       const data = await response.json()
       if (data && !data.error) setPackages(data)
     } catch (err) {
