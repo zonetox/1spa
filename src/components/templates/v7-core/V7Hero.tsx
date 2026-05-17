@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { EditableText } from '@/components/shared/EditableText';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -50,11 +51,10 @@ export const V7Hero: React.FC<V7HeroProps> = ({
           slides.map((slide, index) => (
             <SwiperSlide key={index} className="h-full w-full">
               <div className={`relative h-full w-full ${isEditing ? 'cursor-pointer group/hero' : ''}`} onClick={() => handleImageClick(index)}>
-                <img 
-                  src={slide} 
+                <Image width={800} height={800} src={slide}   
                   alt={`${title} slide ${index + 1}`}
                   className="v7-img-hero brightness-[1.0] transition-all duration-500"
-                />
+                 />
                 {/* Soft Light Vignette instead of total blackness */}
                 <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-transparent opacity-50 pointer-events-none" />
                 

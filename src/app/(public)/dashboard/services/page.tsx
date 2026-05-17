@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import toast from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client'
 import { Plus, Edit2, Trash2, Check, X, UploadCloud, Link as LinkIcon } from 'lucide-react'
 import Image from 'next/image'
@@ -77,7 +78,7 @@ export default function BusinessServicesPage() {
     const { error: uploadError } = await supabase.storage.from('public_images').upload(filePath, file)
     
     if (uploadError) {
-      alert('Lỗi upload: ' + uploadError.message)
+      toast('Lỗi upload: ' + uploadError.message)
     } else {
       const { data } = supabase.storage.from('public_images').getPublicUrl(filePath)
       setImageUrl(data.publicUrl)
@@ -114,7 +115,7 @@ export default function BusinessServicesPage() {
       setLandingPage({ ...landingPage, content_json: updatedContentJson })
       setIsModalOpen(false)
     } else {
-      alert('Lỗi lưu dịch vụ')
+      toast.error('Lỗi lưu dịch vụ')
     }
   }
 

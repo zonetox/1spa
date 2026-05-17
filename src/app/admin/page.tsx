@@ -1,4 +1,5 @@
 'use client'
+import toast from 'react-hot-toast';
 
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -132,7 +133,7 @@ export default function AdminOverviewPage() {
         .eq('id', id)
 
       if (error) {
-        alert('Cập nhật trạng thái lỗi: ' + error.message)
+        toast('Cập nhật trạng thái lỗi: ' + error.message)
       } else {
         // Optimistic UI update
         setBookings(prev => 

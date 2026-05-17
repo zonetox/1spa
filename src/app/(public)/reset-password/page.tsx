@@ -1,4 +1,5 @@
 'use client'
+import toast from 'react-hot-toast';
 
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -23,7 +24,7 @@ export default function ResetPasswordPage() {
       if (error) throw error
       setSent(true)
     } catch (error: any) {
-      alert(error.message || 'Đã có lỗi xảy ra.')
+      toast(error.message || 'Đã có lỗi xảy ra.')
     } finally {
       setLoading(false)
     }

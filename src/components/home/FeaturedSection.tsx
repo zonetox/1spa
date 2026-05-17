@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image';
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { CheckCircle, Star, MapPin, ArrowRight } from 'lucide-react'
@@ -23,8 +24,8 @@ function BusinessCard({ b, idx }: { b: Business; idx: number }) {
         whileHover={{ y: -6, boxShadow: '0 20px 60px rgba(0,0,0,0.12), 0 4px 20px rgba(212,175,55,0.15)' }}>
         {/* Image */}
         <div className="relative h-64 overflow-hidden">
-          <img src={b.cover_image || 'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?q=80&w=800'} alt={b.business_name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+          <Image width={800} height={800} src={b.cover_image || 'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?q=80&w=800'}   alt={b.business_name}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"  />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           {/* Category badge */}
           <span className="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase text-white"

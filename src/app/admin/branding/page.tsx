@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import toast from 'react-hot-toast';
 import { Check, Upload, ImageIcon, RefreshCw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -53,7 +54,7 @@ export default function BrandingPage() {
         setConfig(prev => ({ ...prev, logoUrl: data.publicUrl }))
       }
     } catch (err: any) {
-      alert('Upload logo thất bại: ' + err.message)
+      toast('Upload logo thất bại: ' + err.message)
     } finally {
       setUploading(false)
     }

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 interface TeamMember {
@@ -61,7 +62,7 @@ export const V7Team: React.FC<V7TeamProps> = ({
                   onMouseEnter={(e) => e.currentTarget.style.borderColor = themeColor}
                   onMouseLeave={(e) => e.currentTarget.style.borderColor = `${themeColor}20`}
                 >
-                  <img src={member.img} alt={member.name} className="v7-img-avatar scale-105 group-hover:scale-110 transition-transform duration-1000 object-cover" />
+                  <Image width={800} height={800} src={member.img}   alt={member.name} className="v7-img-avatar scale-105 group-hover:scale-110 transition-transform duration-1000 object-cover"  />
                 </div>
                 {member.origin && (
                   <div className="absolute bottom-2 right-2 bg-white px-3 py-1 rounded-full shadow-md text-[10px] font-bold uppercase tracking-widest border border-gray-100">

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -655,11 +656,10 @@ export default function BusinessDashboard() {
                 </div>
                 
                 <div className="relative aspect-[21/9] rounded-2xl overflow-hidden group border border-zinc-100 shadow-inner">
-                   <img 
-                    src={landing_page_preview_url(landingPage?.template_id)} 
+                   <Image width={800} height={800} src={landing_page_preview_url(landingPage?.template_id)}   
                     alt="Template Preview" 
                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                   />
+                    />
                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
                       <Link href={`/p/${landingPage?.business_slug}?edit=true`} className="px-8 py-3 bg-white text-[#2F2F2F] font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-[#F9F6F0] transition-colors shadow-xl">
                         Mở Visual Editor
@@ -749,7 +749,7 @@ export default function BusinessDashboard() {
                   <div className="flex flex-col items-center space-y-3">
                     <div className="relative w-24 h-24 rounded-full border-2 border-[#D4AF37]/40 overflow-hidden group shadow-md bg-[#D4AF37]/5 flex items-center justify-center">
                       {personalAvatar ? (
-                        <img src={personalAvatar} alt="Personal Avatar" className="w-full h-full object-cover" />
+                        <Image width={800} height={800} src={personalAvatar}   alt="Personal Avatar" className="w-full h-full object-cover"  />
                       ) : (
                         <span className="text-2xl font-bold text-[#D4AF37]">{fullName ? fullName[0].toUpperCase() : (user?.email ? user.email[0].toUpperCase() : 'U')}</span>
                       )}
@@ -925,11 +925,10 @@ export default function BusinessDashboard() {
                   
                   {/* VietQR Code */}
                   <div className="p-4 bg-white border border-[#D4AF37]/30 rounded-3xl shadow-lg relative overflow-hidden">
-                    <img 
-                      src="/qr_code.jpg"
+                    <Image width={800} height={800} src="/qr_code.jpg"  
                       alt="VietQR Techcombank 1Beauty.Asia"
                       className="w-56 h-auto object-contain bg-white p-1 rounded-2xl"
-                    />
+                     />
                   </div>
 
                   <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-center w-full max-w-md">

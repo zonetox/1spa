@@ -1,4 +1,5 @@
 'use client'
+import toast from 'react-hot-toast';
 
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -103,7 +104,7 @@ export default function AdminPackagesPage() {
       setIsModalOpen(false)
       fetchPackages()
     } catch (err: any) {
-      alert(`Lỗi: ${err.message}`)
+      toast.error(`Lỗi: ${err.message}`)
     }
   }
 
@@ -120,7 +121,7 @@ export default function AdminPackagesPage() {
       if (result.error) throw new Error(result.error)
       fetchPackages()
     } catch (err: any) {
-      alert(`Lỗi: ${err.message}`)
+      toast.error(`Lỗi: ${err.message}`)
     }
   }
 

@@ -9,8 +9,20 @@ const supabaseAdmin = createClient(
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder_key')
 
+// Basic in-memory rate limiter
+const rateLimitMap = new Map<string, number>()
+
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get('x-forwarded-for') || 'unknown-ip'
+    const now = Date.now()
+    const lastRequestTime = rateLimitMap.get(ip)
+
+    if (lastRequestTime && now - lastRequestTime < 60000) {
+      return NextResponse.json({ error: 'Bạn thao tác quá nhanh. Vui lòng đợi 1 phút rồi thử lại.' }, { status: 429 })
+    }
+    rateLimitMap.set(ip, now)
+
     const { 
         business_id, 
         business_name, 

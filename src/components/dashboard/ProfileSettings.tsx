@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import toast from 'react-hot-toast';
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { createClient } from '@/lib/supabase/client'
 import { Camera, Save, Loader2 } from 'lucide-react'
@@ -20,7 +21,7 @@ export function ProfileSettings({ profile, onUpdate }: { profile: any, onUpdate:
         setForm({ ...form, [field]: url })
       }
     } catch (err: any) {
-      alert(err.message)
+      toast(err.message)
     }
   }
 
@@ -43,10 +44,10 @@ export function ProfileSettings({ profile, onUpdate }: { profile: any, onUpdate:
 
     setIsSaving(false)
     if (!error) {
-      alert('Cập nhật thành công!')
+      toast.success('Cập nhật thành công!')
       onUpdate(form)
     } else {
-      alert('Lỗi: ' + error.message)
+      toast('Lỗi: ' + error.message)
     }
   }
 

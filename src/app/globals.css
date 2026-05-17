@@ -160,3 +160,36 @@
 .animate-pulse-gold {
   animation: pulse-gold 3s infinite ease-in-out;
 }
+
+/* ============================================================
+   UniversalTemplate — Static classes (migrated from dangerouslySetInnerHTML)
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+.text-royal-shadow {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes gold-shine {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+.btn-shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine-effect:hover::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 50%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(30deg);
+  animation: gold-shine 0.8s forwards;
+}

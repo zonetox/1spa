@@ -47,8 +47,7 @@ export const V7Header: React.FC<V7HeaderProps> = ({
         {/* Logo - Strong visibility fallback */}
         <Link href="/" className="relative h-12 md:h-14 w-32 md:w-44 flex items-center">
           {logoUrl ? (
-            <img 
-              src={logoUrl} 
+            <Image width={800} height={800} src={logoUrl}   
               alt={businessName} 
               className="h-full w-auto object-contain object-left transition-all duration-300 hover:scale-105"
               style={{ 
@@ -56,7 +55,7 @@ export const V7Header: React.FC<V7HeaderProps> = ({
                   ? 'brightness(0) contrast(100%)' 
                   : 'none' 
               }}
-            />
+             />
           ) : (
             <span className="text-xl md:text-2xl font-serif font-black tracking-tight text-[#1A1A1A]">
               {businessName}

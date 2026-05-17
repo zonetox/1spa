@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Mail, Lock, Building, ArrowRight, ShieldCheck, AlertCircle, MessageCircle } from 'lucide-react'
@@ -60,13 +61,14 @@ export default function SignupPage() {
           }).select().single()
 
         if (profError) {
+          await supabase.from('profiles').delete().eq('id', authData.user.id)
           console.error('Business profile creation error:', profError)
           throw new Error('Lỗi tạo hồ sơ doanh nghiệp: ' + profError.message)
         }
 
         const { error: lpError } = await supabase.from('landing_pages').insert({
           business_id: profile.id,
-          template_id: 'BeautyTemplate',
+          template_id: 'UniversalTemplate',
           status: 'Published',
           content_json: {
             hero_section: { hero_title: `Chào mừng tới ${formData.businessName}`, hero_subtitle: 'Nâng tầm vẻ đẹp thượng lưu' },
@@ -77,6 +79,8 @@ export default function SignupPage() {
           }
         })
         if (lpError) {
+          await supabase.from('business_profiles').delete().eq('account_id', authData.user.id)
+          await supabase.from('profiles').delete().eq('id', authData.user.id)
           console.error('Landing page creation error:', lpError)
           throw new Error('Lỗi tạo trang Landing Page: ' + lpError.message)
         }
@@ -103,11 +107,10 @@ export default function SignupPage() {
             className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#F9F6F0]/90 backdrop-blur-md"
           >
             <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 2 }}>
-              <img 
-                src="/logo-mark.png" 
+              <Image width={800} height={800} src="/logo-mark.png"   
                 alt="Loading..." 
                 className="w-16 h-16 object-contain" 
-              />
+               />
             </motion.div>
             <p className="mt-6 text-[#D4AF37] font-bold tracking-[0.3em] uppercase text-[11px]">Đang thiết lập không gian...</p>
           </motion.div>
@@ -141,11 +144,10 @@ export default function SignupPage() {
             <div className="relative z-10 space-y-6">
               <Link href="/">
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.5 }} className="flex items-center">
-                  <img 
-                    src="/logo.png" 
+                  <Image width={800} height={800} src="/logo.png"   
                     alt="1BEAUTY.ASIA" 
                     className="h-8 w-auto object-contain brightness-0 invert" 
-                  />
+                   />
                 </motion.div>
               </Link>
 

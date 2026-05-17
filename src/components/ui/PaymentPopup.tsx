@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import toast from 'react-hot-toast';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Check, Copy, Sparkles, AlertCircle, ArrowRight, ShieldCheck, Landmark, Crown, Star, Shield } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -92,7 +94,7 @@ export const PaymentPopup = ({ isOpen, onClose, onConfirm }: PaymentPopupProps) 
 
   const handleConfirmPayment = async () => {
     if (!profile || !selectedPkg) {
-      alert('Vui lòng chọn một gói dịch vụ trước khi xác nhận chuyển khoản.')
+      toast('Vui lòng chọn một gói dịch vụ trước khi xác nhận chuyển khoản.')
       return
     }
     setSubmitting(true)
@@ -102,7 +104,7 @@ export const PaymentPopup = ({ isOpen, onClose, onConfirm }: PaymentPopupProps) 
       const { error } = await supabase.from('subscriptions').insert([{
         business_id: profile.id,
         package_id: selectedPkg.id,
-        status: 'Active',
+        status: 'Pending',
         verified: false
       }])
 
@@ -111,24 +113,24 @@ export const PaymentPopup = ({ isOpen, onClose, onConfirm }: PaymentPopupProps) 
       if (user) {
         await supabase
           .from('profiles')
-          .update({ subscription_status: 'active' })
+          .update({ subscription_status: 'pending_verification' })
           .eq('id', user.id)
       }
 
       if (!error) {
-        alert('Kích hoạt gói dịch vụ thành công! Hệ thống đã ghi nhận quyền sở hữu Premium của bạn. Admin sẽ đối chiếu giao dịch trong vòng 24 giờ.')
+        toast('Yêu cầu thanh toán đã được ghi nhận! Admin sẽ xác minh giao dịch và kích hoạt gói Premium trong vòng 24 giờ. Vui lòng đợi thông báo qua email.')
         if (onConfirm) onConfirm()
         onClose()
       } else {
-        // Fallback kích hoạt trực tiếp nếu bảng subscriptions có cấu trúc khác biệt
+        // Fallback: chỉ set pending_verification nếu bảng subscriptions có cấu trúc khác
         const { data: { user } } = await supabase.auth.getUser()
         if (user) {
           const { error: profileUpdateErr } = await supabase
             .from('profiles')
-            .update({ subscription_status: 'active' })
+            .update({ subscription_status: 'pending_verification' })
             .eq('id', user.id)
           if (!profileUpdateErr) {
-            alert('Kích hoạt thành công đặc quyền hội viên Premium!')
+            toast('Yêu cầu thanh toán đã được ghi nhận! Admin sẽ xác minh và kích hoạt trong vòng 24 giờ.')
             if (onConfirm) onConfirm()
             onClose()
             return
@@ -138,7 +140,7 @@ export const PaymentPopup = ({ isOpen, onClose, onConfirm }: PaymentPopupProps) 
       }
     } catch (err: any) {
       console.error('Payment Error:', err)
-      alert('Có lỗi xảy ra: ' + (err.message || err))
+      toast('Có lỗi xảy ra: ' + (err.message || err))
     } finally {
       setSubmitting(false)
     }
@@ -314,11 +316,10 @@ export const PaymentPopup = ({ isOpen, onClose, onConfirm }: PaymentPopupProps) 
                           {/* Techcombank VietQR */}
                           <div className="flex flex-col items-center justify-center p-4 bg-[#FAF8F5] border border-[#D4AF37]/15 rounded-3xl shadow-inner relative group">
                             <div className="absolute inset-0 border border-[#D4AF37]/0 group-hover:border-[#D4AF37]/20 rounded-3xl transition-all pointer-events-none" />
-                            <img 
-                              src="/qr_code.jpg"
+                            <Image width={800} height={800} src="/qr_code.jpg"  
                               alt="VietQR Techcombank"
                               className="w-56 h-auto object-contain bg-white p-2 rounded-2xl shadow-sm"
-                            />
+                             />
                             <span className="text-[10px] text-zinc-500 font-mono tracking-widest uppercase mt-3">TECHCOMBANK • 1BEAUTY.ASIA</span>
                           </div>
 
@@ -343,11 +344,11 @@ export const PaymentPopup = ({ isOpen, onClose, onConfirm }: PaymentPopupProps) 
                         disabled={submitting}
                         className="w-full py-4 bg-gradient-to-r from-[#2F2F2F] to-[#121212] text-[#D4AF37] border border-[#D4AF37]/35 hover:border-[#D4AF37] hover:brightness-110 rounded-2xl font-bold uppercase tracking-widest text-xs transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg"
                       >
-                        {submitting ? 'Đang kích hoạt đặc quyền...' : 'Tôi Đã Chuyển Khoản Thành Công'}
+                        {submitting ? 'Đang ghi nhận thanh toán...' : 'Tôi Đã Chuyển Khoản Thành Công'}
                         <ArrowRight size={14} />
                       </button>
                       <p className="text-[10px] text-zinc-400 font-medium leading-normal text-center">
-                        Gói Premium sẽ được kích hoạt tức thì cho tài khoản của bạn. Đội ngũ đối chiếu của 1Beauty.Asia sẽ hoàn tất xác minh giao dịch trong vòng 24 giờ.
+                        Sau khi bấm xác nhận, đội ngũ 1Beauty.Asia sẽ đối chiếu giao dịch ngân hàng và kích hoạt Premium trong vòng 24 giờ.
                       </p>
                     </div>
                   </div>

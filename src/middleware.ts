@@ -54,6 +54,30 @@ export async function middleware(request: NextRequest) {
         if (!user) {
             return NextResponse.redirect(new URL('/login', request.url))
         }
+
+        // Check subscription expiry — skip for admin users
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('role, subscription_status, expiry_date')
+            .eq('id', user.id)
+            .single()
+
+        // Only check expiry for non-admin business accounts
+        if (profile && profile.role?.toLowerCase() !== 'admin') {
+            const isExpired = profile.expiry_date && new Date(profile.expiry_date) < new Date()
+            const isPendingOrExpired =
+                isExpired &&
+                profile.subscription_status !== 'trial' &&
+                profile.subscription_status !== 'active' &&
+                profile.subscription_status !== 'pending_verification'
+
+            if (isPendingOrExpired) {
+                // Redirect to upgrade page, but not if already on upgrade-related pages
+                if (!request.nextUrl.pathname.includes('/upgrade')) {
+                    return NextResponse.redirect(new URL('/dashboard?expired=true', request.url))
+                }
+            }
+        }
     }
 
     return response

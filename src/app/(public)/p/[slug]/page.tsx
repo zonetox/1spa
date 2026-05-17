@@ -4,12 +4,12 @@ import { createClient } from '@/lib/supabase/server'
 import LandingPageWrapper from '@/components/templates/LandingPageWrapper'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
-  searchParams: {
+  }>
+  searchParams: Promise<{
     edit?: string
-  }
+  }>
 }
 
 const VIRTUAL_DEMOS: Record<string, any> = {

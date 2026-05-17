@@ -1,4 +1,5 @@
 'use client'
+import toast from 'react-hot-toast';
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -327,7 +328,7 @@ export default function AdminImportPage() {
 
   const handleCopyLink = (slug: string) => {
     navigator.clipboard.writeText(`${window.location.origin}/p/${slug}`)
-    alert('Đã copy link Landing Page đối tác!')
+    toast('Đã copy link Landing Page đối tác!')
   }
 
   const togglePagePublished = async (idx: number, slug: string, currentVal: boolean) => {
@@ -353,7 +354,7 @@ export default function AdminImportPage() {
         fetchMetrics()
       }
     } catch (err: any) {
-      alert('Lỗi cập nhật trạng thái: ' + err.message)
+      toast('Lỗi cập nhật trạng thái: ' + err.message)
     }
   }
 
@@ -415,10 +416,10 @@ export default function AdminImportPage() {
         zalo: editForm.zalo
       } : item))
 
-      alert('Đồng bộ dữ liệu cập nhật thành công lên hệ thống!')
+      toast.success('Đồng bộ dữ liệu cập nhật thành công lên hệ thống!')
       setIsEditModalOpen(false)
     } catch (err: any) {
-      alert('Đồng bộ thất bại: ' + err.message)
+      toast('Đồng bộ thất bại: ' + err.message)
     } finally {
       setIsSavingEdit(false)
     }

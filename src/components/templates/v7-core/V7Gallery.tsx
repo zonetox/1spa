@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 interface GalleryItem {
@@ -46,7 +47,7 @@ export const V7Gallery: React.FC<V7GalleryProps> = ({
         {/* High End Gallery Masonry */}
         <div className="columns-1 md:columns-3 gap-8 space-y-8">
           {validItems.map((item, index) => {
-            const imgSrc = item.img || item.url;
+            const imgSrc = item.img || item.url || '';
             const imgAlt = item.title || item.caption || 'Gallery item';
             
             return (
@@ -59,11 +60,10 @@ export const V7Gallery: React.FC<V7GalleryProps> = ({
                 style={{ borderColor: 'rgba(0,0,0,0.05)' }}
               >
                 <div className="relative aspect-auto overflow-hidden">
-                  <img 
-                    src={imgSrc} 
+                  <Image width={800} height={800} src={imgSrc}   
                     alt={imgAlt} 
                     className="w-full h-auto object-cover scale-[1.02] group-hover:scale-110 transition-transform duration-[1.5s] ease-out" 
-                  />
+                   />
                   {/* Reveal Overlay */}
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-end p-8 backdrop-blur-[2px]">
                     <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500 text-center">

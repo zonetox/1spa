@@ -95,7 +95,6 @@ export async function completeOnboarding(formData: FormData) {
         is_verified: false,
       })
   }
-  }
 
   redirect('/dashboard')
 }

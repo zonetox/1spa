@@ -1,4 +1,5 @@
 'use client'
+import toast from 'react-hot-toast';
 
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -77,9 +78,9 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
 
       if (error) throw error
       setHasChanges(false)
-      alert('Đã lưu thay đổi thành công!')
+      toast.success('Đã lưu thay đổi thành công!')
     } catch (error: any) {
-      alert('Lỗi khi lưu: ' + error.message)
+      toast('Lỗi khi lưu: ' + error.message)
     } finally {
       setIsSaving(false)
     }

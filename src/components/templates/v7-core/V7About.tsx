@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { EditableText } from '@/components/shared/EditableText';
 
@@ -41,7 +42,7 @@ export const V7About: React.FC<V7AboutProps> = ({
               className={`relative z-10 w-4/5 group/img ${isEditing ? 'cursor-pointer' : ''}`}
               onClick={() => isEditing && onImagePick && onImagePick('about_us.about_image_1', image1)}
             >
-              <img src={image1} alt={title} className="v7-img-about rounded-sm shadow-2xl group-hover/img:brightness-75 transition-all" />
+              <Image width={800} height={800} src={image1}   alt={title} className="v7-img-about rounded-sm shadow-2xl group-hover/img:brightness-75 transition-all"  />
               {isEditing && (
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img:opacity-100 bg-black/30 transition-opacity">
                   <span className="bg-white text-black text-[10px] font-bold px-3 py-1.5 rounded-full uppercase">Đổi ảnh 1</span>
@@ -56,7 +57,7 @@ export const V7About: React.FC<V7AboutProps> = ({
               className={`absolute -bottom-12 -right-4 z-20 w-3/5 group/img2 ${isEditing ? 'cursor-pointer' : ''}`}
               onClick={() => isEditing && onImagePick && onImagePick('about_us.about_image_2', image2)}
             >
-              <img src={image2} alt="Interior" className="v7-img-about rounded-sm shadow-2xl border-8 border-background group-hover/img2:brightness-75 transition-all" />
+              <Image width={800} height={800} src={image2}   alt="Interior" className="v7-img-about rounded-sm shadow-2xl border-8 border-background group-hover/img2:brightness-75 transition-all"  />
               {isEditing && (
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img2:opacity-100 bg-black/30 transition-opacity">
                   <span className="bg-white text-black text-[10px] font-bold px-3 py-1.5 rounded-full uppercase">Đổi ảnh 2</span>

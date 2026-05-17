@@ -1,4 +1,5 @@
 'use client'
+import toast from 'react-hot-toast';
 
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -102,7 +103,7 @@ export default function UsersAuditPage() {
     if (!error) {
       setBusinesses(prev => prev.map(b => b.id === id ? { ...b, is_verified: !current } : b))
     } else {
-      alert('Lỗi cập nhật: ' + error.message)
+      toast('Lỗi cập nhật: ' + error.message)
     }
   }
 
@@ -118,7 +119,7 @@ export default function UsersAuditPage() {
           : b
       ))
     } else {
-      alert('Lỗi cập nhật trang đích: ' + error.message)
+      toast('Lỗi cập nhật trang đích: ' + error.message)
     }
   }
 
@@ -161,7 +162,7 @@ export default function UsersAuditPage() {
       setBusinesses(prev => prev.map(b => b.id === editingBusiness.id ? editingBusiness : b))
       setEditingBusiness(null)
     } catch (err: any) {
-      alert('Lỗi cập nhật thông tin: ' + err.message)
+      toast('Lỗi cập nhật thông tin: ' + err.message)
     } finally {
       setSaving(false)
     }

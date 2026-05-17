@@ -1,4 +1,5 @@
 'use client'
+import toast from 'react-hot-toast';
 
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -72,10 +73,10 @@ export default function AdminSubscriptionsPage() {
       .eq('id', id)
 
     if (!error) {
-      alert('Đã xác nhận giao dịch thành công! Gói dịch vụ duy trì trạng thái Active an toàn.')
+      toast.success('Đã xác nhận giao dịch thành công! Gói dịch vụ duy trì trạng thái Active an toàn.')
       fetchSubscriptions()
     } else {
-      alert('Lỗi khi duyệt: ' + error.message)
+      toast('Lỗi khi duyệt: ' + error.message)
     }
   }
 
@@ -87,10 +88,10 @@ export default function AdminSubscriptionsPage() {
         .eq('id', id)
 
       if (!error) {
-        alert('Đã từ chối giao dịch thành công. Gói dịch vụ đã chuyển sang trạng thái Pending (Vô hiệu hóa quyền lợi).')
+        toast.success('Đã từ chối giao dịch thành công. Gói dịch vụ đã chuyển sang trạng thái Pending (Vô hiệu hóa quyền lợi).')
         fetchSubscriptions()
       } else {
-        alert('Lỗi khi đình chỉ: ' + error.message)
+        toast('Lỗi khi đình chỉ: ' + error.message)
       }
     }
   }

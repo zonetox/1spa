@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image';
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Phone, MessageSquare, Share2, Music2, ArrowUpRight } from 'lucide-react'
@@ -22,11 +23,10 @@ export function Footer() {
           <div className="space-y-8 lg:col-span-1">
             <div>
               <div className="flex items-center mb-4">
-                <img 
-                  src="/logo.png" 
+                <Image width={800} height={800} src="/logo.png"   
                   alt="1BEAUTY.ASIA" 
                   className="h-10 w-auto object-contain"
-                />
+                 />
               </div>
               <p className="text-[#2F2F2F]/50 text-sm leading-relaxed font-medium">
                 Hệ sinh thái danh bạ làm đẹp tinh hoa hàng đầu Việt Nam.

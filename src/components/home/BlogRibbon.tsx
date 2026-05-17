@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image';
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { motion } from 'framer-motion'
@@ -68,7 +69,7 @@ export function BlogRibbon() {
             className="md:col-span-7 group cursor-pointer">
             <Link href={`/blog/${posts[0]?.slug || ''}`}>
               <div className="relative h-[520px] rounded-3xl overflow-hidden mb-6">
-                <img src={posts[0]?.img} alt={posts[0]?.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <Image width={800} height={800} src={posts[0]?.img}   alt={posts[0]?.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"  />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2F2F2F]/80 via-transparent to-transparent" />
                 <div className="absolute bottom-8 left-8 right-8">
                   <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase text-white mb-4"
@@ -91,7 +92,7 @@ export function BlogRibbon() {
                 className="group cursor-pointer flex gap-5">
                 <Link href={`/blog/${post.slug}`} className="flex gap-5 flex-1">
                   <div className="relative w-32 h-28 rounded-2xl overflow-hidden flex-shrink-0">
-                    <img src={post.img} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <Image width={800} height={800} src={post.img}   alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"  />
                   </div>
                   <div className="flex flex-col justify-center">
                     <span className="text-[10px] tracking-[0.3em] uppercase text-[#D4AF37] font-medium mb-2">{post.label}</span>

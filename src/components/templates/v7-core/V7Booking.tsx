@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 interface V7BookingProps {
@@ -22,11 +23,10 @@ export const V7Booking: React.FC<V7BookingProps> = ({
     <section id="booking" className="relative py-24 md:py-32 overflow-hidden">
       {/* Background with Parallax effect simulation */}
       <div className="absolute inset-0 z-0">
-        <img 
-          src={bgImage || 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80'} 
+        <Image width={800} height={800} src={bgImage || 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80'}   
           alt="Booking background" 
           className="w-full h-full object-cover brightness-[1.0] saturate-[1.1]"
-        />
+         />
         {/* High-class ambient fog layer */}
         <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px]" />
       </div>

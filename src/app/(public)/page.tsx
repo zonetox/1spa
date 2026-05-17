@@ -19,7 +19,6 @@ export default function Home() {
       const { data } = await supabase.from('active_landing_pages').select('*')
       if (data && data.length > 0) {
         const mapped = data.map((item: any) => {
-          const rawCat = (item.category || 'Spa') as keyof typeof CANONICAL_TEMPLATES;
           return {
             slug: item.business_slug,
             business_name: item.business_name,

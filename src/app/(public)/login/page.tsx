@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Mail, Lock, ArrowRight, Sparkles, AlertCircle } from 'lucide-react'
@@ -75,11 +76,10 @@ export default function LoginPage() {
                 transition={{ duration: 1.5 }}
                 className="flex items-center justify-center"
               >
-                <img 
-                  src="/logo.png" 
+                <Image width={800} height={800} src="/logo.png"   
                   alt="1BEAUTY.ASIA" 
                   className="h-9 w-auto object-contain" 
-                />
+                 />
               </motion.div>
             </Link>
             <div className="flex flex-col items-center">

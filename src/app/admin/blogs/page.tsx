@@ -1,4 +1,5 @@
 'use client'
+import toast from 'react-hot-toast';
 
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -50,7 +51,7 @@ export default function AdminBlogsPage() {
         .single()
 
       if (profile?.role?.toLowerCase() !== 'admin') {
-        alert('Unauthorized: Quyền truy cập bị từ chối.')
+        toast('Unauthorized: Quyền truy cập bị từ chối.')
         window.location.href = '/dashboard'
         return
       }
@@ -120,11 +121,11 @@ export default function AdminBlogsPage() {
   async function saveBlog() {
     if (!selectedBiz) return
     if (!title.trim() || !content.trim()) {
-      alert('Vui lòng nhập tiêu đề và nội dung bài viết.')
+      toast('Vui lòng nhập tiêu đề và nội dung bài viết.')
       return
     }
     if (blogs.length >= maxBlogs) {
-      alert(`Doanh nghiệp đã đạt giới hạn ${maxBlogs} bài viết của gói hiện tại!`)
+      toast(`Doanh nghiệp đã đạt giới hạn ${maxBlogs} bài viết của gói hiện tại!`)
       return
     }
 
@@ -163,7 +164,7 @@ export default function AdminBlogsPage() {
       setSelectedCategory('')
       setShowForm(false)
     } catch (err: any) {
-      alert(`Lỗi: ${err.message}`)
+      toast.error(`Lỗi: ${err.message}`)
     }
     setSaving(false)
   }
@@ -178,7 +179,7 @@ export default function AdminBlogsPage() {
     }]).select().single()
 
     if (error) {
-      alert('Lỗi thêm danh mục: ' + error.message)
+      toast('Lỗi thêm danh mục: ' + error.message)
     } else {
       setCategories(prev => [...prev, data].sort((a, b) => a.name.localeCompare(b.name)))
       setNewCategory('')
@@ -198,7 +199,7 @@ export default function AdminBlogsPage() {
       if (result.error) throw new Error(result.error)
       setBlogs(prev => prev.filter(b => b.id !== id))
     } catch (err: any) {
-      alert(`Lỗi: ${err.message}`)
+      toast.error(`Lỗi: ${err.message}`)
     }
   }
 

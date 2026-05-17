@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 interface ServiceItem {
@@ -57,11 +58,10 @@ export const V7Services: React.FC<V7ServicesProps> = ({
               >
                 {/* Card Top Image - Perfect Contain/Blend */}
                 <div className="aspect-[4/3] w-full overflow-hidden relative bg-white">
-                  <img 
-                    src={service.img} 
+                  <Image width={800} height={800} src={service.img}   
                     alt={service.name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
+                   />
                   {service.tagline && (
                     <div className="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-black/60 text-[9px] font-bold tracking-[0.1em] text-white uppercase">
                       {service.tagline}

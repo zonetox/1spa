@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Cormorant_Garamond, JetBrains_Mono, Playfair_Display, Montserrat } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const inter = Inter({
@@ -46,6 +47,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body suppressHydrationWarning className="min-h-full bg-background text-foreground selection:bg-accent/30 selection:text-foreground font-sans">
+        <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
         {children}
       </body>
     </html>

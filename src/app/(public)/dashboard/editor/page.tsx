@@ -1,4 +1,5 @@
 'use client'
+import toast from 'react-hot-toast';
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -522,7 +523,7 @@ export default function EditorPage() {
         isOpen={isPaymentOpen}
         onClose={() => setIsPaymentOpen(false)}
         onConfirm={() => {
-          alert('Yêu cầu nâng cấp đã được gửi. Admin sẽ xác nhận trong 1-2 giờ.')
+          toast('Yêu cầu nâng cấp đã được gửi. Admin sẽ xác nhận trong 1-2 giờ.')
           setIsPaymentOpen(false)
         }}
         planName="GÓI CÔNG TY (PREMIUM)"

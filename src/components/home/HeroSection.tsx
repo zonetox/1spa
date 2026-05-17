@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, MapPin, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -39,7 +40,7 @@ export function HeroSection() {
       {/* Background Image with optimized brightness for logo contrast */}
       <AnimatePresence mode="wait">
         <motion.div key={current} initial={{ opacity: 0, scale: 1.06 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.8, ease: 'easeOut' }} className="absolute inset-0">
-          <img src={slide.bg} alt="" className="w-full h-full object-cover brightness-[0.76] saturate-[1.05]" />
+          <Image width={800} height={800} src={slide.bg}   alt="" className="w-full h-full object-cover brightness-[0.76] saturate-[1.05]"  />
           {/* Subtle top-vignette to make white/gold navigation menus stand out perfectly */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent z-10 pointer-events-none" />
           {/* Gradient overlay - right side heavy, left light for text */}
