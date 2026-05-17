@@ -25,7 +25,6 @@ type Blog = {
 export default function AdminBlogsPage() {
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [selectedBiz, setSelectedBiz] = useState<Business | null>(null)
-  const [isAdminVerified, setIsAdminVerified] = useState(true)
   const [blogs, setBlogs] = useState<Blog[]>([])
   const [maxBlogs, setMaxBlogs] = useState(3)
   const [loading, setLoading] = useState(true)
@@ -190,8 +189,6 @@ export default function AdminBlogsPage() {
 
   const isQuotaFull = blogs.length >= maxBlogs
   
-  if (!isAdminVerified) return null
-
   return (
     <div className="space-y-6">
       <div>
