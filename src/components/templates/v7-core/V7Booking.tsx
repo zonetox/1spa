@@ -52,24 +52,60 @@ export const V7Booking: React.FC<V7BookingProps> = ({
                 {subtitle}
               </p>
               
-              <div className="w-full max-w-md flex flex-col gap-4">
-                <a 
-                  href="#contact"
-                  className="relative overflow-hidden w-full py-4 rounded-full text-white font-bold uppercase tracking-[0.3em] text-[11px] flex items-center justify-center gap-3 group shadow-lg transition-all hover:scale-[1.02]"
+              <form 
+                className="w-full max-w-md flex flex-col gap-4 mt-6 text-left"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  const fd = new FormData(e.currentTarget);
+                  const data = {
+                    customer_name: fd.get('name'),
+                    customer_phone: fd.get('phone'),
+                    service_requested: fd.get('service'),
+                  };
+                  try {
+                    const res = await fetch('/api/bookings', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(data)
+                    });
+                    if (res.ok) {
+                      alert('Đặt lịch thành công! Chúng tôi sẽ liên hệ bạn sớm nhất.');
+                      (e.target as HTMLFormElement).reset();
+                    } else {
+                      alert('Có lỗi xảy ra, vui lòng thử lại.');
+                    }
+                  } catch (err) {
+                    alert('Lỗi mạng. Vui lòng thử lại.');
+                  }
+                }}
+              >
+                <input 
+                  required 
+                  name="name" 
+                  placeholder="Họ và tên của bạn" 
+                  className="w-full px-5 py-4 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:border-[#1A1A1A] transition-colors"
+                />
+                <input 
+                  required 
+                  name="phone" 
+                  type="tel" 
+                  placeholder="Số điện thoại liên hệ" 
+                  className="w-full px-5 py-4 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:border-[#1A1A1A] transition-colors"
+                />
+                <input 
+                  name="service" 
+                  placeholder="Dịch vụ quan tâm (không bắt buộc)" 
+                  className="w-full px-5 py-4 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:border-[#1A1A1A] transition-colors"
+                />
+                <button 
+                  type="submit"
+                  className="relative overflow-hidden w-full py-4 rounded-xl text-white font-bold uppercase tracking-[0.3em] text-[11px] flex items-center justify-center gap-3 group shadow-lg transition-all hover:scale-[1.02]"
                   style={{ background: themeColor }}
                 >
                   <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                   Đặt lịch trải nghiệm ngay
-                </a>
-                
-                <a 
-                  href="#contact"
-                  className="w-full py-4 rounded-full border text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white/50 backdrop-blur-sm transition-all flex items-center justify-center"
-                  style={{ borderColor: `${themeColor}60`, color: themeColor }}
-                >
-                  Tư vấn liệu trình miễn phí
-                </a>
-              </div>
+                </button>
+              </form>
             </div>
           </motion.div>
         </div>

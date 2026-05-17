@@ -263,7 +263,8 @@ export function UniversalTemplate({
                   transition={{ duration: 0.8 }}
                   className="absolute top-0 left-0 w-[80%] h-[85%] overflow-hidden rounded-2xl shadow-[0_40px_60px_-15px_rgba(0,0,0,0.15)] border-8 border-white z-10"
                 >
-                  <img 
+                  <Image 
+                    width={800} height={600}
                     src={about_us.about_image_1 || "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80"} 
                     className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-[2s]" 
                     alt="Visual branding"
@@ -278,7 +279,8 @@ export function UniversalTemplate({
                   transition={{ delay: 0.4, duration: 0.8 }}
                   className="absolute bottom-0 right-0 w-[58%] h-[60%] overflow-hidden rounded-2xl shadow-[0_30px_50px_-10px_rgba(0,0,0,0.2)] border-[12px] border-white z-20"
                 >
-                  <img 
+                  <Image 
+                    width={800} height={600}
                     src={about_us.about_image_2 || "https://images.unsplash.com/photo-1544161515-4af6b1d46af0?auto=format&fit=crop&q=80"} 
                     className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-[2s]" 
                     alt="Detail visual"

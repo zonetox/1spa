@@ -17,8 +17,24 @@ function UpdatePasswordForm() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    // Supabase embeds the token in the URL hash for PKCE flow
-    // The client will automatically exchange it when the page loads
+    const supabase = createClient()
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        // Session is ready for updating password
+      }
+    })
+    
+    // Check if error in hash
+    if (typeof window !== 'undefined') {
+      const hashParams = new URLSearchParams(window.location.hash.substring(1))
+      if (hashParams.has('error_description')) {
+        setErrorMsg(hashParams.get('error_description') || 'Lỗi xác thực token.')
+      }
+    }
+
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
   const handleUpdatePassword = async (e: React.FormEvent) => {

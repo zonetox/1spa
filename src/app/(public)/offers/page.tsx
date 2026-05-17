@@ -3,6 +3,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Clock, Gift, Percent, ArrowRight, Sparkles } from 'lucide-react'
+import Image from 'next/image'
 
 // Mock Data cho Offers
 const OFFERS = [
@@ -119,7 +120,9 @@ export default function OffersPage() {
             >
               {/* Image & Badge */}
               <div className="relative h-64 overflow-hidden">
-                <img 
+                <Image 
+                  width={600}
+                  height={400}
                   src={offer.image} 
                   alt={offer.title} 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out"

@@ -12,6 +12,11 @@ export function useFileUpload() {
       throw new Error('Kích thước ảnh phải nhỏ hơn 2MB!')
     }
 
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+    if (!allowedMimeTypes.includes(file.type)) {
+      throw new Error('Định dạng file không được hỗ trợ. Vui lòng upload ảnh JPG, PNG hoặc WEBP.')
+    }
+
     setIsUploading(true)
     try {
       const fileExt = file.name.split('.').pop()

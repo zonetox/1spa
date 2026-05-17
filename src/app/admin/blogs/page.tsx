@@ -1,5 +1,6 @@
 'use client'
 import toast from 'react-hot-toast';
+import { confirmAction } from '@/lib/confirm';
 
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -188,7 +189,7 @@ export default function AdminBlogsPage() {
   }
 
   async function deleteBlog(id: string) {
-    if (!confirm('Xoá bài viết này?')) return
+    if (!(await confirmAction('Xoá bài viết này?'))) return
     const token = await getAuthToken()
     try {
       const response = await fetch(`/api/admin/blogs?id=${id}`, {

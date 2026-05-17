@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 import { createClient } from '@/lib/supabase/client'
 import { 
   BarChart3, 
@@ -26,40 +27,7 @@ import {
 import LeadTrackerTable from '@/components/dashboard/LeadTrackerTable'
 import { ProfileSettings } from '@/components/dashboard/ProfileSettings'
 
-// ── Toast System ──────────────────────────────────────────────────────────────
-type ToastType = 'success' | 'error' | 'info'
-interface Toast { id: number; message: string; type: ToastType }
 
-function ToastContainer({ toasts, onRemove }: { toasts: Toast[]; onRemove: (id: number) => void }) {
-  return (
-    <div className="fixed top-6 right-6 z-[99999] flex flex-col gap-3 pointer-events-none">
-      <AnimatePresence>
-        {toasts.map(t => (
-          <motion.div
-            key={t.id}
-            initial={{ opacity: 0, x: 60, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 60, scale: 0.95 }}
-            transition={{ duration: 0.25 }}
-            className={`pointer-events-auto flex items-start gap-3 px-5 py-4 rounded-2xl shadow-2xl border max-w-sm ${
-              t.type === 'success' ? 'bg-white border-green-200 text-green-800' :
-              t.type === 'error'   ? 'bg-white border-red-200 text-red-800' :
-                                     'bg-white border-[#D4AF37]/40 text-[#2F2F2F]'
-            }`}
-          >
-            {t.type === 'success' && <CheckCircle2 size={18} className="text-green-500 mt-0.5 shrink-0" />}
-            {t.type === 'error'   && <AlertCircle  size={18} className="text-red-500 mt-0.5 shrink-0" />}
-            {t.type === 'info'    && <Info          size={18} className="text-[#D4AF37] mt-0.5 shrink-0" />}
-            <p className="text-sm font-medium leading-snug flex-1">{t.message}</p>
-            <button onClick={() => onRemove(t.id)} className="opacity-40 hover:opacity-80 transition-opacity mt-0.5 shrink-0">
-              <X size={14} />
-            </button>
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </div>
-  )
-}
 
 export const LOCATION_DATA: Record<string, string[]> = {
   'Hồ Chí Minh': ['Quận 1', 'Quận 3', 'Quận 5', 'Quận 7', 'Quận 10', 'Bình Thạnh', 'Phú Nhuận', 'Gò Vấp', 'Tân Bình', 'Bình Tân', 'Thủ Đức'],
@@ -77,16 +45,11 @@ export default function BusinessDashboard() {
   const [packages, setPackages] = useState<any[]>([])
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false)
 
-  // Toast state
-  const [toasts, setToasts] = useState<Toast[]>([])
-  const toastCounter = React.useRef(0)
-  const showToast = useCallback((message: string, type: ToastType = 'success') => {
-    const id = ++toastCounter.current
-    setToasts(prev => [...prev, { id, message, type }])
-    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000)
-  }, [])
-  const removeToast = useCallback((id: number) => {
-    setToasts(prev => prev.filter(t => t.id !== id))
+  // Toast is handled by react-hot-toast now
+  const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'success') => {
+    if (type === 'success') toast.success(message)
+    else if (type === 'error') toast.error(message)
+    else toast(message)
   }, [])
 
   // Quota states
@@ -530,7 +493,6 @@ export default function BusinessDashboard() {
 
   return (
     <main className="min-h-screen bg-[#F9F6F0] pt-32 pb-24 px-6 md:px-12 text-[#2F2F2F]">
-      <ToastContainer toasts={toasts} onRemove={removeToast} />
       <div className="max-w-7xl mx-auto space-y-12">
         
         {/* Welcome Header */}

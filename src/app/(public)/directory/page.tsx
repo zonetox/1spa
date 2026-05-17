@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { BusinessCard } from '@/components/ui/BusinessCard'
 import { SearchBar } from '@/components/ui/SearchBar'
 import { createClient } from '@/lib/supabase/client'
@@ -203,7 +204,7 @@ function DirectoryPageContent() {
                 {viewMode === 'list' ? (
                   <>
                     <div className="w-full md:w-72 h-48 rounded-xl overflow-hidden shrink-0 relative">
-                      <img src={business.cover_image} alt={business.business_name} className="w-full h-full object-cover" />
+                      <Image width={400} height={300} src={business.cover_image} alt={business.business_name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex flex-col justify-center py-4 px-2 space-y-4 w-full">
                        <span className="text-[10px] font-bold tracking-[0.2em] text-[#D4AF37] uppercase">{business.category}</span>

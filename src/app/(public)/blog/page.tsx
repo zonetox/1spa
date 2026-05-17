@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Clock, ArrowRight, Tag } from 'lucide-react'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { Footer } from '@/components/home/Footer'
 
@@ -140,7 +141,9 @@ export default function BlogPage() {
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[500px]">
                     <div className="relative h-[300px] lg:h-auto overflow-hidden order-1 lg:order-2">
-                      <img 
+                      <Image 
+                        width={800}
+                        height={600}
                         src={featuredPost.image_url || 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80'} 
                         alt={featuredPost.title}
                         className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out"
@@ -188,7 +191,9 @@ export default function BlogPage() {
                       className="group cursor-pointer flex flex-col space-y-6"
                     >
                       <div className="aspect-[4/3] rounded-[2rem] overflow-hidden shadow-sm relative border border-transparent hover:border-[#D4AF37]/20 transition-all duration-500">
-                        <img 
+                        <Image 
+                          width={600}
+                          height={450}
                           src={post.image_url || 'https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?auto=format&fit=crop&q=80'} 
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out"

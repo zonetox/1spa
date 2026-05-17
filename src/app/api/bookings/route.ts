@@ -9,19 +9,29 @@ const supabaseAdmin = createClient(
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder_key')
 
-// Basic in-memory rate limiter
-const rateLimitMap = new Map<string, number>()
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
+
+// Upstash rate limiter (1 request per 60 seconds)
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(1, '60 s'),
+  analytics: true,
+})
 
 export async function POST(req: Request) {
   try {
     const ip = req.headers.get('x-forwarded-for') || 'unknown-ip'
-    const now = Date.now()
-    const lastRequestTime = rateLimitMap.get(ip)
-
-    if (lastRequestTime && now - lastRequestTime < 60000) {
-      return NextResponse.json({ error: 'Bạn thao tác quá nhanh. Vui lòng đợi 1 phút rồi thử lại.' }, { status: 429 })
+    
+    try {
+      const { success } = await ratelimit.limit(`booking_${ip}`)
+      if (!success) {
+        return NextResponse.json({ error: 'Bạn thao tác quá nhanh. Vui lòng đợi 1 phút rồi thử lại.' }, { status: 429 })
+      }
+    } catch (err) {
+      // If Upstash fails (e.g. env missing in local dev), allow pass through or fallback
+      console.warn('Rate limit check failed, allowing request:', err)
     }
-    rateLimitMap.set(ip, now)
 
     const { 
         business_id, 

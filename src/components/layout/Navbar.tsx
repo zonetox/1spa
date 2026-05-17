@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Layers, Users, TrendingUp, Sparkles, Menu, X } from 'lucide-react'
 import { LotusIcon } from '@/components/ui/LotusIcon'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
 export const Navbar = () => {
@@ -88,7 +89,8 @@ export const Navbar = () => {
               whileHover={{ scale: 1.03 }}
               className="flex items-center"
             >
-              <img 
+              <Image 
+                width={150} height={50}
                 src="/logo.png" 
                 alt="1BEAUTY.ASIA" 
                 className={`h-9 w-auto object-contain transition-all duration-500 ${
@@ -144,7 +146,7 @@ export const Navbar = () => {
                     className="w-10 h-10 rounded-full border-2 border-[#D4AF37]/40 overflow-hidden shadow-md cursor-pointer flex items-center justify-center bg-[#D4AF37]/10 transition-all hover:border-[#D4AF37]"
                   >
                     {profile?.logo_url ? (
-                      <img src={profile.logo_url} alt="Profile" className="w-full h-full object-cover" />
+                      <Image width={100} height={100} src={profile.logo_url} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-xs font-mono font-bold text-[#D4AF37]">
                         {(profile?.business_name || user?.email || 'A').charAt(0).toUpperCase()}
@@ -174,7 +176,7 @@ export const Navbar = () => {
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 rounded-full border border-[#D4AF37]/30 overflow-hidden flex items-center justify-center bg-[#D4AF37]/5">
                                 {profile?.logo_url ? (
-                                  <img src={profile.logo_url} alt="Profile" className="w-full h-full object-cover" />
+                                  <Image width={100} height={100} src={profile.logo_url} alt="Profile" className="w-full h-full object-cover" />
                                 ) : (
                                   <span className="text-xs font-mono font-bold text-[#D4AF37]">
                                     {(profile?.business_name || user?.email || 'A').charAt(0).toUpperCase()}
@@ -330,7 +332,7 @@ export const Navbar = () => {
                   >
                     <div className="w-8 h-8 rounded-full border border-[#D4AF37]/40 overflow-hidden flex items-center justify-center bg-[#D4AF37]/10">
                       {profile?.logo_url ? (
-                        <img src={profile.logo_url} alt="Profile" className="w-full h-full object-cover" />
+                        <Image width={100} height={100} src={profile.logo_url} alt="Profile" className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-[10px] font-mono font-bold text-[#D4AF37]">
                           {(profile?.business_name || user?.email || 'A').charAt(0).toUpperCase()}

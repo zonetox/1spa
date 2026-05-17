@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Mail, Lock, Building, ArrowRight, ShieldCheck, AlertCircle, MessageCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { completeSignupProfile } from '@/app/actions/auth'
 import { slugify } from '@/lib/utils'
 import { LotusIcon } from '@/components/ui/LotusIcon'
 
@@ -34,55 +35,9 @@ export default function SignupPage() {
       if (authError) throw authError
 
       if (authData.user) {
-        const { error: accError } = await supabase
-          .from('profiles')
-          .insert({
-            id: authData.user.id,
-            email: formData.email,
-            role: 'Business',
-            subscription_status: 'trial',
-            expiry_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-          })
-        if (accError) {
-          console.error('Account creation error:', accError)
-          throw new Error('Lỗi tạo tài khoản: ' + accError.message)
-        }
-
-        const slug = slugify(formData.businessName) + '-' + Math.random().toString(36).substring(2, 5)
-        const { data: profile, error: profError } = await supabase
-          .from('business_profiles')
-          .insert({
-            account_id: authData.user.id,
-            business_name: formData.businessName,
-            slug,
-            category: 'Spa',
-            location_city: 'Hồ Chí Minh',
-            location_district: 'Quận 1'
-          }).select().single()
-
-        if (profError) {
-          await supabase.from('profiles').delete().eq('id', authData.user.id)
-          console.error('Business profile creation error:', profError)
-          throw new Error('Lỗi tạo hồ sơ doanh nghiệp: ' + profError.message)
-        }
-
-        const { error: lpError } = await supabase.from('landing_pages').insert({
-          business_id: profile.id,
-          template_id: 'UniversalTemplate',
-          status: 'Published',
-          content_json: {
-            hero_section: { hero_title: `Chào mừng tới ${formData.businessName}`, hero_subtitle: 'Nâng tầm vẻ đẹp thượng lưu' },
-            about_us: { intro_text: 'Chúng tôi mang đến dịch vụ tốt nhất cho bạn.' },
-            services_menu: [],
-            contact_info: { hotline: '', zalo_link: '' },
-            operating_hours: {}
-          }
-        })
-        if (lpError) {
-          await supabase.from('business_profiles').delete().eq('account_id', authData.user.id)
-          await supabase.from('profiles').delete().eq('id', authData.user.id)
-          console.error('Landing page creation error:', lpError)
-          throw new Error('Lỗi tạo trang Landing Page: ' + lpError.message)
+        const result = await completeSignupProfile(authData.user.id, formData.email, formData.businessName);
+        if (!result.success) {
+          throw new Error(result.error);
         }
 
         // Wait a bit to show the loading animation before redirecting

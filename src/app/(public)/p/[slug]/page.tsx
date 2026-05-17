@@ -99,6 +99,58 @@ const VIRTUAL_DEMOS: Record<string, any> = {
   }
 }
 
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params;
+  
+  if (VIRTUAL_DEMOS[slug]) {
+    const b = VIRTUAL_DEMOS[slug];
+    return {
+      title: `${b.business_name} | 1SPA Directory`,
+      description: `Khám phá dịch vụ ${b.category} cao cấp tại ${b.business_name}.`,
+      openGraph: {
+        title: `${b.business_name}`,
+        description: `Dịch vụ ${b.category} hàng đầu tại ${b.location_district}.`,
+        url: `https://1beauty.asia/p/${slug}`,
+        siteName: '1Beauty Asia',
+        locale: 'vi_VN',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${b.business_name}`,
+        description: `Dịch vụ ${b.category} hàng đầu tại ${b.location_district}.`,
+      }
+    };
+  }
+
+  const supabase = await createClient();
+  const { data: business } = await supabase
+    .from('active_landing_pages')
+    .select('business_name, category, location_district')
+    .eq('business_slug', slug)
+    .single();
+
+  if (!business) return { title: 'Không tìm thấy trang | 1SPA' };
+
+  return {
+    title: `${business.business_name} | Đặt lịch ngay trên 1SPA`,
+    description: `Khám phá không gian ${business.category} sang trọng và dịch vụ chuyên nghiệp tại ${business.business_name}.`,
+    openGraph: {
+      title: `${business.business_name} | 1Beauty Asia`,
+      description: `Đặt lịch ngay tại ${business.business_name} - Dịch vụ ${business.category} hàng đầu ở ${business.location_district}.`,
+      url: `https://1beauty.asia/p/${slug}`,
+      siteName: '1Beauty Asia',
+      locale: 'vi_VN',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${business.business_name}`,
+      description: `Dịch vụ ${business.category} hàng đầu tại ${business.location_district}.`,
+    }
+  };
+}
+
 export default async function BusinessLandingPage({ params, searchParams }: PageProps) {
   const { slug } = await params
   const resolvedSearchParams = await searchParams
