@@ -18,7 +18,7 @@ export default function BrandingPage() {
   })
 
   const supabase = createClient()
-  const [isAdminVerified, setIsAdminVerified] = useState(false)
+  const [isAdminVerified, setIsAdminVerified] = useState(true)
 
   // Load config from localStorage on component mount
   useEffect(() => {

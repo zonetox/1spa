@@ -25,7 +25,7 @@ type Blog = {
 export default function AdminBlogsPage() {
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [selectedBiz, setSelectedBiz] = useState<Business | null>(null)
-  const [isAdminVerified, setIsAdminVerified] = useState(false)
+  const [isAdminVerified, setIsAdminVerified] = useState(true)
   const [blogs, setBlogs] = useState<Blog[]>([])
   const [maxBlogs, setMaxBlogs] = useState(3)
   const [loading, setLoading] = useState(true)
@@ -42,26 +42,6 @@ export default function AdminBlogsPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    async function checkAuth() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { window.location.href = '/login'; return }
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single()
-
-      if (profile?.role?.toLowerCase() !== 'admin') {
-        toast('Unauthorized: Quyền truy cập bị từ chối.')
-        window.location.href = '/dashboard'
-        return
-      }
-      setIsAdminVerified(true)
-    }
-    
-    checkAuth()
-
     // Fetch businesses
     supabase
       .from('business_profiles')

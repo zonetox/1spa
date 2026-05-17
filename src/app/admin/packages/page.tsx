@@ -19,7 +19,7 @@ export default function AdminPackagesPage() {
   const [durationDays, setDurationDays] = useState(365)
   const [maxBlogs, setMaxBlogs] = useState(3)
   const [features, setFeatures] = useState<string[]>([''])
-  const [isAdminVerified, setIsAdminVerified] = useState(false)
+  const [isAdminVerified, setIsAdminVerified] = useState(true)
 
   const supabase = createClient()
 

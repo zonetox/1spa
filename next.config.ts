@@ -45,7 +45,7 @@ const nextConfig: NextConfig = {
       {
         // Vercel subdomains
         protocol: 'https',
-        hostname: '*.vercel.app',
+        hostname: '1spa.vercel.app', // Changed from *.vercel.app to specific project
       },
     ],
   },
