@@ -93,7 +93,10 @@ export default function AdminBlogsPage() {
     setLoading(true)
 
     try {
-      const response = await fetch(`/api/admin/blogs?businessId=${biz.id}`)
+      const token = await getAuthToken()
+      const response = await fetch(`/api/admin/blogs?businessId=${biz.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
       const blogData = await response.json()
       if (blogData && !blogData.error) setBlogs(blogData)
     } catch (err) {

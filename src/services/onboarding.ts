@@ -44,12 +44,16 @@ export async function completeOnboarding(formData: FormData) {
     .eq('account_id', user.id)
     .maybeSingle()
 
+  const INDUSTRY_PILLARS = ['Spa', 'Beauty', 'Dental'] as const
+  type Category = typeof INDUSTRY_PILLARS[number]
+  const safeCategory: Category = INDUSTRY_PILLARS.includes(major as Category) ? major as Category : 'Spa'
+
   if (business) {
     // Update category and name
     await supabase
       .from('business_profiles')
       .update({ 
-        category: major,
+        category: safeCategory,
         business_name: business_name 
       })
       .eq('id', business.id)
@@ -90,7 +94,7 @@ export async function completeOnboarding(formData: FormData) {
         account_id: user.id,
         business_name,
         slug,
-        category: major,
+        category: safeCategory,
         description: bio,
         is_verified: false,
       })
