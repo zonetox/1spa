@@ -68,6 +68,7 @@ export interface Database {
           business_id: string | null
           event_type: string | null
           page_slug: string | null
+          referrer: string | null
           created_at: string | null
         }
         Insert: {
@@ -75,6 +76,7 @@ export interface Database {
           business_id?: string | null
           event_type?: string | null
           page_slug?: string | null
+          referrer?: string | null
           created_at?: string | null
         }
         Update: {
@@ -82,6 +84,7 @@ export interface Database {
           business_id?: string | null
           event_type?: string | null
           page_slug?: string | null
+          referrer?: string | null
           created_at?: string | null
         }
       }
@@ -257,28 +260,34 @@ export interface Database {
       notifications: {
         Row: {
           id: string
-          recipient_id: string | null
+          profile_id: string | null
+          sender_id: string | null
           type: string | null
           title: string | null
           message: string | null
+          link: string | null
           is_read: boolean | null
           created_at: string | null
         }
         Insert: {
           id?: string
-          recipient_id?: string | null
+          profile_id?: string | null
+          sender_id?: string | null
           type?: string | null
           title?: string | null
           message?: string | null
+          link?: string | null
           is_read?: boolean | null
           created_at?: string | null
         }
         Update: {
           id?: string
-          recipient_id?: string | null
+          profile_id?: string | null
+          sender_id?: string | null
           type?: string | null
           title?: string | null
           message?: string | null
+          link?: string | null
           is_read?: boolean | null
           created_at?: string | null
         }
@@ -291,6 +300,7 @@ export interface Database {
           trial_days: number | null
           duration_days: number | null
           features: Json | null
+          limits: Json | null
           created_at: string | null
         }
         Insert: {
@@ -300,6 +310,7 @@ export interface Database {
           trial_days?: number | null
           duration_days?: number | null
           features?: Json | null
+          limits?: Json | null
           created_at?: string | null
         }
         Update: {
@@ -309,6 +320,7 @@ export interface Database {
           trial_days?: number | null
           duration_days?: number | null
           features?: Json | null
+          limits?: Json | null
           created_at?: string | null
         }
       }
@@ -320,6 +332,7 @@ export interface Database {
           email: string
           subscription_status: string
           expiry_date: string
+          avatar_url: string | null
           created_at: string
         }
         Insert: {
@@ -329,6 +342,7 @@ export interface Database {
           email: string
           subscription_status?: string
           expiry_date?: string
+          avatar_url?: string | null
           created_at?: string
         }
         Update: {
@@ -338,6 +352,7 @@ export interface Database {
           email?: string
           subscription_status?: string
           expiry_date?: string
+          avatar_url?: string | null
           created_at?: string
         }
       }

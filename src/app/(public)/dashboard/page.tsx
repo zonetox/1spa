@@ -339,7 +339,7 @@ export default function BusinessDashboard() {
       // Fetch Subscription (limits + expiry)
       const { data: subData } = await supabase
         .from('subscriptions')
-        .select('package_id, packages(limits), expires_at, created_at, packages(duration_days)')
+        .select('package_id, packages(limits), end_date, created_at, packages(duration_days)')
         .eq('business_id', prof.id)
         .eq('status', 'Active')
         .order('created_at', { ascending: false })
@@ -349,9 +349,9 @@ export default function BusinessDashboard() {
       let packageLimitBlogs = 0
       if (subData && (subData.packages as any)?.limits?.max_blogs) {
         packageLimitBlogs = (subData.packages as any).limits.max_blogs
-        // Tính ngày hết hạn từ expires_at hoặc created_at + duration_days
-        if ((subData as any).expires_at) {
-          setSubscriptionExpiry(new Date((subData as any).expires_at))
+        // Tính ngày hết hạn từ end_date hoặc created_at + duration_days
+        if ((subData as any).end_date) {
+          setSubscriptionExpiry(new Date((subData as any).end_date))
         } else if ((subData as any).created_at && (subData.packages as any)?.duration_days) {
           const expiry = new Date((subData as any).created_at)
           expiry.setDate(expiry.getDate() + (subData.packages as any).duration_days)
@@ -361,15 +361,15 @@ export default function BusinessDashboard() {
         // Fallback: lấy subscription mới nhất bất kể status
         const { data: fallbackSub } = await supabase
           .from('subscriptions')
-          .select('packages(limits), expires_at, created_at, packages(duration_days)')
+          .select('packages(limits), end_date, created_at, packages(duration_days)')
           .eq('business_id', prof.id)
           .order('created_at', { ascending: false })
           .limit(1)
           .maybeSingle()
         if (fallbackSub && (fallbackSub.packages as any)?.limits?.max_blogs) {
           packageLimitBlogs = (fallbackSub.packages as any).limits.max_blogs
-          if ((fallbackSub as any).expires_at) {
-            setSubscriptionExpiry(new Date((fallbackSub as any).expires_at))
+          if ((fallbackSub as any).end_date) {
+            setSubscriptionExpiry(new Date((fallbackSub as any).end_date))
           }
         } else {
           packageLimitBlogs = 3 // default trial
