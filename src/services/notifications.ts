@@ -3,6 +3,16 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+function escapeHtml(str: string) {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export async function createNotification({
   profile_id,
   sender_id,
@@ -49,15 +59,19 @@ export async function createNotification({
         .single()
 
       if (profile?.email) {
+        const safeTitle = escapeHtml(title)
+        const safeMessage = escapeHtml(message || '')
+        const safeLink = escapeHtml(link || '')
+
         await resend.emails.send({
           from: '1Beauty.Asia <hi@1beauty.asia>',
           to: profile.email,
-          subject: title,
+          subject: safeTitle,
           html: `
             <div style="font-family: serif; background: #0A0A0A; color: #FAFAFA; padding: 40px;">
-              <h1 style="color: #D4AF37; font-style: italic;">${title}</h1>
-              <p style="color: #94A3B8; font-size: 16px;">${message}</p>
-              ${link ? `<a href="${process.env.NEXT_PUBLIC_APP_URL}${link}" style="display: inline-block; background: #FAFAFA; color: #0A0A0A; padding: 12px 24px; border-radius: 99px; text-decoration: none; margin-top: 20px;">Xem Chi Tiết</a>` : ''}
+              <h1 style="color: #D4AF37; font-style: italic;">${safeTitle}</h1>
+              <p style="color: #94A3B8; font-size: 16px;">${safeMessage}</p>
+              ${safeLink ? `<a href="${process.env.NEXT_PUBLIC_APP_URL || ''}${safeLink}" style="display: inline-block; background: #FAFAFA; color: #0A0A0A; padding: 12px 24px; border-radius: 99px; text-decoration: none; margin-top: 20px;">Xem Chi Tiết</a>` : ''}
               <p style="margin-top: 40px; font-size: 10px; color: #475569; letter-spacing: 2px;">1Beauty.Asia: HỆ SINH THÁI LÀM ĐẸP</p>
             </div>
           `

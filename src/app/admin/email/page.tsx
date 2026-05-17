@@ -9,6 +9,8 @@ const EMAIL_TEMPLATES = [
 ]
 
 export default function EmailServicePage() {
+  const isResendConnected = !!process.env.RESEND_API_KEY;
+
   return (
     <div className="space-y-8">
       <header>
@@ -21,22 +23,40 @@ export default function EmailServicePage() {
       {/* Resend Connection Status */}
       <div className="glass-card p-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Mail size={18} className="text-amber-500" />
+          <Mail size={18} className={isResendConnected ? "text-amber-500" : "text-rose-500"} />
           <div>
             <p className="text-sm font-medium text-zinc-100">Kết nối Resend API</p>
-            <p className="text-[10px] font-mono text-zinc-500">RESEND_API_KEY đã được thiết lập thành công trong tệp môi trường .env.local</p>
+            <p className="text-[10px] font-mono text-zinc-500">
+              {isResendConnected 
+                ? 'RESEND_API_KEY đã được thiết lập thành công trong tệp môi trường .env.local'
+                : 'CẢNH BÁO: Chưa thiết lập biến RESEND_API_KEY trong tệp .env.local'
+              }
+            </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/30 border border-emerald-900/40">
-          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] font-mono text-emerald-400 uppercase">Đang kết nối</span>
+        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
+          isResendConnected 
+            ? 'bg-emerald-950/30 border border-emerald-900/40' 
+            : 'bg-rose-950/30 border border-rose-900/40'
+        }`}>
+          <div className={`w-1.5 h-1.5 rounded-full ${
+            isResendConnected ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'
+          }`} />
+          <span className={`text-[10px] font-mono uppercase ${
+            isResendConnected ? 'text-emerald-400' : 'text-rose-400'
+          }`}>
+            {isResendConnected ? 'Đang hoạt động' : 'Chưa kết nối'}
+          </span>
         </div>
       </div>
 
       {/* Email Templates */}
       <div className="glass-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-zinc-900 bg-zinc-900/30">
+        <div className="px-6 py-4 border-b border-zinc-900 bg-zinc-900/30 flex justify-between items-center">
           <h3 className="text-sm font-semibold">Các Tiến Trình Email Tự Động</h3>
+          <span className="text-[9px] font-bold uppercase tracking-widest text-amber-500/80 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 animate-pulse">
+            Tính Năng v5.0 (Coming Soon)
+          </span>
         </div>
         <div className="divide-y divide-zinc-900">
           {EMAIL_TEMPLATES.map((template) => (
@@ -52,9 +72,9 @@ export default function EmailServicePage() {
                   <CheckCircle2 size={12} />
                   {template.active ? 'Đang hoạt động' : 'Tạm ngắt'}
                 </span>
-                <button className="text-[10px] text-zinc-600 hover:text-slate-400 font-mono uppercase transition-colors">
-                  Chỉnh Sửa
-                </button>
+                <span className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">
+                  v5.0 (Sắp có)
+                </span>
               </div>
             </div>
           ))}

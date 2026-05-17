@@ -6,6 +6,31 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import { createClient } from '@/lib/supabase/client'
+import { Database } from '@/types/database'
+import { User as SupabaseUser } from '@supabase/supabase-js'
+
+type LandingPage = Database['public']['Tables']['landing_pages']['Row']
+type Booking = Database['public']['Tables']['bookings']['Row']
+type Package = Database['public']['Tables']['packages']['Row']
+
+interface DashboardProfile {
+  id: string
+  account_id: string
+  business_name: string
+  slug: string
+  category: string
+  zalo_phone: string | null
+  hotline: string | null
+  logo_url: string | null
+  is_verified: boolean
+  created_at: string
+  location_city: string | null
+  location_district: string | null
+  rating_score: number | null
+  social_links: any
+  subscription_status?: string
+  expiry_date?: string
+}
 import { 
   BarChart3, 
   Calendar, 
@@ -456,12 +481,18 @@ export default function BusinessDashboard() {
     const { error } = await supabase.from('subscriptions').insert([{
       business_id: profile.id,
       package_id: selectedPkg.id,
-      status: 'Active',
+      status: 'Pending',
       verified: false
     }])
 
     if (!error) {
-      showToast('Chuyển khoản thành công! Gói dịch vụ đã được kích hoạt. Admin sẽ đối chiếu và xác minh trong vòng 24h.')
+      // Cập nhật subscription_status trong bảng profiles thành pending_verification
+      await supabase
+        .from('profiles')
+        .update({ subscription_status: 'pending_verification' })
+        .eq('id', profile.account_id)
+
+      showToast('Chuyển khoản thành công! Yêu cầu nâng cấp gói đã được tiếp nhận và đang chờ duyệt. Admin sẽ đối chiếu và xác minh trong vòng 24h.')
       setIsUpgradeModalOpen(false)
       setSelectedPkg(null)
       
@@ -481,7 +512,7 @@ export default function BusinessDashboard() {
       }
       setMaxBlogs(packageLimitBlogs)
     } else {
-      showToast('Có lỗi xảy ra khi kích hoạt gói: ' + error.message, 'error')
+      showToast('Có lỗi xảy ra khi yêu cầu nâng cấp gói: ' + error.message, 'error')
     }
   }
 

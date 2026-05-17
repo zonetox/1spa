@@ -23,6 +23,13 @@ export default function SignupPage() {
     e.preventDefault()
     setLoading(true)
     setErrorMsg('')
+
+    if (formData.password.length < 8) {
+      setErrorMsg('Mật khẩu phải có độ dài từ 8 ký tự trở lên.')
+      setLoading(false)
+      return
+    }
+
     const supabase = createClient()
 
     try {
@@ -186,11 +193,12 @@ export default function SignupPage() {
                   </div>
                   <input 
                     type="password" 
-                    placeholder="Mật khẩu"
+                    placeholder="Mật khẩu (tối thiểu 8 ký tự)"
                     value={formData.password}
                     onChange={e => setFormData({...formData, password: e.target.value})}
                     className="w-full bg-white/50 border border-white/60 rounded-2xl py-3 pl-12 pr-4 text-[#2F2F2F] placeholder:text-[#2F2F2F]/40 outline-none focus:border-[#D4AF37] focus:bg-white transition-all font-medium text-xs shadow-sm"
                     required
+                    minLength={8}
                   />
                 </div>
               </div>

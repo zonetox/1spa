@@ -6,8 +6,11 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-// Fallback to anon key if service role is not available (for local dev without full env)
-const supabase = createClient(supabaseUrl, supabaseServiceKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+if (!supabaseServiceKey) {
+  throw new Error('CẤU HÌNH LỖI: Thiếu SUPABASE_SERVICE_ROLE_KEY trên Server.');
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 function slugify(text: string) {
   return text.toString().toLowerCase()
@@ -76,6 +79,12 @@ export async function completeSignupProfile(userId: string, email: string, busin
     return { success: true };
   } catch (error: any) {
     console.error('Signup completion error:', error);
+    // Rollback Auth User to prevent Zombie Auth User
+    try {
+      await supabase.auth.admin.deleteUser(userId);
+    } catch (deleteError) {
+      console.error('Failed to delete auth user during rollback:', deleteError);
+    }
     return { success: false, error: error.message };
   }
 }
