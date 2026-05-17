@@ -29,7 +29,7 @@ export async function completeSignupProfile(userId: string, email: string, busin
       .insert({
         id: userId,
         email: email,
-        role: 'Business',
+        role: 'business',
         subscription_status: 'trial',
         expiry_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
       });

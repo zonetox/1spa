@@ -6,13 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "harvest": "node ingest/index.js harvest",
-    "ingest": "node ingest/index.js import",
-    "ingest:dry": "node ingest/index.js import --dry-run",
-    "ingest:refine": "node ingest/index.js import --refine",
-    "batch-harvest": "node ingest/maintenance/batch-harvester.js ingest/data/batch-urls.csv 2",
-    "db:dump": "node scratch/dump_schema.js"
+    "lint": "eslint"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",

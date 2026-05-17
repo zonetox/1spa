@@ -19,7 +19,6 @@ const PLACEHOLDER_IMAGES = [
 export async function POST(req: Request) {
   try {
     // 0. Security Check: Validate Secret Key
-    const authHeader = req.headers.get('Authorization')
     const apiKey = req.headers.get('x-api-key')
     const secretKey = process.env.INGEST_SECRET_KEY
 
