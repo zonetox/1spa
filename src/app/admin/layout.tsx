@@ -23,7 +23,6 @@ const navItems = [
   { href: '/admin/packages', label: 'Gói Thành Viên', icon: Package },
   { href: '/admin/import', label: 'Nhập Dữ Liệu Hàng Loạt', icon: Database },
   { href: '/admin/blogs', label: 'Quản Lý Bài Viết', icon: FileText },
-  { href: '/admin/email', label: 'Cấu Hình Email', icon: Mail },
   { href: '/admin/branding', label: 'Nhận Diện Thương Hiệu', icon: Palette },
 ]
 

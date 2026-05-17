@@ -2,6 +2,7 @@
 
 import React from 'react'
 import toast from 'react-hot-toast';
+import Image from 'next/image'
 import { useFileUpload } from '@/hooks/useFileUpload'
 import { createClient } from '@/lib/supabase/client'
 import { Camera, Save, Loader2 } from 'lucide-react'
@@ -57,7 +58,7 @@ export function ProfileSettings({ profile, onUpdate }: { profile: any, onUpdate:
         <div className="relative group">
           <div className="w-24 h-24 rounded-lg bg-zinc-800 border border-zinc-700 overflow-hidden">
             {form.logo_url ? (
-              <img src={form.logo_url} alt="Logo" className="w-full h-full object-cover" />
+              <Image src={form.logo_url} alt="Logo" width={96} height={96} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-zinc-600 text-xs text-center p-2">No Logo</div>
             )}

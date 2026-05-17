@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Mail, ArrowLeft, Send, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -53,9 +54,11 @@ export default function ResetPasswordPage() {
              
           <div className="text-center space-y-4">
             <Link href="/" className="inline-block mb-2">
-              <img 
+              <Image 
                 src="/logo.png" 
                 alt="1BEAUTY.ASIA" 
+                width={144}
+                height={36}
                 className="h-9 w-auto object-contain" 
               />
             </Link>

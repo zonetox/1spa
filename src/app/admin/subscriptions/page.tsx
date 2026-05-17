@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Check, X, Shield, Clock, AlertTriangle, Search, Filter } from 'lucide-react'
+import { confirmAction } from '@/lib/confirm'
 
 export default function AdminSubscriptionsPage() {
   const [subscriptions, setSubscriptions] = useState<any[]>([])
@@ -81,7 +82,8 @@ export default function AdminSubscriptionsPage() {
   }
 
   const handleReject = async (id: string) => {
-    if (confirm('Bạn có chắc chắn muốn Từ chối và Đình chỉ gói này? Hệ thống sẽ gỡ bỏ quyền lợi lập tức!')) {
+    const confirmed = await confirmAction('Bạn có chắc chắn muốn Từ chối và Đình chỉ gói này? Hệ thống sẽ gỡ bỏ quyền lợi lập tức!')
+    if (confirmed) {
       const { error } = await supabase
         .from('subscriptions')
         .update({ verified: false, status: 'Pending' })

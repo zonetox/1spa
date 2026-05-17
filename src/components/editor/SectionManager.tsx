@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { confirmAction } from '@/lib/confirm'
 import {
   Plus, ChevronUp, ChevronDown, Trash2, Eye, EyeOff,
   Sparkles, Users, MessageSquare, ImageIcon, Video,
@@ -140,9 +141,10 @@ export function SectionManager({
                     </button>
                     {isDeletable && (
                       <button
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.stopPropagation()
-                          if (confirm(`Xóa section "${meta.label}"?`)) onDelete(key)
+                          const confirmed = await confirmAction(`Xóa section "${meta.label}"?`)
+                          if (confirmed) onDelete(key)
                         }}
                         className="p-1 rounded hover:bg-red-100 text-[#2F2F2F]/40 hover:text-red-500 transition-colors"
                         title="Xóa"

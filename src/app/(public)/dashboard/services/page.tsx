@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Plus, Edit2, Trash2, Check, X, UploadCloud, Link as LinkIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { confirmAction } from '@/lib/confirm'
 
 export default function BusinessServicesPage() {
   const [services, setServices] = useState<any[]>([])
@@ -120,7 +121,8 @@ export default function BusinessServicesPage() {
   }
 
   const handleDelete = async (index: number) => {
-    if (confirm('Bạn có chắc muốn xoá dịch vụ này không?')) {
+    const confirmed = await confirmAction('Bạn có chắc muốn xoá dịch vụ này không?')
+    if (confirmed) {
       const updatedServices = services.filter((_, i) => i !== index)
       const updatedContentJson = {
         ...landingPage.content_json,

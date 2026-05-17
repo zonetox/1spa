@@ -2,6 +2,16 @@ import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
+function escapeHtml(str: string) {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -89,17 +99,23 @@ export async function POST(req: Request) {
         const fromDomain = process.env.RESEND_FROM_DOMAIN || 'notifications@1beauty.asia'
         const adminFromDomain = process.env.RESEND_ADMIN_FROM || 'admin@1beauty.asia'
 
+        const safeCustomerName = escapeHtml(customer_name)
+        const safeCustomerPhone = escapeHtml(customer_phone)
+        const safeServiceRequested = escapeHtml(service_requested || 'General Consultation')
+        const safeBusinessName = escapeHtml(business_name || 'business')
+        const safeBusinessId = escapeHtml(business_id)
+
         if (business_email) {
           await resend.emails.send({
             from: `Beauty Directory <${fromDomain}>`,
             to: business_email,
-            subject: `[Lịch hẹn mới] - Khách hàng ${customer_name}`,
+            subject: `[Lịch hẹn mới] - Khách hàng ${safeCustomerName}`,
             html: `
               <div style="font-family: sans-serif; padding: 20px; border: 1px solid #D4AF37; border-radius: 10px;">
                 <h2 style="color: #D4AF37;">Bạn có lịch hẹn mới từ hệ thống!</h2>
-                <p><strong>Khách hàng:</strong> ${customer_name}</p>
-                <p><strong>Số điện thoại:</strong> ${customer_phone}</p>
-                <p><strong>Dịch vụ quan tâm:</strong> ${service_requested}</p>
+                <p><strong>Khách hàng:</strong> ${safeCustomerName}</p>
+                <p><strong>Số điện thoại:</strong> ${safeCustomerPhone}</p>
+                <p><strong>Dịch vụ quan tâm:</strong> ${safeServiceRequested}</p>
                 <hr />
                 <p style="font-size: 12px; color: #666;">Vui lòng liên hệ khách hàng sớm nhất có thể.</p>
               </div>
@@ -111,10 +127,10 @@ export async function POST(req: Request) {
         await resend.emails.send({
           from: `Beauty Directory <${adminFromDomain}>`,
           to: adminEmail,
-          subject: `[Admin Log] Booking mới tại ${business_name || 'business'}`,
+          subject: `[Admin Log] Booking mới tại ${safeBusinessName}`,
           html: `
-            <p>Có một lượt booking mới tại doanh nghiệp: <strong>${business_name || 'business'}</strong> (ID: ${business_id})</p>
-            <p>Chi tiết khách hàng: ${customer_name} - ${customer_phone}</p>
+            <p>Có một lượt booking mới tại doanh nghiệp: <strong>${safeBusinessName}</strong> (ID: ${safeBusinessId})</p>
+            <p>Chi tiết khách hàng: ${safeCustomerName} - ${safeCustomerPhone}</p>
           `
         })
       } catch (emailErr) {

@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react'
 import toast from 'react-hot-toast';
+import Image from 'next/image'
 import { Check, Upload, ImageIcon, RefreshCw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { confirmAction } from '@/lib/confirm'
 
 export default function BrandingPage() {
   const [saved, setSaved] = useState(false)
@@ -68,8 +70,9 @@ export default function BrandingPage() {
   }
 
   // Reset to default branding config
-  const handleReset = () => {
-    if (confirm('Bạn có muốn đặt lại cấu hình nhận diện mặc định không?')) {
+  const handleReset = async () => {
+    const confirmed = await confirmAction('Bạn có muốn đặt lại cấu hình nhận diện mặc định không?')
+    if (confirmed) {
       const defaultConfig = {
         appName: '1Beauty.Asia',
         tagline: 'Premium Beauty, Spa & Dental Directory',
@@ -201,7 +204,7 @@ export default function BrandingPage() {
             <div className="bg-zinc-950 border-b border-zinc-900 p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 {config.logoUrl ? (
-                  <img src={config.logoUrl} alt="Logo" className="h-6 w-auto object-contain" />
+                  <Image src={config.logoUrl} alt="Logo" width={96} height={24} className="h-6 w-auto object-contain" />
                 ) : (
                   <div className="w-5 h-5 rounded bg-amber-500 flex items-center justify-center text-[10px] font-black text-black">
                     1S

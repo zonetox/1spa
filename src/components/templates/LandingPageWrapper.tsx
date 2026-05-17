@@ -7,6 +7,7 @@ import { EditorToolbar } from '@/components/editor/EditorToolbar'
 import { UniversalTemplate } from '@/components/templates/v7-core/UniversalTemplate'
 import { ImagePickerModal } from '@/components/editor/ImagePickerModal'
 import { CATEGORY_DEFAULTS, CATEGORY_COLORS } from '@/lib/constants'
+import { confirmAction } from '@/lib/confirm'
 
 import { LandingPageData, BusinessCategory } from '@/types/landing-page'
 
@@ -86,8 +87,11 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
     }
   }
 
-  const handleCancel = () => {
-    if (hasChanges && !confirm('Bạn có chắc muốn hủy các thay đổi chưa lưu?')) return
+  const handleCancel = async () => {
+    if (hasChanges) {
+      const confirmed = await confirmAction('Bạn có chắc muốn hủy các thay đổi chưa lưu?')
+      if (!confirmed) return
+    }
     setData(business.content_json)
     setHasChanges(false)
     if (isEditMode) window.location.href = window.location.pathname
@@ -106,7 +110,8 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
       zalo: business.zalo_phone || business.zalo,
       hotline: business.hotline,
       slug: business.business_slug,
-      logo_url: business.logo_url
+      logo_url: business.logo_url,
+      email_owner: business.email_owner || business.email || ''
     },
     onImagePick: (path: string, currentUrl: string) => {
       setActiveImagePath(path)

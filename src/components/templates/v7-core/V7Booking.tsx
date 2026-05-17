@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 interface V7BookingProps {
   title: string;
@@ -10,6 +11,9 @@ interface V7BookingProps {
   badge?: string;
   bgImage?: string;
   themeColor?: string;
+  businessId?: string;
+  businessName?: string;
+  businessEmail?: string;
 }
 
 export const V7Booking: React.FC<V7BookingProps> = ({ 
@@ -17,7 +21,10 @@ export const V7Booking: React.FC<V7BookingProps> = ({
   subtitle, 
   badge = 'Ưu đãi đặc biệt',
   bgImage, 
-  themeColor = '#D4AF37' 
+  themeColor = '#D4AF37',
+  businessId,
+  businessName,
+  businessEmail
 }) => {
   return (
     <section id="booking" className="relative py-24 md:py-32 overflow-hidden">
@@ -61,6 +68,10 @@ export const V7Booking: React.FC<V7BookingProps> = ({
                     customer_name: fd.get('name'),
                     customer_phone: fd.get('phone'),
                     service_requested: fd.get('service'),
+                    business_id: businessId || null,
+                    business_name: businessName || null,
+                    business_email: businessEmail || null,
+                    source_url: typeof window !== 'undefined' ? window.location.href : '',
                   };
                   try {
                     const res = await fetch('/api/bookings', {
@@ -69,13 +80,13 @@ export const V7Booking: React.FC<V7BookingProps> = ({
                       body: JSON.stringify(data)
                     });
                     if (res.ok) {
-                      alert('Đặt lịch thành công! Chúng tôi sẽ liên hệ bạn sớm nhất.');
+                      toast.success('Đặt lịch thành công! Chúng tôi sẽ liên hệ bạn sớm nhất.');
                       (e.target as HTMLFormElement).reset();
                     } else {
-                      alert('Có lỗi xảy ra, vui lòng thử lại.');
+                      toast.error('Có lỗi xảy ra, vui lòng thử lại.');
                     }
                   } catch (err) {
-                    alert('Lỗi mạng. Vui lòng thử lại.');
+                    toast.error('Lỗi mạng. Vui lòng thử lại.');
                   }
                 }}
               >

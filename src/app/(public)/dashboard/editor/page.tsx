@@ -13,6 +13,7 @@ import { SectionManager } from '@/components/editor/SectionManager'
 import { ImagePickerModal } from '@/components/editor/ImagePickerModal'
 import { AddSectionModal } from '@/components/editor/AddSectionModal'
 import { PaymentPopup } from '@/components/ui/PaymentPopup'
+import { confirmAction } from '@/lib/confirm'
 
 import { UniversalTemplate } from '@/components/templates/v7-core/UniversalTemplate'
 
@@ -212,7 +213,8 @@ export default function EditorPage() {
   // ── Publish ────────────────────────────────────────────────
   const handlePublish = async () => {
     if (!landingPage) return
-    if (!confirm('Xuất bản thay đổi? Trang công khai sẽ được cập nhật ngay.')) return
+    const confirmed = await confirmAction('Xuất bản thay đổi? Trang công khai sẽ được cập nhật ngay.')
+    if (!confirmed) return
     setPublishStatus('saving')
     try {
       const { error } = await supabase
@@ -285,8 +287,11 @@ export default function EditorPage() {
         {/* Left: Back + Title */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => {
-              if (hasUnsavedChanges && !confirm('Bạn có thay đổi chưa lưu. Thoát không?')) return
+            onClick={async () => {
+              if (hasUnsavedChanges) {
+                const confirmed = await confirmAction('Bạn có thay đổi chưa lưu. Thoát không?')
+                if (!confirmed) return
+              }
               router.push('/dashboard')
             }}
             className="p-2 rounded-full hover:bg-[#D4AF37]/10 text-[#2F2F2F]/40 hover:text-[#D4AF37] transition-colors"

@@ -1,4 +1,5 @@
 import toast from 'react-hot-toast';
+import React from 'react'
 
 export const confirmAction = (message: string): Promise<boolean> => {
   return new Promise((resolve) => {
@@ -17,7 +18,7 @@ export const confirmAction = (message: string): Promise<boolean> => {
               toast.dismiss(t.id);
               resolve(false);
             }}
-            className="w-full border border-transparent rounded-lg px-4 py-2 flex items-center justify-center text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+            className="border border-zinc-200 rounded-lg px-4 py-2 flex items-center justify-center text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
           >
             Hủy
           </button>
@@ -26,7 +27,7 @@ export const confirmAction = (message: string): Promise<boolean> => {
               toast.dismiss(t.id);
               resolve(true);
             }}
-            className="w-full border border-transparent rounded-lg px-4 py-2 flex items-center justify-center text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none"
+            className="border border-transparent rounded-lg px-4 py-2 flex items-center justify-center text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none"
           >
             Xác nhận
           </button>

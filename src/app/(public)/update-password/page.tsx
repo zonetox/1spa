@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Lock, ArrowRight, Sparkles, CheckCircle, AlertCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -94,9 +95,11 @@ function UpdatePasswordForm() {
         >
           <div className="text-center space-y-4">
             <Link href="/" className="inline-block mb-2">
-              <img
+              <Image
                 src="/logo.png"
                 alt="1BEAUTY.ASIA"
+                width={144}
+                height={36}
                 className="h-9 w-auto object-contain"
               />
             </Link>

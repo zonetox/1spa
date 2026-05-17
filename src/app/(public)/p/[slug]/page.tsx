@@ -197,28 +197,3 @@ export default async function BusinessLandingPage({ params, searchParams }: Page
   )
 }
 
-export async function generateMetadata({ params }: PageProps) {
-  const { slug } = await params
-  const supabase = await createClient()
-
-  if (VIRTUAL_DEMOS[slug]) {
-    const business = VIRTUAL_DEMOS[slug]
-    return {
-      title: `${business.business_name} | Mẫu Demo Thiết Kế ${business.category}`,
-      description: `Khám phá mẫu demo thiết kế ${business.category} đẳng cấp tại ${business.business_name}.`,
-    }
-  }
-
-  const { data: business } = await supabase
-    .from('active_landing_pages')
-    .select('business_name, category, hotline')
-    .eq('business_slug', slug)
-    .maybeSingle()
-
-  if (!business) return { title: '1Beauty.Asia Directory' }
-
-  return {
-    title: `${business.business_name} | ${business.category} Đẳng Cấp — 1Beauty.Asia`,
-    description: `Khám phá các dịch vụ ${business.category} cao cấp tại ${business.business_name}. Đặt lịch hẹn nhận tư vấn miễn phí ngay hôm nay! Hotline: ${business.hotline || 'Liên hệ'}`,
-  }
-}

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
 import { EditableText } from '@/components/shared/EditableText';
+import { V7Booking } from './V7Booking';
 
 // Style imports
 import 'swiper/css';
@@ -57,6 +58,7 @@ interface UniversalTemplateProps {
   isEditing?: boolean;
   onUpdate?: (path: string, value: any) => void;
   businessInfo?: {
+    id?: string;
     name?: string;
     logo_url?: string;
     address_full?: string;
@@ -483,46 +485,16 @@ export function UniversalTemplate({
         )}
 
         {/* 7. ULTIMATE CONSOLIDATED CTA (BOOKING) */}
-        <section id="booking" className="py-28 relative bg-white overflow-hidden">
-          {/* Light texture elements background */}
-          <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-          
-          <div className="container mx-auto px-6 relative z-10">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.96 }} 
-              whileInView={{ opacity: 1, scale: 1 }} 
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="max-w-4xl mx-auto bg-white rounded-[2rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] border border-gray-100 p-12 md:p-24 text-center relative overflow-hidden"
-            >
-              {/* Thick top border design cue */}
-              <div className="absolute top-0 left-0 w-full h-[8px]" style={{ backgroundColor: theme_color }} />
-              
-              <span className="inline-block px-6 py-2 mb-10 bg-gray-50 border border-gray-200 rounded-full text-[11px] font-bold uppercase tracking-[0.3em] text-[#1A1A1A]">
-                {data.reservation_section?.badge || "Đặc quyền VIP"}
-              </span>
-
-              <h2 className="text-3xl md:text-6xl font-playfair font-bold text-[#1A1A1A] mb-10 leading-tight tracking-tight">
-                {data.reservation_section?.title || "Chạm Đến Vẻ Đẹp Đẳng Cấp"}
-              </h2>
-
-              <p className="text-[#555555] text-base md:text-xl font-normal max-w-2xl mx-auto mb-16 leading-relaxed">
-                {data.reservation_section?.subtitle || "Hành trình tái tạo năng lượng và đánh thức vẻ đẹp nguyên bản đang chờ đón bạn."}
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 max-w-md mx-auto">
-                <a 
-                  href={`tel:${contactPhone}`}
-                  className="w-full flex items-center justify-center gap-3 px-8 py-5 text-white font-bold text-sm uppercase tracking-[0.2em] rounded-full shadow-2xl transition-all hover:-translate-y-1 btn-shine-effect relative overflow-hidden"
-                  style={{ backgroundColor: '#1A1A1A' }}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                  Đặt lịch tư vấn
-                </a>
-              </div>
-            </motion.div>
-          </div>
-        </section>
+        <V7Booking
+          title={data.reservation_section?.title || "Chạm Đến Vẻ Đẹp Đẳng Cấp"}
+          subtitle={data.reservation_section?.subtitle || "Hành trình tái tạo năng lượng và đánh thức vẻ đẹp nguyên bản đang chờ đón bạn."}
+          badge={data.reservation_section?.badge || "Đặc quyền VIP"}
+          bgImage={about_us.about_image_1}
+          themeColor={theme_color}
+          businessId={businessInfo.id}
+          businessName={brandName}
+          businessEmail={businessInfo.email_owner || contact_info.email}
+        />
 
         {/* 8. THE FINAL ROYAL FOOTER */}
         <footer id="contact" className="bg-white pt-24 pb-12 border-t border-gray-100">

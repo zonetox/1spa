@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Plus, Edit2, Trash2, Check, X, Shield, Settings, Info } from 'lucide-react'
+import { confirmAction } from '@/lib/confirm'
 
 export default function AdminPackagesPage() {
   const [packages, setPackages] = useState<any[]>([])
@@ -109,7 +110,8 @@ export default function AdminPackagesPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc muốn xoá gói này không?')) return
+    const confirmed = await confirmAction('Bạn có chắc muốn xoá gói này không?')
+    if (!confirmed) return
     
     const token = await getAuthToken()
     try {

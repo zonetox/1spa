@@ -1,6 +1,7 @@
 'use client'
 import toast from 'react-hot-toast';
 import { confirmAction } from '@/lib/confirm';
+import Image from 'next/image'
 
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -392,8 +393,8 @@ export default function AdminBlogsPage() {
               {blogs.map(blog => (
                 <div key={blog.id} className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
                   {blog.image_url && (
-                    <div className="h-36 bg-zinc-800 overflow-hidden">
-                      <img src={blog.image_url} alt={blog.title} className="w-full h-full object-cover" />
+                    <div className="h-36 bg-zinc-800 overflow-hidden relative">
+                      <Image src={blog.image_url} alt={blog.title} fill className="w-full h-full object-cover" />
                     </div>
                   )}
                   <div className="p-4">
