@@ -19,7 +19,6 @@ export default function AdminPackagesPage() {
   const [durationDays, setDurationDays] = useState(365)
   const [maxBlogs, setMaxBlogs] = useState(3)
   const [features, setFeatures] = useState<string[]>([''])
-  const [isAdminVerified, setIsAdminVerified] = useState(true)
 
   const supabase = createClient()
 
@@ -29,44 +28,7 @@ export default function AdminPackagesPage() {
   }
 
   useEffect(() => {
-    async function checkAdmin() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        window.location.href = '/login'
-        return
-      }
-      
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single()
-        
-      if (profile?.role?.toLowerCase() !== 'admin') {
-        window.location.href = '/dashboard'
-        return
-      }
-      
-      setIsAdminVerified(true)
-      
-      // Fetch packages inside checkAdmin once verified
-      setLoading(true)
-      try {
-        const token = await getAuthToken()
-        const response = await fetch('/api/admin/packages', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
-        const data = await response.json()
-        if (data && !data.error) setPackages(data)
-      } catch (err) {
-        console.error('Fetch error:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    checkAdmin()
+    fetchPackages()
   }, [])
 
   const fetchPackages = async () => {
