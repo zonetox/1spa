@@ -14,19 +14,19 @@ export default function EmailServicePage() {
   return (
     <div className="space-y-8">
       <header>
-        <h2 className="text-2xl font-display font-bold">Cấu Hình Email Giao Dịch (Transactional Email)</h2>
-        <p className="text-sm text-zinc-500 mt-1">
+        <h2 className="text-2xl font-display font-bold text-[#2F2F2F]">Cấu Hình Email Giao Dịch (Transactional Email)</h2>
+        <p className="text-sm text-[#2F2F2F]/60 mt-1">
           Hệ thống email thông báo tự động được cung cấp bởi Resend API. Mọi email giao dịch đặt lịch và đối soát đều được ghi nhật ký đầy đủ.
         </p>
       </header>
 
       {/* Resend Connection Status */}
-      <div className="glass-card p-5 flex items-center justify-between">
+      <div className="glass-card p-5 flex items-center justify-between bg-white border-[#D4AF37]/10">
         <div className="flex items-center gap-3">
-          <Mail size={18} className={isResendConnected ? "text-amber-500" : "text-rose-500"} />
+          <Mail size={18} className={isResendConnected ? "text-[#D4AF37]" : "text-rose-600"} />
           <div>
-            <p className="text-sm font-medium text-zinc-100">Kết nối Resend API</p>
-            <p className="text-[10px] font-mono text-zinc-500">
+            <p className="text-sm font-medium text-[#2F2F2F]">Kết nối Resend API</p>
+            <p className="text-[10px] font-mono text-[#2F2F2F]/60">
               {isResendConnected 
                 ? 'RESEND_API_KEY đã được thiết lập thành công trong tệp môi trường .env.local'
                 : 'CẢNH BÁO: Chưa thiết lập biến RESEND_API_KEY trong tệp .env.local'
@@ -36,14 +36,14 @@ export default function EmailServicePage() {
         </div>
         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${
           isResendConnected 
-            ? 'bg-emerald-950/30 border border-emerald-900/40' 
-            : 'bg-rose-950/30 border border-rose-900/40'
+            ? 'bg-emerald-50 border border-emerald-200' 
+            : 'bg-rose-50 border border-rose-200'
         }`}>
           <div className={`w-1.5 h-1.5 rounded-full ${
             isResendConnected ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'
           }`} />
           <span className={`text-[10px] font-mono uppercase ${
-            isResendConnected ? 'text-emerald-400' : 'text-rose-400'
+            isResendConnected ? 'text-emerald-600' : 'text-rose-600'
           }`}>
             {isResendConnected ? 'Đang hoạt động' : 'Chưa kết nối'}
           </span>
@@ -51,28 +51,28 @@ export default function EmailServicePage() {
       </div>
 
       {/* Email Templates */}
-      <div className="glass-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-zinc-900 bg-zinc-900/30 flex justify-between items-center">
-          <h3 className="text-sm font-semibold">Các Tiến Trình Email Tự Động</h3>
-          <span className="text-[9px] font-bold uppercase tracking-widest text-amber-500/80 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20 animate-pulse">
+      <div className="glass-card overflow-hidden bg-white border-[#D4AF37]/10">
+        <div className="px-6 py-4 border-b border-[#D4AF37]/10 bg-[#FDFBF7] flex justify-between items-center">
+          <h3 className="text-sm font-semibold text-[#2F2F2F]">Các Tiến Trình Email Tự Động</h3>
+          <span className="text-[9px] font-bold uppercase tracking-widest text-[#D4AF37] bg-[#D4AF37]/10 px-2.5 py-1 rounded-full border border-[#D4AF37]/20 animate-pulse">
             Tính Năng v5.0 (Coming Soon)
           </span>
         </div>
-        <div className="divide-y divide-zinc-900">
+        <div className="divide-y divide-[#D4AF37]/10">
           {EMAIL_TEMPLATES.map((template) => (
-            <div key={template.id} className="px-6 py-5 flex items-center justify-between hover:bg-zinc-900/20 transition-colors">
+            <div key={template.id} className="px-6 py-5 flex items-center justify-between hover:bg-[#FDFBF7] transition-colors">
               <div className="space-y-1">
-                <p className="text-sm text-zinc-200 font-medium">{template.name}</p>
-                <p className="text-[11px] text-zinc-500">{template.description}</p>
+                <p className="text-sm text-[#2F2F2F] font-medium">{template.name}</p>
+                <p className="text-[11px] text-[#2F2F2F]/60">{template.description}</p>
               </div>
               <div className="flex items-center gap-4 ml-8">
                 <span className={`flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-tighter ${
-                  template.active ? 'text-emerald-400' : 'text-zinc-600'
+                  template.active ? 'text-emerald-600' : 'text-[#2F2F2F]/40'
                 }`}>
                   <CheckCircle2 size={12} />
                   {template.active ? 'Đang hoạt động' : 'Tạm ngắt'}
                 </span>
-                <span className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">
+                <span className="text-[10px] text-[#2F2F2F]/40 font-mono uppercase tracking-widest">
                   v5.0 (Sắp có)
                 </span>
               </div>
@@ -82,12 +82,12 @@ export default function EmailServicePage() {
       </div>
 
       {/* SQL Note for setup */}
-      <div className="p-4 rounded-lg bg-zinc-900/40 border border-zinc-800 space-y-2">
-        <p className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">📋 Ghi Chú Thiết Lập</p>
-        <p className="text-xs text-zinc-500">
-          Hãy đảm bảo khai báo biến <code className="text-amber-300 bg-zinc-950 px-1 py-0.5 rounded font-mono">RESEND_API_KEY=re_xxxx</code> và{' '}
-          <code className="text-amber-300 bg-zinc-950 px-1 py-0.5 rounded font-mono">FROM_EMAIL=noreply@1beauty.asia</code> trong tệp{' '}
-          <code className="text-amber-300 bg-zinc-950 px-1 py-0.5 rounded font-mono">.env.local</code> để kích hoạt tính năng gửi thông báo tự động.
+      <div className="p-4 rounded-lg bg-white border border-[#D4AF37]/10 space-y-2">
+        <p className="text-[10px] font-mono text-[#2F2F2F]/80 uppercase tracking-widest">📋 Ghi Chú Thiết Lập</p>
+        <p className="text-xs text-[#2F2F2F]/60">
+          Hãy đảm bảo khai báo biến <code className="text-[#D4AF37] bg-[#FDFBF7] px-1 py-0.5 rounded font-mono">RESEND_API_KEY=re_xxxx</code> và{' '}
+          <code className="text-[#D4AF37] bg-[#FDFBF7] px-1 py-0.5 rounded font-mono">FROM_EMAIL=noreply@1beauty.asia</code> trong tệp{' '}
+          <code className="text-[#D4AF37] bg-[#FDFBF7] px-1 py-0.5 rounded font-mono">.env.local</code> để kích hoạt tính năng gửi thông báo tự động.
         </p>
       </div>
     </div>

@@ -1,4 +1,4 @@
-# Báo cáo tiến độ: 1SPA - Beauty & Dental Directory
+# Báo cáo tiến độ: 1Beauty.Asia - Beauty & Dental Directory
 
 ## 1. Trạng thái hiện tại (Audit 100%)
 Hệ thống đã hoàn tất việc dọn dẹp và chuẩn hóa. Không còn sự chồng chéo với các dự án khác.
@@ -12,7 +12,7 @@ Hệ thống đã hoàn tất việc dọn dẹp và chuẩn hóa. Không còn s
 | **Thông báo Email** | **100%** | Tích hợp Resend cho Booking. |
 
 ## 2. Kết luận
-Dự án **1SPA** hiện đang nằm độc lập tại thư mục này, mã nguồn đã khớp hoàn toàn với PRD và Database Remote. Mọi rác thải từ dự án 1HUB đã được dọn sạch.
+Dự án **1Beauty.Asia** hiện đang nằm độc lập tại thư mục này, mã nguồn đã khớp hoàn toàn với PRD và Database Remote.
 
 ---
 **Hệ thống đã sẵn sàng vận hành.**

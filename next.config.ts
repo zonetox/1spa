@@ -28,6 +28,11 @@ const nextConfig: NextConfig = {
         hostname: 'nhakhoakim.com',
       },
       {
+        // SenSpa
+        protocol: 'https',
+        hostname: 'senspa.com.vn',
+      },
+      {
         // Google user avatars
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',

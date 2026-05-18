@@ -3,7 +3,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowLeft, LotusIcon } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 
 export default function RootNotFound() {
   return (

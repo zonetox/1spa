@@ -131,23 +131,23 @@ export default function AdminSubscriptionsPage() {
   })
 
   return (
-    <div className="p-8 max-w-6xl mx-auto space-y-8 text-zinc-100">
+    <div className="p-8 max-w-6xl mx-auto space-y-8 text-[#2F2F2F]">
       <div>
-        <h1 className="text-3xl font-display font-bold text-zinc-100 flex items-center gap-2">
-          <Shield className="text-amber-500" size={28} /> Đối Soát Thanh Toán
+        <h1 className="text-3xl font-display font-bold text-[#2F2F2F] flex items-center gap-2">
+          <Shield className="text-[#D4AF37]" size={28} /> Đối Soát Thanh Toán
         </h1>
-        <p className="text-zinc-500 mt-2 text-xs uppercase tracking-widest font-mono">Duyệt & Đình chỉ thuê bao theo sao kê ngân hàng</p>
+        <p className="text-[#2F2F2F]/60 mt-2 text-xs uppercase tracking-widest font-mono">Duyệt & Đình chỉ thuê bao theo sao kê ngân hàng</p>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white border border-[#D4AF37]/10 p-6 rounded-2xl shadow-sm">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-zinc-500" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-[#2F2F2F]/40" />
           <input
             type="text"
             placeholder="Tìm tên doanh nghiệp, gói cước..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="pl-10 pr-4 py-2.5 w-full bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-amber-500/50"
+            className="pl-10 pr-4 py-2.5 w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-xl text-sm text-[#2F2F2F] placeholder-[#2F2F2F]/40 focus:outline-none focus:border-[#D4AF37]"
           />
         </div>
 
@@ -162,8 +162,8 @@ export default function AdminSubscriptionsPage() {
               onClick={() => setFilterVerified(btn.id)}
               className={`px-4 py-2 rounded-xl text-xs font-bold font-mono uppercase tracking-wider transition ${
                 filterVerified === btn.id 
-                  ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' 
-                  : 'bg-zinc-950 text-zinc-500 border border-transparent hover:text-zinc-300'
+                  ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20' 
+                  : 'bg-[#FDFBF7] text-[#2F2F2F]/60 border border-[#D4AF37]/10 hover:text-[#2F2F2F] hover:border-[#D4AF37]/30'
               }`}
             >
               {btn.label}
@@ -172,16 +172,16 @@ export default function AdminSubscriptionsPage() {
         </div>
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl">
+      <div className="bg-white border border-[#D4AF37]/10 rounded-3xl overflow-hidden shadow-sm">
         {loading ? (
-          <div className="p-16 text-center text-zinc-500 font-mono text-xs uppercase animate-pulse">Đang tải danh sách đối soát...</div>
+          <div className="p-16 text-center text-[#2F2F2F]/60 font-mono text-xs uppercase animate-pulse">Đang tải danh sách đối soát...</div>
         ) : filteredSubs.length === 0 ? (
-          <div className="p-16 text-center text-zinc-500 font-mono text-xs uppercase">Không tìm thấy giao dịch nào.</div>
+          <div className="p-16 text-center text-[#2F2F2F]/60 font-mono text-xs uppercase">Không tìm thấy giao dịch nào.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-zinc-800 bg-zinc-950 text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+                <tr className="border-b border-[#D4AF37]/10 bg-[#FDFBF7] text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-wider">
                   <th className="py-5 px-6">Doanh Nghiệp</th>
                   <th className="py-5 px-6">Gói Đăng Ký</th>
                   <th className="py-5 px-6">Số Tiền</th>
@@ -190,31 +190,31 @@ export default function AdminSubscriptionsPage() {
                   <th className="py-5 px-6 text-right">Hành Động</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/40 text-sm text-zinc-300">
+              <tbody className="divide-y divide-[#D4AF37]/5 text-sm text-[#2F2F2F]/80">
                 {filteredSubs.map(sub => (
-                  <tr key={sub.id} className="hover:bg-zinc-850/20 transition">
-                    <td className="py-5 px-6 font-bold text-zinc-200">
+                  <tr key={sub.id} className="hover:bg-[#FDFBF7]/50 transition">
+                    <td className="py-5 px-6 font-bold text-[#2F2F2F]">
                       {sub.business_profiles?.business_name || 'N/A'}
                     </td>
-                    <td className="py-5 px-6 font-mono text-xs font-semibold text-zinc-400">
+                    <td className="py-5 px-6 font-mono text-xs font-semibold text-[#2F2F2F]/60">
                       {sub.packages?.name || 'N/A'}
                     </td>
-                    <td className="py-5 px-6 font-bold text-amber-500 font-mono text-xs">
+                    <td className="py-5 px-6 font-bold text-[#D4AF37] font-mono text-xs">
                       {sub.packages?.price?.toLocaleString('vi-VN')}đ
                     </td>
-                    <td className="py-5 px-6 text-xs text-zinc-500 font-mono">
+                    <td className="py-5 px-6 text-xs text-[#2F2F2F]/40 font-mono">
                       {new Date(sub.created_at).toLocaleString('vi-VN')}
                     </td>
                     <td className="py-5 px-6">
                       <div className="flex flex-col gap-1">
                         <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider w-fit ${
                           sub.verified 
-                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
-                            : 'bg-rose-500/10 text-rose-400 border border-rose-500/20 animate-pulse'
+                            ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' 
+                            : 'bg-rose-50 text-rose-600 border border-rose-200 animate-pulse'
                         }`}>
                           {sub.verified ? 'Đã Đối Soát (OK)' : 'Chưa Đối Soát'}
                         </span>
-                        <span className={`text-[10px] font-mono ${sub.status === 'Active' ? 'text-green-500' : 'text-zinc-500'}`}>
+                        <span className={`text-[10px] font-mono ${sub.status === 'Active' ? 'text-green-600' : 'text-[#2F2F2F]/40'}`}>
                           Quyền lợi: {sub.status === 'Active' ? 'Đã Kích Hoạt' : 'Vô Hiệu Hóa'}
                         </span>
                       </div>
@@ -224,14 +224,14 @@ export default function AdminSubscriptionsPage() {
                         {!sub.verified ? (
                           <button
                             onClick={() => handleVerify(sub.id)}
-                            className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-bold hover:bg-emerald-500 hover:text-white transition flex items-center gap-1"
+                            className="px-3 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-600 hover:text-white transition flex items-center gap-1"
                           >
                             <Check size={14} /> Xác Nhận
                           </button>
                         ) : (
                           <button
                             onClick={() => handleReject(sub.id)}
-                            className="px-3 py-1.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-lg text-xs font-bold hover:bg-rose-500 hover:text-white transition flex items-center gap-1"
+                            className="px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-200 rounded-lg text-xs font-bold hover:bg-rose-600 hover:text-white transition flex items-center gap-1"
                           >
                             <X size={14} /> Đình Chỉ Gói
                           </button>

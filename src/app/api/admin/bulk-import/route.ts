@@ -347,8 +347,7 @@ export async function POST(req: Request) {
             location_city,
             location_district,
             logo_url,
-            social_links,
-            updated_at: new Date().toISOString()
+            social_links
           })
           .eq('id', businessId)
       } else {

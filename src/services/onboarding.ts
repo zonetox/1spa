@@ -30,8 +30,7 @@ export async function completeOnboarding(formData: FormData) {
   const { error: profileError } = await supabase
     .from('profiles')
     .update({
-      full_name: business_name,
-      updated_at: new Date().toISOString()
+      full_name: business_name
     })
     .eq('id', user.id)
 
@@ -95,7 +94,6 @@ export async function completeOnboarding(formData: FormData) {
         business_name,
         slug,
         category: safeCategory,
-        description: bio,
         is_verified: false,
       })
   }

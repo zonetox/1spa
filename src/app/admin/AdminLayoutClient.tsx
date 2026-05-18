@@ -34,55 +34,55 @@ function NavLink({ href, label, icon: Icon, exact }: { href: string; label: stri
       href={href}
       className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all group ${
         isActive
-          ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium'
-          : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60 border border-transparent'
+          ? 'bg-[#D4AF37]/10 text-[#9c7a1c] border border-[#D4AF37]/20 font-medium'
+          : 'text-[#2F2F2F]/70 hover:text-[#D4AF37] hover:bg-[#D4AF37]/5 border border-transparent'
       }`}
     >
       <Icon 
         size={15} 
-        className={`flex-shrink-0 ${isActive ? 'text-amber-400' : 'text-zinc-500 group-hover:text-zinc-300'} transition-colors`} 
+        className={`flex-shrink-0 ${isActive ? 'text-[#9c7a1c]' : 'text-[#2F2F2F]/40 group-hover:text-[#D4AF37]'} transition-colors`} 
       />
       <span className="truncate">{label}</span>
-      {isActive && <div className="ml-auto w-1 h-1 rounded-full bg-amber-400" />}
+      {isActive && <div className="ml-auto w-1 h-1 rounded-full bg-[#D4AF37]" />}
     </Link>
   )
 }
 
 export default function AdminLayoutClient({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50 flex">
+    <div className="min-h-screen bg-[#F9F6F0] text-[#2F2F2F] flex">
       {/* Sidebar */}
-      <aside className="w-60 border-r border-zinc-800/60 flex flex-col fixed top-0 left-0 h-full z-40 bg-zinc-950">
+      <aside className="w-60 border-r border-[#D4AF37]/20 flex flex-col fixed top-0 left-0 h-full z-40 bg-white">
         {/* Logo */}
-        <div className="p-5 border-b border-zinc-800/60">
+        <div className="p-5 border-b border-[#D4AF37]/10">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-amber-500 flex items-center justify-center">
-              <Sparkles size={14} className="text-black" />
+            <div className="w-7 h-7 rounded-lg bg-[#D4AF37] flex items-center justify-center">
+              <Sparkles size={14} className="text-white" />
             </div>
             <div>
-              <h1 className="text-sm font-bold text-zinc-100 font-display tracking-wide">1Beauty.Asia Admin</h1>
-              <p className="text-[9px] font-mono text-zinc-600 uppercase tracking-[0.2em]">Quản Trị Hệ Thống</p>
+              <h1 className="text-sm font-bold text-[#2F2F2F] font-display tracking-wide">1Beauty.Asia Admin</h1>
+              <p className="text-[9px] font-mono text-[#2F2F2F]/40 uppercase tracking-[0.2em]">Quản Trị Hệ Thống</p>
             </div>
           </div>
         </div>
 
         {/* Nav */}
         <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          <p className="text-[9px] font-mono text-zinc-600 uppercase tracking-[0.2em] px-4 py-2">Menu Chính</p>
+          <p className="text-[9px] font-mono text-[#2F2F2F]/30 uppercase tracking-[0.2em] px-4 py-2">Menu Chính</p>
           {navItems.map(item => (
             <NavLink key={item.href} {...item} />
           ))}
         </nav>
 
         {/* Footer */}
-        <div className="p-3 border-t border-zinc-800/60 space-y-2">
+        <div className="p-3 border-t border-[#D4AF37]/10 space-y-2">
           <div className="px-4 py-2">
-            <p className="text-[10px] text-zinc-600 font-mono">Đăng nhập với vai trò</p>
-            <p className="text-xs text-amber-500 font-medium">Super Admin</p>
+            <p className="text-[10px] text-[#2F2F2F]/40 font-mono">Đăng nhập với vai trò</p>
+            <p className="text-xs text-[#9c7a1c] font-medium">Super Admin</p>
           </div>
           <a
             href="/"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800/40 border border-transparent transition-all"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-[#2F2F2F]/60 hover:text-[#D4AF37] hover:bg-[#D4AF37]/5 border border-transparent transition-all"
           >
             <LogOut size={15} />
             Về trang chủ
@@ -91,7 +91,7 @@ export default function AdminLayoutClient({ children }: { children: React.ReactN
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-60 min-h-screen">
+      <main className="flex-1 ml-60 min-h-screen bg-[#F9F6F0]">
         <div className="p-8 max-w-screen-xl">
           {children}
         </div>

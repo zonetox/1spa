@@ -173,10 +173,10 @@ export default function UsersAuditPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-display font-bold text-zinc-100">Quản Lý Đối Tác & Khách Hàng</h2>
-          <p className="text-xs text-zinc-500 mt-1">Kiểm soát toàn diện thông tin, trang đích, gói cước và hiệu suất leads của các đối tác.</p>
+          <h2 className="text-2xl font-display font-bold text-[#2F2F2F]">Quản Lý Đối Tác & Khách Hàng</h2>
+          <p className="text-xs text-[#2F2F2F]/60 mt-1">Kiểm soát toàn diện thông tin, trang đích, gói cước và hiệu suất leads của các đối tác.</p>
         </div>
-        <button onClick={fetchData} className="flex items-center gap-2 px-4 py-2 text-xs font-mono bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-300 hover:text-white transition">
+        <button onClick={fetchData} className="flex items-center gap-2 px-4 py-2 text-xs font-mono bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg text-[#2F2F2F]/80 hover:text-[#2F2F2F] transition">
           <RefreshCw size={12} /> Làm mới
         </button>
       </div>
@@ -184,13 +184,13 @@ export default function UsersAuditPage() {
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-[#2F2F2F]/40" />
           <input
             type="text"
             placeholder="Tìm tên doanh nghiệp, email, slug..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-9 pr-4 py-2 w-full bg-zinc-900 border border-zinc-800 rounded-lg text-sm text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-amber-500/50"
+            className="pl-9 pr-4 py-2 w-full bg-white border border-[#D4AF37]/10 rounded-lg text-sm text-[#2F2F2F] placeholder-[#2F2F2F]/40 focus:outline-none focus:border-[#D4AF37]"
           />
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -199,8 +199,8 @@ export default function UsersAuditPage() {
               key={f}
               onClick={() => setFilter(f as any)}
               className={`px-3 py-2 rounded-lg text-xs font-medium transition ${filter === f
-                ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
-                : 'bg-zinc-900 text-zinc-500 border border-zinc-800 hover:text-zinc-200'
+                ? 'bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20'
+                : 'bg-white text-[#2F2F2F]/60 border border-[#D4AF37]/10 hover:text-[#2F2F2F] hover:border-[#D4AF37]/30'
               }`}
             >
               {f === 'all' ? 'Tất cả' : f === 'verified' ? 'Xác minh' : f === 'unverified' ? 'Chưa xác minh' : f === 'trial' ? 'Dùng thử' : f === 'active' ? 'Hoạt động' : 'Đã khóa'}
@@ -210,16 +210,16 @@ export default function UsersAuditPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+      <div className="bg-white border border-[#D4AF37]/10 rounded-xl overflow-hidden shadow-sm">
         {loading ? (
-          <div className="p-12 text-center text-zinc-500 text-xs font-mono animate-pulse">Đang tải danh sách đối tác...</div>
+          <div className="p-12 text-center text-[#2F2F2F]/60 text-xs font-mono animate-pulse">Đang tải danh sách đối tác...</div>
         ) : filtered.length === 0 ? (
-          <div className="p-12 text-center text-zinc-500 text-xs font-mono">Không tìm thấy đối tác nào phù hợp.</div>
+          <div className="p-12 text-center text-[#2F2F2F]/60 text-xs font-mono">Không tìm thấy đối tác nào phù hợp.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-zinc-800 bg-zinc-950 text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+                <tr className="border-b border-[#D4AF37]/10 bg-[#FDFBF7] text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-wider">
                   <th className="py-4 px-5">Doanh Nghiệp</th>
                   <th className="py-4 px-5">Danh Mục</th>
                   <th className="py-4 px-5">Email & Gói</th>
@@ -229,7 +229,7 @@ export default function UsersAuditPage() {
                   <th className="py-4 px-5 text-right">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/50 text-xs text-zinc-300">
+              <tbody className="divide-y divide-[#D4AF37]/5 text-xs text-[#2F2F2F]/80">
                 {filtered.map(b => {
                   const lp = b.landing_pages?.[0]
                   const isPublished = lp?.is_published === true
@@ -239,47 +239,47 @@ export default function UsersAuditPage() {
                   const leadsCount = b.bookings?.[0]?.count || 0
 
                   return (
-                    <tr key={b.id} className={`hover:bg-zinc-800/30 transition ${b.profiles?.subscription_status === 'blocked' ? 'opacity-50' : ''}`}>
+                    <tr key={b.id} className={`hover:bg-[#FDFBF7]/50 transition ${b.profiles?.subscription_status === 'blocked' ? 'opacity-50' : ''}`}>
                       <td className="py-4 px-5">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-amber-500">
+                          <div className="w-8 h-8 rounded-lg bg-[#FDFBF7] border border-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37]">
                             <Building2 size={14} />
                           </div>
                           <div>
-                            <div className="font-semibold text-zinc-100 flex items-center gap-1">
+                            <div className="font-semibold text-[#2F2F2F] flex items-center gap-1">
                               {b.business_name}
-                              {b.is_verified && <BadgeCheck size={13} className="text-amber-400" />}
+                              {b.is_verified && <BadgeCheck size={13} className="text-[#D4AF37]" />}
                             </div>
-                            <div className="text-[10px] text-zinc-500 font-mono">/p/{b.slug}</div>
+                            <div className="text-[10px] text-[#2F2F2F]/40 font-mono">/p/{b.slug}</div>
                           </div>
                         </div>
                       </td>
                       <td className="py-4 px-5">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-800 text-zinc-400 uppercase">{b.category}</span>
-                        <div className="text-[10px] text-zinc-600 mt-0.5">{[b.location_district, b.location_city].filter(Boolean).join(', ') || '—'}</div>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#FDFBF7] text-[#2F2F2F]/60 uppercase">{b.category}</span>
+                        <div className="text-[10px] text-[#2F2F2F]/40 mt-0.5">{[b.location_district, b.location_city].filter(Boolean).join(', ') || '—'}</div>
                       </td>
                       <td className="py-4 px-5">
-                        <div className="text-zinc-300">{b.profiles?.email || '—'}</div>
-                        <div className={`text-[10px] font-mono mt-0.5 ${b.profiles?.subscription_status?.toLowerCase() === 'active' ? 'text-emerald-400' : b.profiles?.subscription_status?.toLowerCase() === 'trial' ? 'text-amber-400' : 'text-red-400'}`}>
+                        <div className="text-[#2F2F2F]">{b.profiles?.email || '—'}</div>
+                        <div className={`text-[10px] font-mono mt-0.5 ${b.profiles?.subscription_status?.toLowerCase() === 'active' ? 'text-emerald-600' : b.profiles?.subscription_status?.toLowerCase() === 'trial' ? 'text-[#D4AF37]' : 'text-red-600'}`}>
                           {b.profiles?.subscription_status?.toLowerCase() === 'active' ? 'Hoạt động' : b.profiles?.subscription_status?.toLowerCase() === 'trial' ? 'Dùng thử' : b.profiles?.subscription_status?.toLowerCase() === 'blocked' ? 'Đã khóa' : b.profiles?.subscription_status || '—'}
                         </div>
                       </td>
                       <td className="py-4 px-5">
                         {days !== null ? (
-                          <div className={`flex items-center gap-1 text-[10px] font-mono ${isExpired ? 'text-red-400' : isExpiringSoon ? 'text-amber-400 animate-pulse' : 'text-zinc-400'}`}>
+                          <div className={`flex items-center gap-1 text-[10px] font-mono ${isExpired ? 'text-red-600' : isExpiringSoon ? 'text-[#D4AF37] animate-pulse' : 'text-[#2F2F2F]/60'}`}>
                             <Clock size={11} />
                             {isExpired ? `Hết hạn ${Math.abs(days)} ngày` : `Còn ${days} ngày`}
                           </div>
                         ) : '—'}
                       </td>
                       <td className="py-4 px-5">
-                         <div className="flex items-center gap-1.5 font-medium text-emerald-400">
+                         <div className="flex items-center gap-1.5 font-medium text-emerald-600">
                            <UsersIcon size={14} />
                            {leadsCount} Bookings
                          </div>
                       </td>
                       <td className="py-4 px-5">
-                        <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${isPublished ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-zinc-800 text-zinc-500 border border-zinc-700'}`}>
+                        <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${isPublished ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-[#FDFBF7] text-[#2F2F2F]/40 border border-[#D4AF37]/10'}`}>
                           {isPublished ? 'Public' : 'Private'}
                         </span>
                       </td>
@@ -288,7 +288,7 @@ export default function UsersAuditPage() {
                           <button
                             onClick={() => setEditingBusiness(b)}
                             title="Sửa thông tin"
-                            className="p-1.5 rounded border border-zinc-700 text-zinc-500 hover:text-amber-400 hover:border-amber-500/50 transition"
+                            className="p-1.5 rounded border border-[#D4AF37]/10 text-[#2F2F2F]/40 hover:text-[#D4AF37] hover:border-[#D4AF37]/30 transition"
                           >
                             <Edit size={13} />
                           </button>
@@ -296,8 +296,8 @@ export default function UsersAuditPage() {
                             onClick={() => togglePublished(b.id, isPublished)}
                             title={isPublished ? 'Gỡ xuống (Private)' : 'Xuất bản (Public)'}
                             className={`p-1.5 rounded border transition ${isPublished
-                              ? 'bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500 hover:text-white'
-                              : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white'
+                              ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-600 hover:text-white'
+                              : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-600 hover:text-white'
                             }`}
                           >
                             {isPublished ? <Lock size={13} /> : <Unlock size={13} />}
@@ -306,8 +306,8 @@ export default function UsersAuditPage() {
                             onClick={() => toggleVerified(b.id, b.is_verified)}
                             title={b.is_verified ? 'Bỏ xác minh' : 'Cấp tích xanh'}
                             className={`p-1.5 rounded border transition ${b.is_verified
-                              ? 'bg-amber-500/10 border-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-white'
-                              : 'bg-zinc-800 border-zinc-700 text-zinc-500 hover:bg-amber-500 hover:text-white hover:border-transparent'
+                              ? 'bg-[#D4AF37]/10 border-[#D4AF37]/20 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white'
+                              : 'bg-[#FDFBF7] border-[#D4AF37]/10 text-[#2F2F2F]/40 hover:bg-[#D4AF37] hover:text-white hover:border-transparent'
                             }`}
                           >
                             <ShieldCheck size={13} />
@@ -316,7 +316,7 @@ export default function UsersAuditPage() {
                             href={`/p/${b.slug}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="p-1.5 rounded border border-zinc-700 text-zinc-500 hover:text-zinc-200 hover:border-zinc-500 transition"
+                            className="p-1.5 rounded border border-[#D4AF37]/10 text-[#2F2F2F]/40 hover:text-[#2F2F2F] hover:border-[#D4AF37]/30 transition"
                           >
                             <ExternalLink size={13} />
                           </a>
@@ -331,20 +331,20 @@ export default function UsersAuditPage() {
         )}
       </div>
 
-      <p className="text-[10px] text-zinc-600 font-mono">
+      <p className="text-[10px] text-[#2F2F2F]/40 font-mono">
         Tổng cộng: {filtered.length} doanh nghiệp
       </p>
 
       {/* Edit Modal */}
       {editingBusiness && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 p-5 flex justify-between items-center z-10">
+          <div className="bg-white border border-[#D4AF37]/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
+            <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-[#D4AF37]/10 p-5 flex justify-between items-center z-10">
               <div>
-                <h3 className="font-display font-bold text-lg text-zinc-100">Chỉnh Sửa Toàn Diện</h3>
-                <p className="text-xs text-zinc-500 font-mono mt-1">ID: {editingBusiness.id}</p>
+                <h3 className="font-display font-bold text-lg text-[#2F2F2F]">Chỉnh Sửa Toàn Diện</h3>
+                <p className="text-xs text-[#2F2F2F]/40 font-mono mt-1">ID: {editingBusiness.id}</p>
               </div>
-              <button onClick={() => setEditingBusiness(null)} className="p-2 text-zinc-500 hover:text-white rounded-lg hover:bg-zinc-900 transition">
+              <button onClick={() => setEditingBusiness(null)} className="p-2 text-[#2F2F2F]/40 hover:text-[#2F2F2F] rounded-lg hover:bg-[#FDFBF7] transition">
                 <X size={20} />
               </button>
             </div>
@@ -352,24 +352,24 @@ export default function UsersAuditPage() {
             <form onSubmit={handleSaveEdit} className="p-5 space-y-6">
               {/* Business Info */}
               <div className="space-y-4">
-                <h4 className="text-sm font-semibold text-amber-500 uppercase tracking-wider font-mono">Thông Tin Cơ Sở</h4>
+                <h4 className="text-sm font-semibold text-[#D4AF37] uppercase tracking-wider font-mono">Thông Tin Cơ Sở</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-xs text-zinc-400">Tên doanh nghiệp</label>
+                    <label className="text-xs text-[#2F2F2F]/60">Tên doanh nghiệp</label>
                     <input 
                       required
                       type="text" 
                       value={editingBusiness.business_name}
                       onChange={e => setEditingBusiness({...editingBusiness, business_name: e.target.value})}
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-zinc-400">Danh mục (Category)</label>
+                    <label className="text-xs text-[#2F2F2F]/60">Danh mục (Category)</label>
                     <select 
                       value={editingBusiness.category}
                       onChange={e => setEditingBusiness({...editingBusiness, category: e.target.value})}
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                     >
                       <option value="Spa">Spa</option>
                       <option value="Beauty">Làm Đẹp (Beauty)</option>
@@ -377,39 +377,39 @@ export default function UsersAuditPage() {
                     </select>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-zinc-400">Hotline</label>
+                    <label className="text-xs text-[#2F2F2F]/60">Hotline</label>
                     <input 
                       type="text" 
                       value={editingBusiness.hotline || ''}
                       onChange={e => setEditingBusiness({...editingBusiness, hotline: e.target.value})}
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-zinc-400">Zalo Phone</label>
+                    <label className="text-xs text-[#2F2F2F]/60">Zalo Phone</label>
                     <input 
                       type="text" 
                       value={editingBusiness.zalo_phone || ''}
                       onChange={e => setEditingBusiness({...editingBusiness, zalo_phone: e.target.value})}
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-zinc-400">Quận/Huyện</label>
+                    <label className="text-xs text-[#2F2F2F]/60">Quận/Huyện</label>
                     <input 
                       type="text" 
                       value={editingBusiness.location_district || ''}
                       onChange={e => setEditingBusiness({...editingBusiness, location_district: e.target.value})}
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-zinc-400">Tỉnh/Thành</label>
+                    <label className="text-xs text-[#2F2F2F]/60">Tỉnh/Thành</label>
                     <input 
                       type="text" 
                       value={editingBusiness.location_city || ''}
                       onChange={e => setEditingBusiness({...editingBusiness, location_city: e.target.value})}
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -417,32 +417,32 @@ export default function UsersAuditPage() {
 
               {/* Account / Subscription Info */}
               {editingBusiness.profiles && (
-                <div className="space-y-4 pt-4 border-t border-zinc-800">
-                  <h4 className="text-sm font-semibold text-amber-500 uppercase tracking-wider font-mono">Quản Lý Gói & Quyền Hạn</h4>
+                <div className="space-y-4 pt-4 border-t border-[#D4AF37]/10">
+                  <h4 className="text-sm font-semibold text-[#D4AF37] uppercase tracking-wider font-mono">Quản Lý Gói & Quyền Hạn</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-xs text-zinc-400">Quyền hạn (Role)</label>
+                      <label className="text-xs text-[#2F2F2F]/60">Quyền hạn (Role)</label>
                       <select 
                         value={(editingBusiness.profiles as any).role?.toLowerCase()}
                         onChange={e => setEditingBusiness({
                           ...editingBusiness, 
                           profiles: { ...editingBusiness.profiles!, role: e.target.value } as any
                         })}
-                        className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                        className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                       >
                         <option value="business">Business (Doanh nghiệp)</option>
                         <option value="admin">Admin (Quản trị viên)</option>
                       </select>
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs text-zinc-400">Trạng Thái Gói</label>
+                      <label className="text-xs text-[#2F2F2F]/60">Trạng Thái Gói</label>
                       <select 
                         value={editingBusiness.profiles.subscription_status?.toLowerCase()}
                         onChange={e => setEditingBusiness({
                           ...editingBusiness, 
                           profiles: { ...editingBusiness.profiles!, subscription_status: e.target.value }
                         })}
-                        className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                        className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                       >
                         <option value="trial">Dùng thử (Trial)</option>
                         <option value="active">Kích hoạt (Active)</option>
@@ -450,7 +450,7 @@ export default function UsersAuditPage() {
                       </select>
                     </div>
                     <div className="space-y-1 md:col-span-2">
-                      <label className="text-xs text-zinc-400">Ngày Hết Hạn</label>
+                      <label className="text-xs text-[#2F2F2F]/60">Ngày Hết Hạn</label>
                       <input 
                         type="datetime-local" 
                         value={editingBusiness.profiles.expiry_date ? new Date(editingBusiness.profiles.expiry_date).toISOString().slice(0, 16) : ''}
@@ -458,7 +458,7 @@ export default function UsersAuditPage() {
                           ...editingBusiness, 
                           profiles: { ...editingBusiness.profiles!, expiry_date: new Date(e.target.value).toISOString() }
                         })}
-                        className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                        className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                       />
                     </div>
                   </div>
@@ -469,14 +469,14 @@ export default function UsersAuditPage() {
                 <button 
                   type="button" 
                   onClick={() => setEditingBusiness(null)}
-                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-[#FDFBF7] text-[#2F2F2F]/60 hover:text-[#2F2F2F] hover:bg-[#FDFBF7]/80 transition border border-[#D4AF37]/10"
                 >
                   Hủy bỏ
                 </button>
                 <button 
                   type="submit" 
                   disabled={saving}
-                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-amber-500 text-black hover:bg-amber-400 transition disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-[#D4AF37] text-white hover:bg-[#C59B27] transition disabled:opacity-50"
                 >
                   {saving ? 'Đang lưu...' : 'Lưu Thay Đổi'}
                 </button>

@@ -133,42 +133,42 @@ export default function AdminPackagesPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-display font-bold text-zinc-100">Cấu Hình Gói Dịch Vụ (SaaS Plans)</h2>
-          <p className="text-xs text-zinc-500 mt-1">Định hình các gói thành viên hội viên và thiết lập giới hạn tính năng (Blogs, Quota) tương ứng.</p>
+          <h2 className="text-2xl font-display font-bold text-[#2F2F2F]">Cấu Hình Gói Dịch Vụ (SaaS Plans)</h2>
+          <p className="text-xs text-[#2F2F2F]/60 mt-1">Định hình các gói thành viên hội viên và thiết lập giới hạn tính năng (Blogs, Quota) tương ứng.</p>
         </div>
         <button 
           onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 px-5 py-2.5 bg-amber-500 text-black hover:bg-amber-400 transition rounded-lg text-xs font-semibold"
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#D4AF37] text-white hover:bg-[#C59B27] transition rounded-lg text-xs font-semibold shadow-sm"
         >
           <Plus size={14} /> Thêm Gói Mới
         </button>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-zinc-500 text-xs font-mono animate-pulse">Đang tải danh sách gói cước...</div>
+        <div className="p-12 text-center text-[#2F2F2F]/60 text-xs font-mono animate-pulse">Đang tải danh sách gói cước...</div>
       ) : packages.length === 0 ? (
-        <div className="p-12 text-center text-zinc-500 text-xs font-mono">Chưa cấu hình gói cước nào. Nhấn nút "Thêm Gói Mới" để bắt đầu.</div>
+        <div className="p-12 text-center text-[#2F2F2F]/60 text-xs font-mono">Chưa cấu hình gói cước nào. Nhấn nút "Thêm Gói Mới" để bắt đầu.</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {packages.map(pkg => (
-            <div key={pkg.id} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-5 flex flex-col justify-between">
+            <div key={pkg.id} className="bg-white border border-[#D4AF37]/10 rounded-2xl p-6 space-y-5 flex flex-col justify-between shadow-sm">
               <div className="space-y-4">
                 <div className="flex items-start justify-between">
-                  <h3 className="font-bold text-lg text-zinc-100 font-display">{pkg.name}</h3>
+                  <h3 className="font-bold text-lg text-[#2F2F2F] font-display">{pkg.name}</h3>
                   <div className="flex gap-1">
                     <button 
                       onClick={() => handleOpenModal(pkg)} 
-                      className="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-amber-400 transition"
+                      className="p-1.5 rounded hover:bg-[#FDFBF7] text-[#2F2F2F]/40 hover:text-[#D4AF37] transition"
                       title="Sửa"
                     >
                       <Edit2 size={13} />
                     </button>
                     <button 
                       onClick={() => handleDelete(pkg.id)} 
-                      className="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-red-400 transition"
+                      className="p-1.5 rounded hover:bg-[#FDFBF7] text-[#2F2F2F]/40 hover:text-red-600 transition"
                       title="Xóa"
                     >
                       <Trash2 size={13} />
@@ -176,29 +176,29 @@ export default function AdminPackagesPage() {
                   </div>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-amber-500 font-mono">{pkg.price.toLocaleString('vi-VN')}đ</p>
-                  <p className="text-[10px] text-zinc-500 mt-1 font-mono uppercase tracking-wider">
+                  <p className="text-2xl font-bold text-[#D4AF37] font-mono">{pkg.price.toLocaleString('vi-VN')}đ</p>
+                  <p className="text-[10px] text-[#2F2F2F]/40 mt-1 font-mono uppercase tracking-wider">
                     Chu kỳ: {pkg.duration_days} ngày | Trial: {pkg.trial_days} ngày
                   </p>
                 </div>
-                <div className="pt-4 border-t border-zinc-800/60 space-y-2">
-                  <p className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest flex items-center gap-1">
+                <div className="pt-4 border-t border-[#D4AF37]/5 space-y-2">
+                  <p className="text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-widest flex items-center gap-1">
                     <Settings size={11} /> Giới hạn tính năng:
                   </p>
-                  <div className="text-xs text-zinc-300 bg-zinc-950 px-3 py-2 rounded-lg font-mono">
+                  <div className="text-xs text-[#2F2F2F]/80 bg-[#FDFBF7] px-3 py-2 rounded-lg font-mono">
                     Tối đa {pkg.limits?.max_blogs || 3} bài viết (Blogs)
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2 pt-2">
-                <p className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest flex items-center gap-1">
+                <p className="text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-widest flex items-center gap-1">
                   <Info size={11} /> Đặc quyền đi kèm:
                 </p>
                 <ul className="space-y-1.5 pl-1">
                   {(pkg.features || []).map((f: string, i: number) => (
-                    <li key={i} className="text-xs text-zinc-300 flex items-start gap-2 leading-relaxed">
-                      <Check size={12} className="text-emerald-500 mt-0.5 shrink-0" /> 
+                    <li key={i} className="text-xs text-[#2F2F2F]/80 flex items-start gap-2 leading-relaxed">
+                      <Check size={12} className="text-emerald-600 mt-0.5 shrink-0" /> 
                       <span>{f}</span>
                     </li>
                   ))}
@@ -212,15 +212,15 @@ export default function AdminPackagesPage() {
       {/* Save / Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 p-5 flex justify-between items-center z-10">
+          <div className="bg-white border border-[#D4AF37]/10 rounded-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-xl">
+            <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-[#D4AF37]/10 p-5 flex justify-between items-center z-10">
               <div>
-                <h3 className="font-display font-bold text-lg text-zinc-100">
+                <h3 className="font-display font-bold text-lg text-[#2F2F2F]">
                   {editingPackage ? 'Cập Nhật Cấu Hình Gói' : 'Tạo Gói SaaS Mới'}
                 </h3>
-                <p className="text-xs text-zinc-500 font-mono mt-1">Cấu hình các chỉ số hạn mức của gói cước</p>
+                <p className="text-xs text-[#2F2F2F]/40 font-mono mt-1">Cấu hình các chỉ số hạn mức của gói cước</p>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="p-2 text-zinc-500 hover:text-white rounded-lg hover:bg-zinc-900 transition">
+              <button onClick={() => setIsModalOpen(false)} className="p-2 text-[#2F2F2F]/40 hover:text-[#2F2F2F] rounded-lg hover:bg-[#FDFBF7] transition">
                 <X size={20} />
               </button>
             </div>
@@ -228,60 +228,60 @@ export default function AdminPackagesPage() {
             <div className="p-5 space-y-6">
               <div className="space-y-4">
                 <div className="space-y-1">
-                  <label className="text-xs text-zinc-400">Tên gói cước</label>
+                  <label className="text-xs text-[#2F2F2F]/60">Tên gói cước</label>
                   <input 
                     type="text" 
                     value={name} 
                     onChange={e => setName(e.target.value)} 
                     placeholder="VD: Premium Luxury" 
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                    className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                   />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-xs text-zinc-400">Giá thành (VNĐ)</label>
+                    <label className="text-xs text-[#2F2F2F]/60">Giá thành (VNĐ)</label>
                     <input 
                       type="number" 
                       value={price} 
                       onChange={e => setPrice(Number(e.target.value))} 
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-zinc-400">Dùng thử (Số ngày)</label>
+                    <label className="text-xs text-[#2F2F2F]/60">Dùng thử (Số ngày)</label>
                     <input 
                       type="number" 
                       value={trialDays} 
                       onChange={e => setTrialDays(Number(e.target.value))} 
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-xs text-zinc-400">Thời hạn chu kỳ (Số ngày)</label>
+                    <label className="text-xs text-[#2F2F2F]/60">Thời hạn chu kỳ (Số ngày)</label>
                     <input 
                       type="number" 
                       value={durationDays} 
                       onChange={e => setDurationDays(Number(e.target.value))} 
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs text-zinc-400">Hạn mức viết Blog (Quota)</label>
+                    <label className="text-xs text-[#2F2F2F]/60">Hạn mức viết Blog (Quota)</label>
                     <input 
                       type="number" 
                       value={maxBlogs} 
                       onChange={e => setMaxBlogs(Number(e.target.value))} 
-                      className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:border-amber-500 focus:outline-none"
+                      className="w-full bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-sm text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2 pt-2">
-                  <label className="text-xs text-zinc-400 block">Đặc quyền đi kèm (Features)</label>
+                  <label className="text-xs text-[#2F2F2F]/60 block">Đặc quyền đi kèm (Features)</label>
                   <div className="space-y-2">
                     {features.map((feature, index) => (
                       <div key={index} className="flex gap-2">
@@ -289,12 +289,12 @@ export default function AdminPackagesPage() {
                           type="text" 
                           value={feature} 
                           onChange={e => handleFeatureChange(index, e.target.value)} 
-                          className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-100 focus:border-amber-500 focus:outline-none"
+                          className="flex-1 bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-lg px-3 py-2 text-xs text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none"
                           placeholder="VD: Bản đồ tích hợp chỉ đường Google Maps" 
                         />
                         <button 
                           onClick={() => removeFeatureRow(index)} 
-                          className="p-2 text-zinc-500 hover:text-red-400 hover:bg-zinc-900 rounded-lg transition"
+                          className="p-2 text-[#2F2F2F]/40 hover:text-red-600 hover:bg-[#FDFBF7] rounded-lg transition"
                         >
                           <Trash2 size={14}/>
                         </button>
@@ -302,7 +302,7 @@ export default function AdminPackagesPage() {
                     ))}
                     <button 
                       onClick={addFeatureRow} 
-                      className="text-xs text-amber-500 hover:text-amber-400 font-semibold transition"
+                      className="text-xs text-[#D4AF37] hover:text-[#C59B27] font-semibold transition"
                     >
                       + Thêm dòng đặc quyền
                     </button>
@@ -310,17 +310,17 @@ export default function AdminPackagesPage() {
                 </div>
               </div>
 
-              <div className="pt-4 flex gap-3 justify-end border-t border-zinc-800">
+              <div className="pt-4 flex gap-3 justify-end border-t border-[#D4AF37]/10">
                 <button 
                   type="button" 
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-[#FDFBF7] text-[#2F2F2F]/60 hover:text-[#2F2F2F] hover:bg-[#FDFBF7]/80 transition border border-[#D4AF37]/10"
                 >
                   Hủy bỏ
                 </button>
                 <button 
                   onClick={handleSave}
-                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-amber-500 text-black hover:bg-amber-400 transition"
+                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-[#D4AF37] text-white hover:bg-[#C59B27] transition"
                 >
                   Lưu Cấu Hình
                 </button>

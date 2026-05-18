@@ -105,7 +105,7 @@ export async function generateMetadata({ params }: PageProps) {
   if (VIRTUAL_DEMOS[slug]) {
     const b = VIRTUAL_DEMOS[slug];
     return {
-      title: `${b.business_name} | 1SPA Directory`,
+      title: `${b.business_name} | 1Beauty.Asia`,
       description: `Khám phá dịch vụ ${b.category} cao cấp tại ${b.business_name}.`,
       openGraph: {
         title: `${b.business_name}`,
@@ -130,10 +130,10 @@ export async function generateMetadata({ params }: PageProps) {
     .eq('business_slug', slug)
     .single();
 
-  if (!business) return { title: 'Không tìm thấy trang | 1SPA' };
+  if (!business) return { title: 'Không tìm thấy trang | 1Beauty.Asia' };
 
   return {
-    title: `${business.business_name} | Đặt lịch ngay trên 1SPA`,
+    title: `${business.business_name} | Đặt lịch ngay trên 1Beauty.Asia`,
     description: `Khám phá không gian ${business.category} sang trọng và dịch vụ chuyên nghiệp tại ${business.business_name}.`,
     openGraph: {
       title: `${business.business_name} | 1Beauty Asia`,

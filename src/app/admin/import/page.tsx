@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 import toast from 'react-hot-toast';
 
 import React, { useState, useEffect } from 'react'
@@ -263,7 +263,7 @@ export default function AdminImportPage() {
       try {
         const response = await fetch('/api/admin/bulk-import', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.NEXT_PUBLIC_INGEST_SECRET_KEY || '1spa_master_secret_2026_x8k2l9m4' },
+          headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.NEXT_PUBLIC_INGEST_SECRET_KEY || '1beauty_master_secret_2026_x8k2l9m4' },
           body: JSON.stringify([item])
         })
 
@@ -396,21 +396,21 @@ export default function AdminImportPage() {
         zalo: editForm.zalo
       } : item))
 
-      toast.success('Äá»“ng bá»™ dá»¯ liá»‡u cáº­p nháº­t thÃ nh cÃ´ng lÃªn há»‡ thá»‘ng!')
+      toast.success('Đồng bộ dữ liệu cập nhật thành công lên hệ thống!')
       setIsEditModalOpen(false)
     } catch (err: any) {
-      toast('Äá»“ng bá»™ tháº¥t báº¡i: ' + err.message)
+      toast('Đồng bộ thất bại: ' + err.message)
     } finally {
       setIsSavingEdit(false)
     }
   }
 
   return (
-    <main className="min-h-screen bg-[#0d0d0f] text-zinc-300 pt-32 pb-24 px-6 relative overflow-hidden selection:bg-[#D4AF37]/20">
+    <main className="min-h-screen bg-[#FDFBF7] text-[#2F2F2F] pt-32 pb-24 px-6 relative overflow-hidden selection:bg-[#D4AF37]/20">
       
       {/* Decorative luxury glowing backgrounds */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#D4AF37]/5 to-transparent rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-t from-zinc-900 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-t from-[#FDFBF7] to-transparent rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-6xl mx-auto space-y-12 relative z-10">
         
@@ -419,79 +419,79 @@ export default function AdminImportPage() {
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-[#D4AF37] font-mono text-[10px] uppercase tracking-[0.4em]">
               <Database size={14} />
-              <span>Há»‡ thá»‘ng Quáº£n trá»‹ Tá»‘i cao 1Beauty.Asia</span>
+              <span>Hệ thống Quản trị Tối cao 1Beauty.Asia</span>
             </div>
-            <h1 className="font-serif text-4xl md:text-5xl text-white italic">
+            <h1 className="font-serif text-4xl md:text-5xl text-[#2F2F2F] italic">
               Import Center <span className="text-[#D4AF37]">Dashboard.</span>
             </h1>
           </div>
           <button 
             onClick={downloadCSVTemplate}
-            className="bg-white/5 border border-[#D4AF37]/20 hover:border-[#D4AF37] text-white text-xs font-mono tracking-widest uppercase px-6 py-3.5 rounded-full flex items-center gap-2 transition-all hover:scale-105"
+            className="bg-white border border-[#D4AF37]/20 hover:border-[#D4AF37] text-[#2F2F2F] text-xs font-mono tracking-widest uppercase px-6 py-3.5 rounded-full flex items-center gap-2 transition-all hover:scale-105 shadow-sm"
           >
             <Download size={14} className="text-[#D4AF37]" />
-            Táº£i File Máº«u (.csv)
+            Tải File Mẫu (.csv)
           </button>
         </div>
 
         {/* DASHBOARD STATS METRICS */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-zinc-900/40 border border-white/5 p-6 rounded-3xl flex items-center gap-5">
+          <div className="bg-white border border-[#D4AF37]/10 p-6 rounded-3xl flex items-center gap-5 shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37]">
               <Globe size={22} />
             </div>
             <div>
-              <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">CÆ¡ sá»Ÿ Ä‘Ã£ náº¡p</p>
-              <h4 className="text-2xl font-serif text-white mt-1">
-                {metrics.totalBusinesses} <span className="text-xs text-zinc-500 font-sans font-normal">(Public: {metrics.publishedPages} | NhÃ¡p: {metrics.draftPages})</span>
+              <p className="text-[10px] font-mono uppercase tracking-widest text-[#2F2F2F]/60">Cơ sở đã nạp</p>
+              <h4 className="text-2xl font-serif text-[#2F2F2F] mt-1">
+                {metrics.totalBusinesses} <span className="text-xs text-[#2F2F2F]/60 font-sans font-normal">(Public: {metrics.publishedPages} | Nháp: {metrics.draftPages})</span>
               </h4>
             </div>
           </div>
-          <div className="bg-zinc-900/40 border border-white/5 p-6 rounded-3xl flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-400">
+          <div className="bg-white border border-[#D4AF37]/10 p-6 rounded-3xl flex items-center gap-5 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-600">
               <TrendingUp size={22} />
             </div>
             <div>
-              <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">GÃ³i dÃ¹ng thá»­ (Trial)</p>
-              <h4 className="text-2xl font-serif text-white mt-1">{metrics.trialAccounts} cÆ¡ sá»Ÿ</h4>
+              <p className="text-[10px] font-mono uppercase tracking-widest text-[#2F2F2F]/60">Gói dùng thử (Trial)</p>
+              <h4 className="text-2xl font-serif text-[#2F2F2F] mt-1">{metrics.trialAccounts} cơ sở</h4>
             </div>
           </div>
-          <div className="bg-zinc-900/40 border border-white/5 p-6 rounded-3xl flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-400">
+          <div className="bg-white border border-[#D4AF37]/10 p-6 rounded-3xl flex items-center gap-5 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-600">
               <ShieldCheck size={22} />
             </div>
             <div>
-              <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">ThÃ nh viÃªn Premium</p>
-              <h4 className="text-2xl font-serif text-white mt-1">{metrics.premiumAccounts} cÆ¡ sá»Ÿ</h4>
+              <p className="text-[10px] font-mono uppercase tracking-widest text-[#2F2F2F]/60">Thành viên Premium</p>
+              <h4 className="text-2xl font-serif text-[#2F2F2F] mt-1">{metrics.premiumAccounts} cơ sở</h4>
             </div>
           </div>
-          <div className="bg-zinc-900/40 border border-white/5 p-6 rounded-3xl flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+          <div className="bg-white border border-[#D4AF37]/10 p-6 rounded-3xl flex items-center gap-5 shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-600">
               <UserCheck size={22} />
             </div>
             <div>
-              <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">Tráº¡ng thÃ¡i bÃ n giao</p>
-              <h4 className="text-2xl font-serif text-white mt-1">Sáºµn sÃ ng</h4>
+              <p className="text-[10px] font-mono uppercase tracking-widest text-[#2F2F2F]/60">Trạng thái bàn giao</p>
+              <h4 className="text-2xl font-serif text-[#2F2F2F] mt-1">Sẵn sàng</h4>
             </div>
           </div>
         </div>
 
         {/* STEPPER WIZARD STEPS */}
-        <div className="grid grid-cols-3 gap-4 border-b border-white/5 pb-8 max-w-xl">
+        <div className="grid grid-cols-3 gap-4 border-b border-[#D4AF37]/10 pb-8 max-w-xl">
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex items-center gap-3">
-              <div className={`w-8 h-8 rounded-full font-serif flex items-center justify-center text-xs ${activeStep >= s ? 'bg-[#D4AF37] text-black font-bold' : 'bg-white/5 text-zinc-500'}`}>
+              <div className={`w-8 h-8 rounded-full font-serif flex items-center justify-center text-xs ${activeStep >= s ? 'bg-[#D4AF37] text-white font-bold' : 'bg-[#FDFBF7] text-[#2F2F2F]/40'}`}>
                 {s}
               </div>
-              <span className={`text-[10px] font-mono uppercase tracking-widest ${activeStep === s ? 'text-[#D4AF37]' : 'text-zinc-500'}`}>
-                {s === 1 ? 'Chá»n File' : s === 2 ? 'Xem trÆ°á»›c' : 'Náº¡p dá»¯ liá»‡u'}
+              <span className={`text-[10px] font-mono uppercase tracking-widest ${activeStep === s ? 'text-[#D4AF37]' : 'text-[#2F2F2F]/40'}`}>
+                {s === 1 ? 'Chọn File' : s === 2 ? 'Xem trước' : 'Nạp dữ liệu'}
               </span>
             </div>
           ))}
         </div>
 
         {/* STEPPER PANELS */}
-        <div className="bg-zinc-900/30 border border-white/5 rounded-3xl p-8 relative overflow-hidden">
+        <div className="bg-white border border-[#D4AF37]/10 rounded-3xl p-8 relative overflow-hidden shadow-sm">
           
           <AnimatePresence mode="wait">
             
@@ -505,39 +505,39 @@ export default function AdminImportPage() {
                 className="space-y-6"
               >
                 <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3 text-zinc-400">
+                  <div className="flex items-center gap-3 text-[#2F2F2F]/60">
                     <FileSpreadsheet size={20} className="text-[#D4AF37]" />
-                    <span className="text-xs font-mono uppercase tracking-widest">Náº¡p dá»¯ liá»‡u tá»« Excel / CSV / JSON</span>
+                    <span className="text-xs font-mono uppercase tracking-widest">Nạp dữ liệu từ Excel / CSV / JSON</span>
                   </div>
                   <button 
                     onClick={() => {
                       const csvText = [
                         'business_name,category,email_owner,zalo_phone,hotline,slug,city,district,address_full,latitude,longitude,map_embed_url,hero_title,hero_subtitle,hero_video_url,hero_slide_1,hero_slide_2,hero_slide_3,about_intro,experience_years,about_video_url,sv_1_name,sv_1_price,sv_1_desc,sv_1_img,sv_2_name,sv_2_price,sv_2_desc,sv_2_img,sv_3_name,sv_3_price,sv_3_desc,sv_3_img,sv_4_name,sv_4_price,sv_4_desc,sv_4_img,sv_5_name,sv_5_price,sv_5_desc,sv_5_img,sv_6_name,sv_6_price,sv_6_desc,sv_6_img,time_mon,time_tue,time_wed,time_thu,time_fri,time_sat,time_sun,fb_link,tiktok_link',
-                        'Lavender Luxury Spa,Spa,lavender@beauty.com,0901234561,19001231,lavender-spa-luxury,TP. Há»“ ChÃ­ Minh,Quáº­n 1,15 LÃª Lá»£i Quáº­n 1,10.7769,106.7009,,Lavender - Viá»‡n Tháº©m Má»¹ HoÃ ng Gia Luxury,Tráº£i nghiá»‡m dá»‹ch vá»¥ lÃ m Ä‘áº¹p Ä‘áº³ng cáº¥p 5 sao vá»›i cÃ´ng nghá»‡ Ä‘á»™c quyá»n tá»« Thá»¥y SÄ©.,,https://images.unsplash.com/photo-1540555700478-4be289fbecef,https://images.unsplash.com/photo-1600334129128-685c5582fd35,https://images.unsplash.com/photo-1544161515-4af6b1d46af0,Vá»›i hÆ¡n 10 nÄƒm hÃ¬nh thÃ nh vÃ  phÃ¡t triá»ƒn chÃºng tÃ´i tá»± hÃ o lÃ  Ä‘Æ¡n vá»‹ dáº«n Ä‘áº§u.,10+,,Táº¯m tráº¯ng phi thuyá»n,3.500.000Ä‘,Táº¯m tráº¯ng phi thuyá»n nuÃ´i dÆ°á»¡ng da sÃ¢u tá»« bÃªn trong.,https://images.unsplash.com/photo-1540555700478-4be289fbecef,Tráº» hÃ³a da Thermage FLX,15.000.000Ä‘,CÃ´ng nghá»‡ xÃ³a nhÄƒn nÃ¢ng cÆ¡ Ä‘á»‰nh cao hÃ ng Ä‘áº§u tháº¿ giá»›i.,https://images.unsplash.com/photo-1600334129128-685c5582fd35,ChÄƒm sÃ³c da chuyÃªn sÃ¢u,1.500.000Ä‘,Tráº£i nghiá»‡m chÄƒm sÃ³c da nuÃ´i dÆ°á»¡ng chuyÃªn sÃ¢u cÃ¹ng táº¿ bÃ o gá»‘c.,https://images.unsplash.com/photo-1544161515-4af6b1d46af0,Triá»‡t lÃ´ng Diode Laser,2.000.000Ä‘,Triá»‡t lÃ´ng vÄ©nh viá»…n cÃ´ng nghá»‡ Ã¡nh sÃ¡ng tháº¿ há»‡ má»›i.,https://images.unsplash.com/photo-1519415510236-8559b1956a20,Massage Thá»¥y Äiá»ƒn Luxury,1.200.000Ä‘,Giáº£m cÄƒng tháº³ng má»‡t má»i hiá»‡u quáº£ sau giá» lÃ m viá»‡c.,https://images.unsplash.com/photo-1596178065887-1198b6148b2b,HÃºt chÃ¬ tháº£i Ä‘á»™c tá»‘ da,800.000Ä‘,Tháº£i Ä‘á»™c chÃ¬ loáº¡i bá» bá»¥i báº©n táº¿ bÃ o cháº¿t bÃ¡m sÃ¢u.,https://images.unsplash.com/photo-1540555700478-4be289fbecef,08:00 - 20:00,08:00 - 20:00,08:00 - 20:00,08:00 - 20:00,08:00 - 20:00,08:00 - 21:00,09:00 - 18:00,fb.com/lavenderspa,tiktok.com/@lavenderspa',
-                        'Nha Khoa Kim Elite,Dental,kim@dental.com,0901234562,19001232,nha-khoa-kim-q3,TP. Há»“ ChÃ­ Minh,Quáº­n 3,45 Nguyá»…n ÄÃ¬nh Chiá»ƒu Quáº­n 3,10.7769,106.7009,,Nha Khoa Kim Elite - Kiáº¿n Táº¡o Ná»¥ CÆ°á»i Viá»‡t,Há»‡ thá»‘ng nha khoa tháº©m má»¹ cao cáº¥p chuyÃªn sÃ¢u bá»c rÄƒng sá»© vÃ  trá»“ng rÄƒng Implant.,,https://images.unsplash.com/photo-1629909613654-28e377c37b09,https://images.unsplash.com/photo-1588776814546-1ffcf47267a5,https://images.unsplash.com/photo-1598256989800-fe5f95da9787,Nha Khoa Kim Elite kiáº¿n táº¡o ná»¥ cÆ°á»i ráº¡ng rá»¡ chuáº©n tá»· lá»‡ vÃ ng báº±ng trang thiáº¿t bá»‹ nha khoa nháº­p kháº©u.,8+,,Bá»c rÄƒng sá»© Cercon,6.000.000Ä‘,RÄƒng sá»© nguyÃªn khá»‘i nháº­p kháº©u chÃ­nh hÃ£ng Äá»©c bá»n Ä‘áº¹p vÄ©nh viá»…n.,https://images.unsplash.com/photo-1629909613654-28e377c37b09,Trá»“ng rÄƒng sá»© Implant,18.000.000Ä‘,KhÃ´i phá»¥c chÃ¢n rÄƒng máº¥t báº±ng cÃ´ng nghá»‡ Implant an toÃ n khÃ´ng Ä‘au.,https://images.unsplash.com/photo-1588776814546-1ffcf47267a5,Táº©y tráº¯ng rÄƒng Laser,2.500.000Ä‘,ÄÃ¡nh bay xá»‰n mÃ u á»‘ vÃ ng tráº£ láº¡i ná»¥ cÆ°á»i ráº¡ng rá»¡ sau 45 phÃºt.,https://images.unsplash.com/photo-1598256989800-fe5f95da9787,Niá»ng rÄƒng máº¯c cÃ i pha lÃª,35.000.000Ä‘,Chá»‰nh nha tháº©m má»¹ cÃ´ng nghá»‡ pha lÃª vÃ´ hÃ¬nh hiá»‡n Ä‘áº¡i nháº¥t.,https://images.unsplash.com/photo-1468495244123-6c6c332eeece,Nhá»• rÄƒng khÃ´n khÃ´ng Ä‘au,1.500.000Ä‘,Nhá»• rÄƒng báº±ng cÃ´ng nghá»‡ sÃ³ng siÃªu Ã¢m Piezotome Ãªm dá»‹u.,https://images.unsplash.com/photo-1629909613654-28e377c37b09,Láº¥y cao rÄƒng siÃªu Ã¢m,300.000Ä‘,Vá»‡ sinh rÄƒng miá»‡ng sáº¡ch sáº½ máº£ng bÃ¡m ngÄƒn ngá»«a hÃ´i miá»‡ng.,https://images.unsplash.com/photo-1588776814546-1ffcf47267a5,08:30 - 20:00,08:30 - 20:00,08:30 - 20:00,08:30 - 20:00,08:30 - 20:00,08:30 - 17:00,08:30 - 17:00,fb.com/nhakhoakim,tiktok.com/@nhakhoakim'
+                        'Lavender Luxury Spa,Spa,lavender@beauty.com,0901234561,19001231,lavender-spa-luxury,TP. Hồ Chí Minh,Quận 1,15 Lê Lợi Quận 1,10.7769,106.7009,,Lavender - Viện Thẩm Mỹ Hoàng Gia Luxury,Trải nghiệm dịch vụ làm đẹp đẳng cấp 5 sao với công nghệ độc quyền từ Thụy Sĩ.,,https://images.unsplash.com/photo-1540555700478-4be289fbecef,https://images.unsplash.com/photo-1600334129128-685c5582fd35,https://images.unsplash.com/photo-1544161515-4af6b1d46af0,Với hơn 10 năm hình thành và phát triển chúng tôi tự hào là đơn vị dẫn đầu.,10+,,Tắm trắng phi thuyền,3.500.000đ,Tắm trắng phi thuyền nuôi dưỡng da sâu từ bên trong.,https://images.unsplash.com/photo-1540555700478-4be289fbecef,Trẻ hóa da Thermage FLX,15.000.000đ,Công nghệ xóa nhăn nâng cơ đỉnh cao hàng đầu thế giới.,https://images.unsplash.com/photo-1600334129128-685c5582fd35,Chăm sóc da chuyên sâu,1.500.000đ,Trải nghiệm chăm sóc da nuôi dưỡng chuyên sâu cùng tế bào gốc.,https://images.unsplash.com/photo-1544161515-4af6b1d46af0,Triệt lông Diode Laser,2.000.000đ,Triệt lông vĩnh viễn công nghệ ánh sáng thế hệ mới.,https://images.unsplash.com/photo-1519415510236-8559b1956a20,Massage Thụy Điển Luxury,1.200.000đ,Giảm căng thẳng mệt mỏi hiệu quả sau giờ làm việc.,https://images.unsplash.com/photo-1596178065887-1198b6148b2b,Hút chì thải độc tố da,800.000đ,Thải độc chì loại bỏ bụi bẩn tế bào chết bám sâu.,https://images.unsplash.com/photo-1540555700478-4be289fbecef,08:00 - 20:00,08:00 - 20:00,08:00 - 20:00,08:00 - 20:00,08:00 - 20:00,08:00 - 21:00,09:00 - 18:00,fb.com/lavenderspa,tiktok.com/@lavenderspa',
+                        'Nha Khoa Kim Elite,Dental,kim@dental.com,0901234562,19001232,nha-khoa-kim-q3,TP. Hồ Chí Minh,Quận 3,45 Nguyễn Đình Chiểu Quận 3,10.7769,106.7009,,Nha Khoa Kim Elite - Kiến Tạo Nụ Cười Việt,Hệ thống nha khoa thẩm mỹ cao cấp chuyên sâu bọc răng sứ và trồng răng Implant.,,https://images.unsplash.com/photo-1629909613654-28e377c37b09,https://images.unsplash.com/photo-1588776814546-1ffcf47267a5,https://images.unsplash.com/photo-1598256989800-fe5f95da9787,Nha Khoa Kim Elite kiến tạo nụ cười rạng rỡ chuẩn tỷ lệ vàng bằng trang thiết bị nha khoa nhập khẩu.,8+,,Bọc răng sứ Cercon,6.000.000đ,Răng sứ nguyên khối nhập khẩu chính hãng Đức bền đẹp vĩnh viễn.,https://images.unsplash.com/photo-1629909613654-28e377c37b09,Trồng răng sứ Implant,18.000.000đ,Khôi phục chân răng mất bằng công nghệ Implant an toàn không đau.,https://images.unsplash.com/photo-1588776814546-1ffcf47267a5,Tẩy trắng răng Laser,2.500.000đ,Đánh bay xỉn màu ố vàng trả lại nụ cười rạng rỡ sau 45 phút.,https://images.unsplash.com/photo-1598256989800-fe5f95da9787,Niềng răng mắc cài pha lê,35.000.000đ,Chỉnh nha thẩm mỹ công nghệ pha lê vô hình hiện đại nhất.,https://images.unsplash.com/photo-1468495244123-6c6c332eeece,Nhổ răng khôn không đau,1.500.000đ,Nhổ răng bằng công nghệ sóng siêu âm Piezotome êm dịu.,https://images.unsplash.com/photo-1629909613654-28e377c37b09,Lấy cao răng siêu âm,300.000đ,Vệ sinh răng miệng sạch sẽ mảng bám ngăn ngừa hôi miệng.,https://images.unsplash.com/photo-1588776814546-1ffcf47267a5,08:30 - 20:00,08:30 - 20:00,08:30 - 20:00,08:30 - 20:00,08:30 - 20:00,08:30 - 17:00,08:30 - 17:00,fb.com/nhakhoakim,tiktok.com/@nhakhoakim'
                       ].join('\n')
                       setRawData(csvText)
                     }}
                     className="text-[10px] font-mono text-[#D4AF37] uppercase tracking-widest hover:underline"
                   >
-                    Náº¡p dá»¯ liá»‡u máº«u
+                    Nạp dữ liệu mẫu
                   </button>
                 </div>
 
                 <textarea 
                   value={rawData}
                   onChange={(e) => setRawData(e.target.value)}
-                  placeholder="DÃ¡n cÃ¡c hÃ ng sao chÃ©p tá»« file Excel cá»§a báº¡n hoáº·c kÃ©o tháº£ file CSV vÃ o Ä‘Ã¢y..."
-                  className="w-full h-80 bg-[#060608] border border-white/5 rounded-2xl p-6 text-zinc-300 font-mono text-sm outline-none focus:border-[#D4AF37]/20 transition-all resize-none"
+                  placeholder="Dán các hàng sao chép từ file Excel của bạn hoặc kéo thả file CSV vào đây..."
+                  className="w-full h-80 bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-2xl p-6 text-[#2F2F2F] font-mono text-sm outline-none focus:border-[#D4AF37] transition-all resize-none"
                 />
 
                 <div className="flex justify-end gap-4">
                   <button 
                     onClick={handleParseAndPreview}
                     disabled={!rawData.trim()}
-                    className="bg-[#D4AF37] text-black font-bold uppercase tracking-widest text-xs px-10 py-4 rounded-full hover:bg-white transition-all disabled:opacity-40"
+                    className="bg-[#D4AF37] text-white font-bold uppercase tracking-widest text-xs px-10 py-4 rounded-full hover:bg-[#C59B27] transition-all disabled:opacity-40"
                   >
-                    Xem trÆ°á»›c & Kiá»ƒm tra
+                    Xem trước & Kiểm tra
                   </button>
                 </div>
               </motion.div>
@@ -553,34 +553,34 @@ export default function AdminImportPage() {
                 className="space-y-6"
               >
                 <div className="flex justify-between items-center">
-                  <h3 className="font-serif text-2xl text-white italic">Kiá»ƒm tra thÃ´ng tin trÆ°á»›c khi náº¡p</h3>
+                  <h3 className="font-serif text-2xl text-[#2F2F2F] italic">Kiểm tra thông tin trước khi nạp</h3>
                   <button 
                     onClick={() => setActiveStep(1)}
-                    className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest hover:text-white transition-colors"
+                    className="text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-widest hover:text-[#2F2F2F] transition-colors"
                   >
-                    Quay láº¡i sá»­a dá»¯ liá»‡u
+                    Quay lại sửa dữ liệu
                   </button>
                 </div>
 
-                <div className="border border-white/5 rounded-2xl overflow-hidden max-h-80 overflow-y-auto">
+                <div className="border border-[#D4AF37]/10 rounded-2xl overflow-hidden max-h-80 overflow-y-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-white/5 text-[9px] font-mono text-zinc-500 uppercase tracking-widest sticky top-0">
+                    <thead className="bg-[#FDFBF7] text-[9px] font-mono text-[#2F2F2F]/60 uppercase tracking-widest sticky top-0">
                       <tr>
-                        <th className="px-6 py-4">Doanh nghiá»‡p</th>
-                        <th className="px-6 py-4">NgÃ nh hÃ ng</th>
+                        <th className="px-6 py-4">Doanh nghiệp</th>
+                        <th className="px-6 py-4">Ngành hàng</th>
                         <th className="px-6 py-4">Email</th>
-                        <th className="px-6 py-4">Khu vá»±c</th>
-                        <th className="px-6 py-4">Sá»‘ dá»‹ch vá»¥</th>
+                        <th className="px-6 py-4">Khu vực</th>
+                        <th className="px-6 py-4">Số dịch vụ</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5 bg-[#060608]/40">
+                    <tbody className="divide-y divide-[#D4AF37]/10 bg-white">
                       {parsedItems.map((item, idx) => (
-                        <tr key={idx} className="hover:bg-white/5 transition-colors">
-                          <td className="px-6 py-4 text-white font-medium">{item.business_name}</td>
+                        <tr key={idx} className="hover:bg-[#FDFBF7] transition-colors">
+                          <td className="px-6 py-4 text-[#2F2F2F] font-medium">{item.business_name}</td>
                           <td className="px-6 py-4 font-mono text-[10px] text-[#D4AF37]">{item.category}</td>
-                          <td className="px-6 py-4 text-zinc-400">{item.email_owner}</td>
-                          <td className="px-6 py-4 font-mono text-zinc-400">{item.location_district || 'ChÆ°a chá»n'}</td>
-                          <td className="px-6 py-4 font-mono text-[#D4AF37]">{item.content_json?.services_menu?.length || 0} / 6 dá»‹ch vá»¥</td>
+                          <td className="px-6 py-4 text-[#2F2F2F]/60">{item.email_owner}</td>
+                          <td className="px-6 py-4 font-mono text-[#2F2F2F]/60">{item.location_district || 'Chưa chọn'}</td>
+                          <td className="px-6 py-4 font-mono text-[#D4AF37]">{item.content_json?.services_menu?.length || 0} / 6 dịch vụ</td>
                         </tr>
                       ))}
                     </tbody>
@@ -588,12 +588,12 @@ export default function AdminImportPage() {
                 </div>
 
                 <div className="flex justify-between items-center pt-4">
-                  <span className="text-xs font-mono text-zinc-500">Sáºµn sÃ ng náº¡p {parsedItems.length} cÆ¡ sá»Ÿ Ä‘á»‘i tÃ¡c. Má»i Landing Page máº·c Ä‘á»‹nh Ä‘Æ°á»£c gÃ¡n tráº¡ng thÃ¡i NhÃ¡p (Draft).</span>
+                  <span className="text-xs font-mono text-[#2F2F2F]/60">Sẵn sàng nạp {parsedItems.length} cơ sở đối tác. Mọi Landing Page mặc định được gán trạng thái Nháp (Draft).</span>
                   <button 
                     onClick={runIngestionProcess}
-                    className="bg-[#D4AF37] text-black font-bold uppercase tracking-widest text-xs px-10 py-4 rounded-full hover:bg-white transition-all flex items-center gap-2"
+                    className="bg-[#D4AF37] text-white font-bold uppercase tracking-widest text-xs px-10 py-4 rounded-full hover:bg-[#C59B27] transition-all flex items-center gap-2 shadow-sm"
                   >
-                    <Play size={14} fill="black" /> Báº¯t Ä‘áº§u náº¡p cÃ´ng nghiá»‡p
+                    <Play size={14} fill="white" /> Bắt đầu nạp công nghiệp
                   </button>
                 </div>
               </motion.div>
@@ -608,29 +608,29 @@ export default function AdminImportPage() {
                 className="space-y-8"
               >
                 <div className="space-y-3">
-                  <h3 className="font-serif text-2xl text-white italic">Tiáº¿n trÃ¬nh náº¡p cÆ¡ sá»Ÿ dá»¯ liá»‡u thá»i gian thá»±c</h3>
+                  <h3 className="font-serif text-2xl text-[#2F2F2F] italic">Tiến trình nạp cơ sở dữ liệu thời gian thực</h3>
                   
                   {/* Progress bar */}
-                  <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-[#FDFBF7] rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-gradient-to-r from-[#D4AF37] to-amber-500 transition-all duration-300"
                       style={{ width: `${((currentIndex + 1) / parsedItems.length) * 100}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
-                    <span>Äang náº¡p: {parsedItems[currentIndex]?.business_name}</span>
-                    <span>{currentIndex + 1} / {parsedItems.length} Ä‘á»‘i tÃ¡c</span>
+                  <div className="flex justify-between text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-widest">
+                    <span>Đang nạp: {parsedItems[currentIndex]?.business_name}</span>
+                    <span>{currentIndex + 1} / {parsedItems.length} đối tác</span>
                   </div>
                 </div>
 
                 {/* Console Log Rows */}
-                <div className="bg-[#060608] border border-white/5 rounded-2xl p-6 h-48 overflow-y-auto font-mono text-xs text-zinc-400 space-y-2">
+                <div className="bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-2xl p-6 h-48 overflow-y-auto font-mono text-xs text-[#2F2F2F] space-y-2">
                   {importLogs.map((log, idx) => (
-                    <div key={idx} className={log.startsWith('âŒ') ? 'text-red-400' : log.startsWith('âœ“') ? 'text-green-400' : 'text-zinc-400'}>
+                    <div key={idx} className={log.startsWith('â Œ') ? 'text-red-600' : log.startsWith('âœ“') ? 'text-green-600' : 'text-[#2F2F2F]/60'}>
                       {log}
                     </div>
                   ))}
-                  {loading && <div className="text-[#D4AF37] flex items-center gap-2 mt-2"><Loader2 className="animate-spin" size={12} /> Äang xá»­ lÃ½ Ä‘á»‘i tÃ¡c tiáº¿p theo...</div>}
+                  {loading && <div className="text-[#D4AF37] flex items-center gap-2 mt-2"><Loader2 className="animate-spin" size={12} /> Đang xử lý đối tác tiếp theo...</div>}
                 </div>
 
                 {/* FINAL REPORT PANEL */}
@@ -640,11 +640,11 @@ export default function AdminImportPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="space-y-6"
                   >
-                    <div className="flex items-center gap-2.5 text-green-400">
+                    <div className="flex items-center gap-2.5 text-green-600">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                      <div className="flex items-center gap-2.5 text-green-400">
+                      <div className="flex items-center gap-2.5 text-green-600">
                         <CheckCircle2 size={22} />
-                        <h4 className="font-serif text-2xl italic text-white">BÃ¡o cÃ¡o náº¡p dá»¯ liá»‡u hoÃ n táº¥t!</h4>
+                        <h4 className="font-serif text-2xl italic text-[#2F2F2F]">Báo cáo nạp dữ liệu hoàn tất!</h4>
                       </div>
                       <button 
                         onClick={() => {
@@ -667,38 +667,38 @@ export default function AdminImportPage() {
                           link.click()
                           document.body.removeChild(link)
                         }}
-                        className="bg-white/5 border border-amber-500/20 hover:border-amber-500 text-white text-xs font-mono tracking-widest uppercase px-5 py-2.5 rounded-full flex items-center gap-1.5 transition-all"
+                        className="bg-white border border-[#D4AF37]/20 hover:border-[#D4AF37] text-[#2F2F2F] text-xs font-mono tracking-widest uppercase px-5 py-2.5 rounded-full flex items-center gap-1.5 transition-all shadow-sm"
                       >
-                        <Download size={12} className="text-amber-400" />
-                        Xuáº¥t bÃ¡o cÃ¡o offline (.csv)
+                        <Download size={12} className="text-[#D4AF37]" />
+                        Xuất báo cáo offline (.csv)
                       </button>
                     </div>
                     </div>
 
-                    <div className="border border-white/5 rounded-2xl overflow-hidden bg-[#060608]/20">
+                    <div className="border border-[#D4AF37]/10 rounded-2xl overflow-hidden bg-white shadow-sm">
                       <table className="w-full text-left text-xs">
-                        <thead className="bg-white/5 text-[9px] font-mono text-zinc-500 uppercase tracking-widest">
+                        <thead className="bg-[#FDFBF7] text-[9px] font-mono text-[#2F2F2F]/60 uppercase tracking-widest">
                           <tr>
-                            <th className="px-6 py-4">Doanh nghiá»‡p</th>
-                            <th className="px-6 py-4">TÃ i khoáº£n (Email)</th>
-                            <th className="px-6 py-4">Máº­t kháº©u</th>
-                            <th className="px-6 py-4">Tráº¡ng thÃ¡i</th>
-                            <th className="px-6 py-4">BÃ n giao</th>
-                            <th className="px-6 py-4 text-right">HÃ nh Ä‘á»™ng</th>
+                            <th className="px-6 py-4">Doanh nghiệp</th>
+                            <th className="px-6 py-4">Tài khoản (Email)</th>
+                            <th className="px-6 py-4">Mật khẩu</th>
+                            <th className="px-6 py-4">Trạng thái</th>
+                            <th className="px-6 py-4">Bàn giao</th>
+                            <th className="px-6 py-4 text-right">Hành động</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-[#D4AF37]/10">
                           {finalReport.map((res, idx) => (
-                            <tr key={idx} className={`hover:bg-white/5 transition-colors ${!res.isPublished ? 'bg-amber-500/[0.03] border-l-2 border-l-amber-500/40' : ''}`}>
-                              <td className="px-6 py-4 text-white font-medium">{res.name}</td>
-                              <td className="px-6 py-4 font-mono text-zinc-400">{res.email}</td>
-                              <td className="px-6 py-4 font-mono text-amber-400 font-bold">Beauty123!</td>
+                            <tr key={idx} className={`hover:bg-[#FDFBF7] transition-colors ${!res.isPublished ? 'bg-[#D4AF37]/5 border-l-2 border-l-[#D4AF37]' : ''}`}>
+                              <td className="px-6 py-4 text-[#2F2F2F] font-medium">{res.name}</td>
+                              <td className="px-6 py-4 font-mono text-[#2F2F2F]/60">{res.email}</td>
+                              <td className="px-6 py-4 font-mono text-[#D4AF37] font-bold">Beauty123!</td>
                               <td className="px-6 py-4">
                                 <button
                                   onClick={() => togglePagePublished(idx, res.slug, res.isPublished)}
-                                  className={`px-3 py-1 rounded-full text-[10px] font-mono uppercase font-bold tracking-widest ${res.isPublished ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'}`}
+                                  className={`px-3 py-1 rounded-full text-[10px] font-mono uppercase font-bold tracking-widest ${res.isPublished ? 'bg-green-50 text-green-600 border border-green-200' : 'bg-orange-50 text-orange-600 border border-orange-200'}`}
                                 >
-                                  {res.isPublished ? 'Live' : 'NhÃ¡p'}
+                                  {res.isPublished ? 'Live' : 'Nháp'}
                                 </button>
                               </td>
                               <td className="px-6 py-4">
@@ -715,15 +715,15 @@ export default function AdminImportPage() {
                               <td className="px-6 py-4 text-right space-x-3">
                                 <button 
                                   onClick={() => handleOpenEditModal(idx, res)}
-                                  className="text-zinc-500 hover:text-amber-500 transition-colors inline-flex items-center gap-1.5 mr-3"
-                                  title="Chá»‰nh sá»­a thÃ´ng tin Ä‘á»‘i tÃ¡c"
+                                  className="text-[#2F2F2F]/40 hover:text-[#D4AF37] transition-colors inline-flex items-center gap-1.5 mr-3"
+                                  title="Chỉnh sửa thông tin đối tác"
                                 >
-                                  <Edit size={14} /> <span className="text-[10px] font-mono uppercase tracking-widest">Sá»­a</span>
+                                  <Edit size={14} /> <span className="text-[10px] font-mono uppercase tracking-widest">Sửa</span>
                                 </button>
                                 <button 
                                   onClick={() => handleCopyLink(res.slug)}
-                                  className="text-zinc-500 hover:text-[#D4AF37] transition-colors inline-flex items-center gap-1.5"
-                                  title="Copy link bÃ n giao"
+                                  className="text-[#2F2F2F]/40 hover:text-[#D4AF37] transition-colors inline-flex items-center gap-1.5"
+                                  title="Copy link bàn giao"
                                 >
                                   <Copy size={14} /> <span className="text-[10px] font-mono uppercase tracking-widest">Copy Link</span>
                                 </button>
@@ -742,9 +742,9 @@ export default function AdminImportPage() {
                           setParsedItems([])
                           setFinalReport([])
                         }}
-                        className="bg-white/5 hover:bg-white/10 text-white font-bold uppercase tracking-widest text-xs px-8 py-4 rounded-full transition-all"
+                        className="bg-white hover:bg-[#FDFBF7] text-[#2F2F2F] font-bold uppercase tracking-widest text-xs px-8 py-4 rounded-full transition-all border border-[#D4AF37]/10"
                       >
-                        Náº¡p lÃ´ dá»¯ liá»‡u má»›i
+                        Nạp lô dữ liệu mới
                       </button>
                     </div>
                   </motion.div>
@@ -759,7 +759,7 @@ export default function AdminImportPage() {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start gap-4 text-red-400"
+            className="p-6 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-4 text-red-600"
           >
             <AlertCircle size={20} className="shrink-0" />
             <p className="text-sm font-medium">{error}</p>
@@ -774,32 +774,32 @@ export default function AdminImportPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-lg p-8 bg-[#0d0d0f] border border-white/10 rounded-[2rem] shadow-[0_0_50px_rgba(212,175,55,0.15)] relative"
+                className="w-full max-w-lg p-8 bg-white border border-[#D4AF37]/10 rounded-[2rem] shadow-xl relative"
               >
-                <h3 className="font-display text-2xl text-white font-bold mb-1">Chá»‰nh sá»­a nhanh Ä‘á»‘i tÃ¡c</h3>
-                <p className="text-xs text-zinc-500 mb-6">Äá»“ng bá»™ cáº­p nháº­t trá»±c tiáº¿p lÃªn cÆ¡ sá»Ÿ dá»¯ liá»‡u Supabase thá»±c táº¿.</p>
+                <h3 className="font-display text-2xl text-[#2F2F2F] font-bold mb-1">Chỉnh sửa nhanh đối tác</h3>
+                <p className="text-xs text-[#2F2F2F]/60 mb-6">Đồng bộ cập nhật trực tiếp lên cơ sở dữ liệu Supabase thực tế.</p>
                 
                 <div className="space-y-4">
                   {/* Business Name */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider font-bold">TÃªn doanh nghiá»‡p</label>
+                    <label className="text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-wider font-bold">Tên doanh nghiệp</label>
                     <input 
                       type="text"
                       value={editForm.name}
                       onChange={e => setEditForm({ ...editForm, name: e.target.value })}
-                      className="w-full px-4 py-3 bg-[#060608]/50 border border-white/5 rounded-xl text-white focus:border-[#D4AF37]/50 focus:outline-none transition-colors text-sm"
-                      placeholder="TÃªn Spa / Nha khoa..."
+                      className="w-full px-4 py-3 bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-xl text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none transition-colors text-sm"
+                      placeholder="Tên Spa / Nha khoa..."
                     />
                   </div>
 
                   {/* Email Owner */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider font-bold">Email quáº£n trá»‹ (TÃ i khoáº£n Ä‘Äƒng nháº­p)</label>
+                    <label className="text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-wider font-bold">Email quản trị (Tài khoản đăng nhập)</label>
                     <input 
                       type="email"
                       value={editForm.email}
                       onChange={e => setEditForm({ ...editForm, email: e.target.value })}
-                      className="w-full px-4 py-3 bg-[#060608]/50 border border-white/5 rounded-xl text-white focus:border-[#D4AF37]/50 focus:outline-none transition-colors text-sm"
+                      className="w-full px-4 py-3 bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-xl text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none transition-colors text-sm"
                       placeholder="partner@example.com"
                     />
                   </div>
@@ -807,40 +807,40 @@ export default function AdminImportPage() {
                   <div className="grid grid-cols-2 gap-4">
                     {/* Category */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider font-bold">Danh má»¥c</label>
+                      <label className="text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-wider font-bold">Danh mục</label>
                       <select 
                         value={editForm.category}
                         onChange={e => setEditForm({ ...editForm, category: e.target.value })}
-                        className="w-full px-4 py-3 bg-[#060608]/50 border border-white/5 rounded-xl text-white focus:border-[#D4AF37]/50 focus:outline-none transition-colors text-sm"
+                        className="w-full px-4 py-3 bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-xl text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none transition-colors text-sm"
                       >
                         <option value="Spa">Spa</option>
                         <option value="Dental">Nha khoa (Dental)</option>
-                        <option value="Clinic">PhÃ²ng khÃ¡m (Clinic)</option>
+                        <option value="Clinic">Phòng khám (Clinic)</option>
                       </select>
                     </div>
 
                     {/* District */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider font-bold">Quáº­n/Huyá»‡n</label>
+                      <label className="text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-wider font-bold">Quận/Huyện</label>
                       <input 
                         type="text"
                         value={editForm.district}
                         onChange={e => setEditForm({ ...editForm, district: e.target.value })}
-                        className="w-full px-4 py-3 bg-[#060608]/50 border border-white/5 rounded-xl text-white focus:border-[#D4AF37]/50 focus:outline-none transition-colors text-sm"
-                        placeholder="VÃ­ dá»¥: Quáº­n 1"
+                        className="w-full px-4 py-3 bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-xl text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none transition-colors text-sm"
+                        placeholder="Ví dụ: Quận 1"
                       />
                     </div>
                   </div>
 
                   {/* Zalo Phone */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider font-bold">Sá»‘ Ä‘iá»‡n thoáº¡i Zalo</label>
+                    <label className="text-[10px] font-mono text-[#2F2F2F]/60 uppercase tracking-wider font-bold">Số điện thoại Zalo</label>
                     <input 
                       type="text"
                       value={editForm.zalo}
                       onChange={e => setEditForm({ ...editForm, zalo: e.target.value })}
-                      className="w-full px-4 py-3 bg-[#060608]/50 border border-white/5 rounded-xl text-white focus:border-[#D4AF37]/50 focus:outline-none transition-colors text-sm"
-                      placeholder="VÃ­ dá»¥: 0901234567"
+                      className="w-full px-4 py-3 bg-[#FDFBF7] border border-[#D4AF37]/10 rounded-xl text-[#2F2F2F] focus:border-[#D4AF37] focus:outline-none transition-colors text-sm"
+                      placeholder="Ví dụ: 0901234567"
                     />
                   </div>
                 </div>

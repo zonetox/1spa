@@ -171,7 +171,7 @@ export const V7Contact: React.FC<V7ContactProps> = ({
             © {new Date().getFullYear()} {email ? email.split('@')[1] : 'Domain'}. Bảo lưu mọi quyền.
           </p>
           <p className="text-[10px] text-gray-400 font-bold tracking-[0.3em] uppercase flex items-center gap-2">
-            Powered By <span className="font-serif italic font-black tracking-normal" style={{ color: themeColor }}>1SPA</span>
+            Powered By <span className="font-serif italic font-black tracking-normal" style={{ color: themeColor }}>1Beauty.Asia</span>
           </p>
         </div>
 

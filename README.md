@@ -1,8 +1,8 @@
-# Beauty & Dental Directory (Premium SaaS)
+# 1Beauty.Asia - Beauty & Dental Directory (Premium SaaS)
 **Hệ thống Danh bạ & Landing Page cao cấp cho ngành Làm đẹp và Nha khoa.**
 
 ## 1. Giới thiệu
-Dự án **1SPA** là nền tảng Directory kết hợp SaaS, cho phép các doanh nghiệp (Spa, Nha khoa, Clinic) đăng ký và sở hữu ngay một Landing Page chuyên nghiệp theo phong cách **Royal Luxury**.
+Dự án **1Beauty.Asia** là nền tảng Directory kết hợp SaaS, cho phép các doanh nghiệp (Spa, Nha khoa, Clinic) đăng ký và sở hữu ngay một Landing Page chuyên nghiệp theo phong cách **Royal Luxury**.
 
 ## 2. Các chức năng chính
 - **Directory**: Tìm kiếm doanh nghiệp theo khu vực và chuyên môn.
