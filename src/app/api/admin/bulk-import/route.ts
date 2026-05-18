@@ -10,11 +10,143 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-const PLACEHOLDER_IMAGES = [
-  'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1519415510236-8559b1956a20?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=1200&auto=format&fit=crop'
-]
+// ─── Fallback khi chưa có Unsplash API key ───
+const PLACEHOLDER_IMAGES: Record<string, string[]> = {
+  Spa: [
+    'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1519415510236-8559b1956a20?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1544161515-4af6b1d46af0?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=1200&auto=format&fit=crop'
+  ],
+  Beauty: [
+    'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?q=80&w=1200&auto=format&fit=crop'
+  ],
+  Dental: [
+    'https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?q=80&w=1200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1571772996211-2f02c9727629?q=80&w=1200&auto=format&fit=crop'
+  ]
+}
+
+// ─── Từ khóa tìm ảnh Unsplash theo ngành ───
+const IMAGE_KEYWORDS: Record<string, string[]> = {
+  Spa:    ['spa treatment', 'massage therapy', 'wellness zen', 'aromatherapy relaxation'],
+  Beauty: ['beauty salon professional', 'skincare aesthetic', 'makeup artist studio', 'cosmetic clinic'],
+  Dental: ['dental clinic modern', 'dentist professional', 'smile teeth white', 'orthodontics']
+}
+
+// ─── Fetch ảnh từ Unsplash API (6 ảnh theo ngành) ───
+async function fetchUnsplashImages(category: string): Promise<string[]> {
+  const key = process.env.UNSPLASH_ACCESS_KEY
+  if (!key) return PLACEHOLDER_IMAGES[category] || PLACEHOLDER_IMAGES.Spa
+
+  try {
+    const keywords = IMAGE_KEYWORDS[category] || IMAGE_KEYWORDS.Spa
+    const query = keywords[Math.floor(Math.random() * keywords.length)]
+
+    const res = await fetch(
+      `https://api.unsplash.com/photos/random?query=${encodeURIComponent(query)}&count=6&orientation=landscape`,
+      { headers: { Authorization: `Client-ID ${key}` }, next: { revalidate: 0 } }
+    )
+
+    if (!res.ok) return PLACEHOLDER_IMAGES[category] || PLACEHOLDER_IMAGES.Spa
+
+    const photos = await res.json()
+    if (!Array.isArray(photos) || photos.length === 0) {
+      return PLACEHOLDER_IMAGES[category] || PLACEHOLDER_IMAGES.Spa
+    }
+
+    return photos.map((p: any) => `${p.urls.regular}&w=1200&q=80`)
+  } catch {
+    return PLACEHOLDER_IMAGES[category] || PLACEHOLDER_IMAGES.Spa
+  }
+}
+
+// ─── Tone prompt theo từng lĩnh vực ───
+const TONE_PROMPT: Record<string, string> = {
+  Spa: `TONE: Thư giãn, thơ mộng, chữa lành. Ưu tiên từ ngữ: "tĩnh lặng", "tái tạo", "liệu trình", "trải nghiệm", "cân bằng". CTA: "Đặt lịch thư giãn". Chuyên gia gọi là "Chuyên viên trị liệu".`,
+  Beauty: `TONE: Năng động, thời thượng, tự tin. Ưu tiên từ ngữ: "công nghệ", "đột phá", "kết quả rõ rệt", "biến đổi", "xu hướng". CTA: "Đăng ký tư vấn miễn phí". Chuyên gia gọi là "Chuyên gia thẩm mỹ".`,
+  Dental: `TONE: Chuyên nghiệp, tin cậy, khoa học. Ưu tiên từ ngữ: "tiêu chuẩn quốc tế", "vô trùng", "bác sĩ", "kết quả lâu dài", "an toàn". CTA: "Đặt khám ngay". Chuyên gia gọi là "Bác sĩ" kèm bằng cấp.`
+}
+
+// ─── AI Content Enrichment via DeepSeek API ───
+async function enrichWithAI(
+  business_name: string,
+  category: 'Spa' | 'Beauty' | 'Dental',
+  rawData: any
+): Promise<Record<string, any>> {
+  const apiKey = process.env.DEEPSEEK_API_KEY
+  if (!apiKey) return {}
+
+  try {
+    const rawServices = (rawData.services_menu || []).slice(0, 3).map((s: any) => s.name || '').filter(Boolean)
+    const rawDesc = rawData.about_us?.intro_text || rawData.hero_section?.hero_subtitle || ''
+
+    const systemPrompt = `Bạn là một AI Copywriter đỉnh cao chuyên về lĩnh vực ${category} tại Việt Nam, có khả năng viết lách mượt mà và tinh tế như Claude 3.5 Sonnet.
+Nhiệm vụ của bạn là tạo ra nội dung marketing hấp dẫn, giàu cảm xúc nhưng vẫn tự nhiên, không dùng các từ ngữ sáo rỗng hay văn mẫu.
+
+Quy tắc viết theo ngành:
+${TONE_PROMPT[category]}
+
+Yêu cầu kỹ thuật:
+- Trả về kết quả dưới dạng JSON thuần túy.
+- Đảm bảo JSON hợp lệ.`
+
+    const userPrompt = `Hãy viết nội dung cho doanh nghiệp sau:
+- Tên: ${business_name}
+- Lĩnh vực: ${category}
+- Dịch vụ chính: ${rawServices.join(', ') || 'Chưa có'}
+- Mô tả thô: ${rawDesc || 'Chưa có'}
+
+Hãy điền vào cấu trúc JSON sau (viết bằng tiếng Việt, tự nhiên, cuốn hút):
+{
+  "hero_title": "(5-8 từ, giật tít tinh tế, hứa hẹn giá trị, đúng tone ngành)",
+  "hero_subtitle": "(1 câu mô tả giá trị cốt lõi, chạm đến mong muốn của khách hàng, tối đa 15 từ)",
+  "about_intro": "(2-3 câu giới thiệu chuyên sâu, kể câu chuyện ngắn hoặc nêu bật triết lý phục vụ, đúng tone ngành)",
+  "reservation_title": "(Lời kêu gọi hành động CTA tinh tế, không vồ vập, phù hợp tone)",
+  "seo_description": "(tối đa 155 ký tự cho meta description, hấp dẫn để tăng click)"
+}`
+
+    const res = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.7,
+        response_format: { type: 'json_object' }
+      })
+    })
+
+    if (!res.ok) {
+      console.error('DeepSeek API error:', await res.text())
+      return {}
+    }
+
+    const json = await res.json()
+    const text = (json.choices?.[0]?.message?.content || '').trim()
+    return JSON.parse(text)
+  } catch (error) {
+    console.error('enrichWithAI error:', error)
+    return {}
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -33,6 +165,8 @@ export async function POST(req: Request) {
     }
 
     const results = []
+    const maxAIEnrich = parseInt(process.env.AI_ENRICH_MAX_PER_BATCH || '10', 10)
+    let aiEnrichCount = 0
 
     for (const item of data) {
       // 1. Khai thác dữ liệu theo SCHEMA V6.0 (Đồng bộ 100%)
@@ -80,7 +214,16 @@ export async function POST(req: Request) {
          slug = `${slug}-${slugify(location_district)}`
       }
 
-      // 4. Xử lý content_json (Ưu tiên cấu trúc chuẩn từ harvester)
+      // 4. Fetch ảnh theo ngành + AI enrich content
+      const freshImages = await fetchUnsplashImages(categoryClean)
+
+      let aiEnriched: Record<string, any> = {}
+      if (aiEnrichCount < maxAIEnrich) {
+        aiEnriched = await enrichWithAI(business_name, categoryClean, item)
+        if (Object.keys(aiEnriched).length > 0) aiEnrichCount++
+      }
+
+      // 5. Xử lý content_json (Ưu tiên cấu trúc chuẩn từ harvester)
       let content_json = item.content_json
       
       // Nếu không có content_json wrapper, map từ cấu trúc phẳng của harvester V7
@@ -128,17 +271,23 @@ export async function POST(req: Request) {
           : []
 
         content_json = {
-          hero_section: item.hero_section || {
-            hero_title: `Chào mừng tới ${business_name}`,
-            hero_subtitle: 'Trải nghiệm dịch vụ đẳng cấp',
-            hero_slides: PLACEHOLDER_IMAGES
+          hero_section: {
+            hero_title: aiEnriched.hero_title || item.hero_section?.hero_title || `Chào mừng tới ${business_name}`,
+            hero_subtitle: aiEnriched.hero_subtitle || item.hero_section?.hero_subtitle || 'Trải nghiệm dịch vụ đẳng cấp',
+            hero_video_url: item.hero_section?.hero_video_url || '',
+            hero_slides: (
+              item.hero_section?.hero_slides?.filter(Boolean).length
+                ? item.hero_section.hero_slides
+                : freshImages.slice(0, 3)
+            )
           },
-          about_us: item.about_us || {
+          about_us: {
             section_title: 'Về Chúng Tôi',
-            intro_text: `Chào mừng bạn đến với ${business_name}.`,
-            experience_years: '5+',
-            about_image_1: PLACEHOLDER_IMAGES[0],
-            about_image_2: PLACEHOLDER_IMAGES[1]
+            intro_text: aiEnriched.about_intro || item.about_us?.intro_text || `Chào mừng bạn đến với ${business_name}.`,
+            experience_years: item.about_us?.experience_years || '5+',
+            video_intro_url: item.about_us?.video_intro_url || '',
+            about_image_1: item.about_us?.about_image_1 || freshImages[3] || freshImages[0],
+            about_image_2: item.about_us?.about_image_2 || freshImages[4] || freshImages[1]
           },
           services_menu,
           expert_team,
@@ -147,11 +296,12 @@ export async function POST(req: Request) {
             rating_count: item.rating_count || 50,
             testimonials
           },
-          reservation_section: item.reservation_section || {
-            title: `Đặt lịch tại ${business_name}`,
-            subtitle: 'Liên hệ với chúng tôi để được tư vấn',
+          reservation_section: {
+            title: aiEnriched.reservation_title || item.reservation_section?.title || `Đặt lịch tại ${business_name}`,
+            subtitle: item.reservation_section?.subtitle || 'Liên hệ với chúng tôi để được tư vấn',
             badge: 'Tư vấn miễn phí'
           },
+          seo_description: aiEnriched.seo_description || '',
           contact_info: {
             zalo_link: `https://zalo.me/${zalo}`,
             hotline: hotline,

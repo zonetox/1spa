@@ -7,9 +7,9 @@ export const INDUSTRY_PILLARS = ['Spa', 'Beauty', 'Dental'] as const;
 export type IndustryPillar = typeof INDUSTRY_PILLARS[number];
 
 export const CANONICAL_TEMPLATES: Record<IndustryPillar, string> = {
-  Spa: 'UniversalTemplate',
-  Beauty: 'UniversalTemplate',
-  Dental: 'UniversalTemplate'
+  Spa: 'SpaTemplate',
+  Beauty: 'BeautyTemplate',
+  Dental: 'DentalTemplate'
 };
 
 export const CATEGORY_COLORS: Record<IndustryPillar, string> = {

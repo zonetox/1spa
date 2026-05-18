@@ -9,6 +9,23 @@ import { ImagePickerModal } from '@/components/editor/ImagePickerModal'
 import { CATEGORY_DEFAULTS, CATEGORY_COLORS } from '@/lib/constants'
 import { confirmAction } from '@/lib/confirm'
 
+// Lazy imports: các template riêng biệt theo lĩnh vực (sẽ tạo dần)
+// Nếu chưa tồn tại, system fallback về UniversalTemplate
+let SpaTemplate: React.ComponentType<any> | null = null
+let BeautyTemplate: React.ComponentType<any> | null = null
+let DentalTemplate: React.ComponentType<any> | null = null
+
+try { SpaTemplate    = require('@/components/templates/v7-core/SpaTemplate').SpaTemplate       } catch {}
+try { BeautyTemplate = require('@/components/templates/v7-core/BeautyTemplate').BeautyTemplate  } catch {}
+try { DentalTemplate = require('@/components/templates/v7-core/DentalTemplate').DentalTemplate  } catch {}
+
+const TEMPLATE_MAP: Record<string, React.ComponentType<any>> = {
+  SpaTemplate:    SpaTemplate    || UniversalTemplate,
+  BeautyTemplate: BeautyTemplate || UniversalTemplate,
+  DentalTemplate: DentalTemplate || UniversalTemplate,
+  UniversalTemplate               // explicit fallback
+}
+
 import { LandingPageData, BusinessCategory } from '@/types/landing-page'
 
 interface WrapperProps {
@@ -170,7 +187,7 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
       )
     }
 
-    // 2. Render Engine (V7 Smart Universal Core)
+    // 2. Render Engine (V7 Smart Template Router)
     const categoryRaw = (business.category || 'Spa') as any
     const pillar = (['Spa', 'Beauty', 'Dental'].includes(categoryRaw) ? categoryRaw : 'Spa') as 'Spa' | 'Beauty' | 'Dental'
     
@@ -178,13 +195,17 @@ export default function LandingPageWrapper({ business, isEditMode }: WrapperProp
     const industryDefaults = CATEGORY_DEFAULTS[pillar] || CATEGORY_DEFAULTS.Spa
     const industryTheme = CATEGORY_COLORS[pillar] || CATEGORY_COLORS.Spa
 
+    // Lựa chọn template theo template_id (từ DB) hoặc fallback theo ngành
+    const templateId = business.template_id || `${pillar}Template`
+    const TemplateComponent = TEMPLATE_MAP[templateId] || TEMPLATE_MAP[`${pillar}Template`] || UniversalTemplate
+
     return (
-      <UniversalTemplate 
-        {...props} 
+      <TemplateComponent
+        {...props}
         defaults={{
           ...industryDefaults,
           themeColor: industryTheme
-        }} 
+        }}
       />
     )
   }
