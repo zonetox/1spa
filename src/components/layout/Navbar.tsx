@@ -22,6 +22,7 @@ export const Navbar = () => {
   const [profile, setProfile] = useState<any>(null)
   const [account, setAccount] = useState<any>(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [logoUrl, setLogoUrl] = useState('/logo.png')
  
   const supabase = createClient()
  
@@ -29,6 +30,21 @@ export const Navbar = () => {
     const onScroll = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      const { data } = await supabase
+        .from('site_settings')
+        .select('logo_url')
+        .eq('id', 'current')
+        .maybeSingle()
+      
+      if (data?.logo_url) {
+        setLogoUrl(data.logo_url)
+      }
+    }
+    fetchConfig()
   }, [])
  
   useEffect(() => {
@@ -91,10 +107,12 @@ export const Navbar = () => {
             >
               <Image 
                 width={150} height={50}
-                src="/logo.png" 
+                src={logoUrl} 
                 alt="1BEAUTY.ASIA" 
                 className={`h-9 w-auto object-contain transition-all duration-500 ${
-                  (scrolled || (pathname !== '/' && !pathname.startsWith('/p/'))) ? 'brightness-[0.2]' : 'brightness-0 invert'
+                  logoUrl.startsWith('http')
+                    ? ''
+                    : ((scrolled || (pathname !== '/' && !pathname.startsWith('/p/'))) ? 'brightness-[0.2]' : 'brightness-0 invert')
                 }`}
               />
             </motion.div>

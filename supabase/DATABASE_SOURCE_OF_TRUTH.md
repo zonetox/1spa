@@ -1,6 +1,6 @@
-# Supabase Database Schema (Live from Cloud)
+# Supabase Database Source of Truth
 
-Generated on: 09:57:51 18/5/2026
+Generated on: 11:25:00 18/5/2026
 
 ## Table: active_landing_pages
 
@@ -159,6 +159,17 @@ Generated on: 09:57:51 18/5/2026
 | comment | text | YES |  |
 | created_at | timestamp with time zone | NO | timezone('utc'::text, now()) |
 
+## Table: site_settings
+
+| Column | Type | Nullable | Default |
+| --- | --- | --- | --- |
+| id | text | NO | 'current'::text |
+| app_name | text | YES | '1Beauty.Asia'::text |
+| tagline | text | YES | 'Premium Beauty, Spa & Dental Directory'::text |
+| accent_color | text | YES | '#D4AF37'::text |
+| logo_url | text | YES |  |
+| updated_at | timestamp with time zone | YES | now() |
+
 ## Table: subscriptions
 
 | Column | Type | Nullable | Default |
@@ -171,4 +182,3 @@ Generated on: 09:57:51 18/5/2026
 | end_date | timestamp with time zone | YES |  |
 | created_at | timestamp with time zone | YES | now() |
 | verified | boolean | YES | false |
-

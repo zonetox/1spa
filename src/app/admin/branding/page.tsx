@@ -19,16 +19,25 @@ export default function BrandingPage() {
 
   const supabase = createClient()
 
-  // Load config from localStorage on component mount
+  // Load config from Supabase on component mount
   useEffect(() => {
-    const savedConfig = localStorage.getItem('1beauty_branding_config')
-    if (savedConfig) {
-      try {
-        setConfig(JSON.parse(savedConfig))
-      } catch (err) {
-        console.error('Error parsing saved branding config:', err)
+    const fetchConfig = async () => {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('id', 'current')
+        .maybeSingle()
+      
+      if (data) {
+        setConfig({
+          appName: data.app_name || '1Beauty.Asia',
+          tagline: data.tagline || 'Premium Beauty, Spa & Dental Directory',
+          accentColor: data.accent_color || '#D4AF37',
+          logoUrl: data.logo_url || '',
+        })
       }
     }
+    fetchConfig()
   }, [])
 
   // Handle Logo Upload to Supabase Storage ('public_images' bucket)
@@ -62,11 +71,25 @@ export default function BrandingPage() {
     }
   }
 
-  // Save branding config to localStorage
-  const handleSave = () => {
-    localStorage.setItem('1beauty_branding_config', JSON.stringify(config))
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+  // Save branding config to Supabase
+  const handleSave = async () => {
+    const { error } = await supabase
+      .from('site_settings')
+      .upsert({
+        id: 'current',
+        app_name: config.appName,
+        tagline: config.tagline,
+        accent_color: config.accentColor,
+        logo_url: config.logoUrl,
+        updated_at: new Date().toISOString(),
+      })
+
+    if (error) {
+      toast('Lưu cấu hình thất bại: ' + error.message)
+    } else {
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    }
   }
 
   // Reset to default branding config
@@ -79,8 +102,23 @@ export default function BrandingPage() {
         accentColor: '#D4AF37',
         logoUrl: '',
       }
-      setConfig(defaultConfig)
-      localStorage.setItem('1beauty_branding_config', JSON.stringify(defaultConfig))
+      
+      const { error } = await supabase
+        .from('site_settings')
+        .upsert({
+          id: 'current',
+          app_name: defaultConfig.appName,
+          tagline: defaultConfig.tagline,
+          accent_color: defaultConfig.accentColor,
+          logo_url: defaultConfig.logoUrl,
+          updated_at: new Date().toISOString(),
+        })
+
+      if (error) {
+        toast('Đặt lại cấu hình thất bại: ' + error.message)
+      } else {
+        setConfig(defaultConfig)
+      }
     }
   }
 

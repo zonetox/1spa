@@ -1,5 +1,7 @@
 'use client'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image';
+import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Phone, MessageSquare, Share2, Music2, ArrowUpRight } from 'lucide-react'
@@ -12,6 +14,23 @@ const SEO_LINKS = {
 }
 
 export function Footer() {
+  const [logoUrl, setLogoUrl] = useState('/logo.png')
+  const supabase = createClient()
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      const { data } = await supabase
+        .from('site_settings')
+        .select('logo_url')
+        .eq('id', 'current')
+        .maybeSingle()
+      
+      if (data?.logo_url) {
+        setLogoUrl(data.logo_url)
+      }
+    }
+    fetchConfig()
+  }, [])
   return (
     <footer style={{ background: '#F9F6F0' }} className="border-t border-[#D4AF37]/10">
       <div className="max-w-7xl mx-auto px-6 pt-24 pb-12">
@@ -23,7 +42,7 @@ export function Footer() {
           <div className="space-y-8 lg:col-span-1">
             <div>
               <div className="flex items-center mb-4">
-                <Image width={800} height={800} src="/logo.png"   
+                <Image width={800} height={800} src={logoUrl}   
                   alt="1BEAUTY.ASIA" 
                   className="h-10 w-auto object-contain"
                  />

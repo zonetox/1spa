@@ -27,6 +27,7 @@
 .DS_Store
 *.pem
 *.sql
+!supabase/migrations/*.sql
 *.txt
 *.log*
 *.docx
