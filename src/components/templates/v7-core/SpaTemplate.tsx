@@ -409,6 +409,67 @@ export function SpaTemplate({
         </section>
       )}
 
+      {/* ── TESTIMONIALS ── */}
+      {social_trust.testimonials && social_trust.testimonials.length > 0 && (
+        <section className="py-28" style={{ background: '#F3EDE4' }}>
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-20">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <span className="text-[11px] uppercase tracking-[0.4em] font-bold block mb-4" style={{ color: theme }}>Cảm Nhận Khách Hàng</span>
+                <h2 className="font-serif text-4xl md:text-5xl font-bold" style={{ color: SPA_DARK }}>Họ Nói Gì Về Chúng Tôi</h2>
+                <div className="w-12 h-px mx-auto mt-6" style={{ backgroundColor: theme }} />
+              </motion.div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {social_trust.testimonials.map((t: any, i: number) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.7 }}
+                  className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-500 relative"
+                >
+                  {/* Quote mark */}
+                  <span className="absolute top-6 right-8 font-serif text-7xl leading-none opacity-10" style={{ color: theme }}>"</span>
+                  {/* Stars */}
+                  <div className="flex gap-1 mb-5">
+                    {[...Array(t.rating || 5)].map((_: any, s: number) => (
+                      <span key={s} className="text-yellow-400 text-lg">★</span>
+                    ))}
+                  </div>
+                  <p className="text-base leading-relaxed italic mb-6 relative z-10" style={{ color: '#6B5B4E' }}>"{t.comment || t.text || t.content}"</p>
+                  <div className="flex items-center gap-3 pt-4 border-t" style={{ borderColor: '#EDE7DF' }}>
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: theme }}>
+                      {(t.author || t.name || 'K')[0].toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm" style={{ color: SPA_DARK }}>{t.author || t.name || 'Khách hàng'}</p>
+                      <p className="text-[11px] uppercase tracking-[0.1em]" style={{ color: '#9A8B7E' }}>{t.date || 'Khách hàng thân thiết'}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            {/* Overall rating */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mt-16 text-center"
+            >
+              <div className="inline-flex items-center gap-4 px-8 py-4 rounded-2xl" style={{ background: `${theme}15`, border: `1px solid ${theme}30` }}>
+                <span className="font-serif text-4xl font-bold" style={{ color: theme }}>5.0</span>
+                <div className="text-left">
+                  <div className="text-yellow-400 text-xl">★★★★★</div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] font-bold" style={{ color: SPA_DARK }}>{social_trust.rating_count || 200}+ đánh giá từ khách hàng</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {/* ── BOOKING ── */}
       <V7Booking
         title={data.reservation_section?.title || 'Đặt Lịch Thư Giãn'}

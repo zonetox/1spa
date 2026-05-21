@@ -360,6 +360,72 @@ export function DentalTemplate({
         </section>
       )}
 
+      {/* ── PATIENT TESTIMONIALS ── */}
+      {social_trust.testimonials && social_trust.testimonials.length > 0 && (
+        <section className="py-28 bg-white">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-20">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <span className="text-[11px] uppercase tracking-[0.4em] font-bold block mb-4" style={{ color: theme }}>Đánh Giá Bệnh Nhân</span>
+                <h2 className="font-serif text-4xl md:text-5xl font-bold" style={{ color: DENTAL_DARK }}>Bệnh Nhân Nói Gì?</h2>
+                <div className="w-12 h-[2px] mx-auto mt-6" style={{ backgroundColor: theme }} />
+              </motion.div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {social_trust.testimonials.map((t: any, i: number) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.7 }}
+                  className="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all duration-500 border relative"
+                  style={{ borderColor: DENTAL_LIGHT }}
+                >
+                  <span className="absolute top-5 right-6 font-serif text-7xl leading-none opacity-5" style={{ color: theme }}>"</span>
+                  {/* Google-style stars */}
+                  <div className="flex items-center gap-2 mb-5">
+                    <div className="flex gap-0.5">
+                      {[...Array(t.rating || 5)].map((_: any, s: number) => (
+                        <span key={s} className="text-yellow-400 text-base">★</span>
+                      ))}
+                    </div>
+                    <span className="text-[10px] uppercase tracking-[0.1em] font-bold" style={{ color: theme }}>Đã xác minh</span>
+                  </div>
+                  <p className="text-sm leading-relaxed mb-6 relative z-10" style={{ color: '#3D5A6A' }}>"{t.comment || t.text || t.content}"</p>
+                  <div className="flex items-center gap-3 pt-4 border-t" style={{ borderColor: DENTAL_LIGHT }}>
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: theme }}>
+                      {(t.author || t.name || 'B')[0].toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm" style={{ color: DENTAL_DARK }}>{t.author || t.name || 'Bệnh nhân'}</p>
+                      <p className="text-[11px]" style={{ color: '#8A9BAA' }}>{t.date || 'Bệnh nhân đã điều trị'}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            {/* Google rating summary */}
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-14 flex justify-center">
+              <div className="flex items-center gap-6 px-8 py-5 rounded-2xl bg-white shadow-md border" style={{ borderColor: DENTAL_LIGHT }}>
+                <div className="text-center">
+                  <span className="font-serif text-5xl font-bold block" style={{ color: DENTAL_DARK }}>5.0</span>
+                  <div className="text-yellow-400 text-lg mt-1">★★★★★</div>
+                </div>
+                <div className="w-px h-12 bg-gray-200" />
+                <div>
+                  <p className="font-bold text-base" style={{ color: DENTAL_DARK }}>Google Reviews</p>
+                  <p className="text-sm" style={{ color: '#8A9BAA' }}>{social_trust.rating_count || 1000}+ đánh giá từ bệnh nhân</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className="text-[11px] font-bold" style={{ color: theme }}>✓ Đã xác minh bởi Google</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {/* ── BOOKING ── */}
       <V7Booking
         title={data.reservation_section?.title || 'Đặt Lịch Khám Ngay Hôm Nay'}

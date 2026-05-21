@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:images": "node ingest/tools/build-image-library.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",

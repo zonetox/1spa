@@ -323,6 +323,63 @@ export function BeautyTemplate({
         </section>
       )}
 
+      {/* ── TESTIMONIALS ── */}
+      {social_trust.testimonials && social_trust.testimonials.length > 0 && (
+        <section className="py-28" style={{ background: BEAUTY_DARK }}>
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-20">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                <span className="text-[11px] uppercase tracking-[0.4em] font-bold block mb-4" style={{ color: BEAUTY_GOLD }}>Cảm Nhận Thực Tế</span>
+                <h2 className="font-serif text-4xl md:text-5xl font-bold text-white">Khách Hàng Nói Gì?</h2>
+                <div className="w-12 h-px mx-auto mt-6" style={{ background: `linear-gradient(90deg, ${theme}, ${BEAUTY_GOLD})` }} />
+              </motion.div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {social_trust.testimonials.map((t: any, i: number) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.7 }}
+                  className="relative rounded-2xl p-8 group hover:scale-[1.02] transition-all duration-500"
+                  style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${BEAUTY_GOLD}20` }}
+                >
+                  <span className="absolute top-5 right-7 font-serif text-7xl leading-none opacity-10 text-white">"</span>
+                  <div className="flex gap-1 mb-5">
+                    {[...Array(t.rating || 5)].map((_: any, s: number) => (
+                      <span key={s} style={{ color: BEAUTY_GOLD }} className="text-lg">★</span>
+                    ))}
+                  </div>
+                  <p className="text-white/70 text-base leading-relaxed italic mb-6 relative z-10">"{t.comment || t.text || t.content}"</p>
+                  <div className="flex items-center gap-3 pt-4 border-t border-white/10">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm"
+                      style={{ background: `linear-gradient(135deg, ${theme}, ${BEAUTY_GOLD})`, color: BEAUTY_DARK }}
+                    >
+                      {(t.author || t.name || 'K')[0].toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm text-white">{t.author || t.name || 'Khách hàng'}</p>
+                      <p className="text-[11px] uppercase tracking-[0.1em] text-white/40">{t.date || 'Khách hàng thân thiết'}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-14 text-center">
+              <div className="inline-flex items-center gap-4 px-8 py-4 rounded-2xl" style={{ background: `${BEAUTY_GOLD}15`, border: `1px solid ${BEAUTY_GOLD}30` }}>
+                <span className="font-serif text-4xl font-bold" style={{ color: BEAUTY_GOLD }}>5.0</span>
+                <div className="text-left">
+                  <div style={{ color: BEAUTY_GOLD }} className="text-xl">★★★★★</div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] font-bold text-white">{social_trust.rating_count || 500}+ khách hàng tin tưởng</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {/* ── BOOKING ── */}
       <V7Booking
         title={data.reservation_section?.title || 'Đăng Ký Tư Vấn Miễn Phí'}
